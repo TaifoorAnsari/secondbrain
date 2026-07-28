@@ -1,0 +1,212 @@
+<div class="login-page">
+  <div class="login-left">
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
+    <div class="circle circle-3"></div>
+
+    <div class="content">
+      <div class="logo">
+        <div class="logo-icon">🧠</div>
+        <h1>SecondBrain</h1>
+      </div>
+
+      <h2>
+        Organize your Memories.
+        <br />
+        at One Place.
+      </h2>
+
+      <p>
+        Capture ideas, organize your knowledge, manage relationships and
+        never miss an important moment again.
+      </p>
+
+      <div class="features">
+        <span>Smart Timeline</span>
+        <span>Entity CRM</span>
+        <span>Notes</span>
+        <span>Reminders</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="login-right">
+    <div class="login-card">
+
+      <h2>Create Account</h2>
+      <p>Create your SecondBrain account.</p>
+
+      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+
+        <!-- Full Name -->
+
+        <div
+          class="input-group"
+          [class.error]="signupForm.controls.fullName.invalid && signupForm.controls.fullName.touched">
+
+          <lucide-icon [img]="User"></lucide-icon>
+
+          <input
+            type="text"
+            placeholder="Full Name"
+            formControlName="fullName">
+
+        </div>
+
+        @if(signupForm.controls.fullName.touched &&
+        signupForm.controls.fullName.hasError('required')){
+
+        <p class="error-message">
+          Full name is required.
+        </p>
+
+        }
+
+        @if(signupForm.controls.fullName.touched &&
+        signupForm.controls.fullName.hasError('minlength')){
+
+        <p class="error-message">
+          Name should be at least 3 characters.
+        </p>
+
+        }
+
+        <!-- Email -->
+
+        <div
+          class="input-group"
+          [class.error]="signupForm.controls.email.invalid && signupForm.controls.email.touched">
+
+          <lucide-icon [img]="Mail"></lucide-icon>
+
+          <input
+            type="email"
+            placeholder="Email Address"
+            formControlName="email">
+
+        </div>
+
+        @if(signupForm.controls.email.touched &&
+        signupForm.controls.email.hasError('required')){
+
+        <p class="error-message">
+          Email is required.
+        </p>
+
+        }
+
+        @if(signupForm.controls.email.touched &&
+        signupForm.controls.email.hasError('email')){
+
+        <p class="error-message">
+          Please enter a valid email address.
+        </p>
+
+        }
+
+        <!-- Password -->
+
+        <div
+          class="input-group"
+          [class.error]="signupForm.controls.password.invalid && signupForm.controls.password.touched">
+
+          <lucide-icon [img]="Lock"></lucide-icon>
+
+          <input
+            [type]="hidePassword ? 'password' : 'text'"
+            placeholder="Password"
+            formControlName="password">
+
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="hidePassword = !hidePassword">
+
+            <lucide-icon
+              [img]="hidePassword ? Eye : EyeOff">
+            </lucide-icon>
+
+          </button>
+
+        </div>
+
+        @if(signupForm.controls.password.touched &&
+        signupForm.controls.password.hasError('required')){
+
+        <p class="error-message">
+          Password is required.
+        </p>
+
+        }
+
+        @if(signupForm.controls.password.touched &&
+        signupForm.controls.password.hasError('minlength')){
+
+        <p class="error-message">
+          Password must be at least 8 characters.
+        </p>
+
+        }
+
+        <!-- Confirm Password -->
+
+        <div
+          class="input-group"
+          [class.error]="(signupForm.controls.confirmPassword.invalid && signupForm.controls.confirmPassword.touched) || (signupForm.hasError('passwordMismatch') && signupForm.controls.confirmPassword.touched)">
+
+          <lucide-icon [img]="Lock"></lucide-icon>
+
+          <input
+            [type]="hideConfirmPassword ? 'password' : 'text'"
+            placeholder="Confirm Password"
+            formControlName="confirmPassword">
+
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="hideConfirmPassword = !hideConfirmPassword">
+
+            <lucide-icon
+              [img]="hideConfirmPassword ? Eye : EyeOff">
+            </lucide-icon>
+
+          </button>
+
+        </div>
+
+        @if(signupForm.controls.confirmPassword.touched &&
+        signupForm.controls.confirmPassword.hasError('required')){
+
+        <p class="error-message">
+          Confirm Password is required.
+        </p>
+
+        }
+
+        @if(signupForm.hasError('passwordMismatch') &&
+        signupForm.controls.confirmPassword.touched){
+
+        <p class="error-message">
+          Passwords do not match.
+        </p>
+
+        }
+
+        <button
+          type="submit"
+          class="login-btn">
+
+          Create Account
+
+        </button>
+
+      </form>
+
+      <span>
+        Already have an account?
+        <a routerLink="/login">Login</a>
+      </span>
+
+    </div>
+  </div>
+</div>

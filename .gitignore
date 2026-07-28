@@ -1,0 +1,29 @@
+# Dependencies
+**/node_modules/
+
+# Angular
+**/.angular/
+
+# Build output
+**/dist/
+
+# Environment files
+**/.env
+
+# Prisma generated client
+**/generated/
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/

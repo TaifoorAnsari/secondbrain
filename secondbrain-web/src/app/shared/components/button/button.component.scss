@@ -1,0 +1,16 @@
+@use "variables" as *;
+
+.btn--primary {
+  background: $color-primary;
+  color: $color-white;
+}
+
+.btn--secondary {
+  background: #6b7280;
+  color: $color-white;
+}
+
+.btn--danger {
+  background: #dc2626;
+  color: $color-white;
+}

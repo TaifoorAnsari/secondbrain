@@ -1,0 +1,109 @@
+<div class="login-page">
+    <div class="login-left">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+
+        <div class="content">
+            <div class="logo">
+                <div class="logo-icon">🧠</div>
+                <h1>SecondBrain</h1>
+            </div>
+
+            <h2>
+                Organize your Memories.
+                <br />
+                at One Place.
+            </h2>
+
+            <p>
+                Capture ideas, organize your knowledge, manage relationships and
+                never miss an important moment again.
+            </p>
+
+            <div class="features">
+                <span>Smart Timeline</span>
+                <span>Entity CRM</span>
+                <span>Notes</span>
+                <span>Reminders</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="login-right">
+        <div class="login-card">
+            <h2>Welcome Back</h2>
+
+            <p>Login to continue your productivity journey.</p>
+
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+                <!-- Email -->
+
+                <div class="input-group"
+                    [class.error]="loginForm.controls.email.invalid && loginForm.controls.email.touched">
+
+                    <lucide-icon [img]="Mail"></lucide-icon>
+
+                    <input type="email" placeholder="Email Address" formControlName="email">
+                </div>
+
+                @if(loginForm.controls.email.touched &&
+                loginForm.controls.email.hasError('required')) {
+
+                <p class="error-message">
+                    Email is required.
+                </p>
+
+                }
+
+                @if(loginForm.controls.email.touched &&
+                loginForm.controls.email.hasError('email')) {
+
+                <p class="error-message">
+                    Please enter a valid email address.
+                </p>
+
+                }
+
+                <!-- Password -->
+
+                <div class="input-group"
+                    [class.error]="loginForm.controls.password.invalid && loginForm.controls.password.touched">
+
+                    <lucide-icon [img]="Lock"></lucide-icon>
+
+                    <input [type]="hidePassword ? 'password' : 'text'" placeholder="Password"
+                        formControlName="password">
+
+                    <button type="button" class="password-toggle" (click)="hidePassword = !hidePassword">
+
+                        <lucide-icon [img]="hidePassword ? Eye : EyeOff">
+                        </lucide-icon>
+
+                    </button>
+
+                </div>
+                @if(loginForm.controls.password.touched &&
+                loginForm.controls.password.hasError('required')) {
+                <p class="error-message">
+                    Password is required.
+                </p>
+                }
+                @if(loginForm.controls.password.touched &&
+                loginForm.controls.password.hasError('minlength')) {
+                <p class="error-message">
+                    Password must be at least 8 characters.
+                </p>
+                }
+                <button type="submit" [disabled]="loginForm.invalid">
+                    Login
+                </button>
+            </form>
+            <span>
+                Don't have an account?
+                <a routerLink="/signup">Sign Up</a>
+            </span>
+        </div>
+    </div>
+</div>
