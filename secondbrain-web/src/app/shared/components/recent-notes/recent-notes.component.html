@@ -1,0 +1,35 @@
+<div class="recent-notes">
+  <div class="recent-notes__header">
+    <div>
+      <h2>Recent Notes</h2>
+
+      <p>Your latest knowledge.</p>
+    </div>
+
+    <a> View All </a>
+  </div>
+
+  <div class="notes-list">
+    @for (note of notes(); track note.id) {
+      <article class="note">
+        <div class="note__icon">
+          <span class="material-symbols-rounded"> description </span>
+        </div>
+
+        <div class="note__body">
+          <h3>
+            {{ note.title }}
+          </h3>
+
+          <span>
+            {{ note.updatedAt }}
+          </span>
+
+          <p>
+            {{ note.preview }}
+          </p>
+        </div>
+      </article>
+    }
+  </div>
+</div>

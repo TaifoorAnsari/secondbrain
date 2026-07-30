@@ -1,0 +1,25 @@
+<a class="quick-card" [routerLink]="route()">
+  <div
+    class="quick-card__icon"
+    [style.background]="color() + '15'"
+    [style.color]="color()"
+  >
+    <span class="material-symbols-rounded">
+      {{ icon() }}
+    </span>
+  </div>
+
+  <div class="quick-card__body">
+    <h3>
+      {{ title() }}
+    </h3>
+
+    <p>
+      {{ description() }}
+    </p>
+  </div>
+
+  <span class="quick-card__arrow material-symbols-rounded">
+    arrow_forward
+  </span>
+</a>

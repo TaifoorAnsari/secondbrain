@@ -1,0 +1,27 @@
+<div class="stat-card">
+  <div class="stat-card__top">
+    <div
+      class="stat-card__icon"
+      [style.background]="color() + '15'"
+      [style.color]="color()"
+    >
+     <span class="material-symbols-rounded">
+       {{ icon() }}
+     </span>
+    </div>
+  </div>
+
+  <div class="stat-card__content">
+    <span class="stat-card__title">{{ title() }}</span>
+
+    <h2 class="stat-card__value">
+      {{ value() }}
+    </h2>
+
+    @if (subtitle()) {
+      <p class="stat-card__subtitle">
+        {{ subtitle() }}
+      </p>
+    }
+  </div>
+</div>

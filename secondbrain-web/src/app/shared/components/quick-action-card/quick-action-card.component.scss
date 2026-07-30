@@ -1,0 +1,85 @@
+:host {
+  display: block;
+}
+
+.quick-card {
+  display: flex;
+
+  align-items: center;
+
+  gap: 1rem;
+
+  padding: 1.3rem;
+
+  border-radius: 20px;
+
+  background: white;
+
+  border: 1px solid #ececec;
+
+  text-decoration: none;
+
+  transition: 0.3s;
+
+  position: relative;
+
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-5px);
+
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.08);
+
+    border-color: #6366f1;
+  }
+
+  &:hover .quick-card__arrow {
+    transform: translateX(6px);
+  }
+
+  &:hover .quick-card__icon {
+    transform: scale(1.08);
+  }
+}
+
+.quick-card__icon {
+  width: 58px;
+
+  height: 58px;
+
+  border-radius: 18px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  transition: 0.3s;
+}
+
+.quick-card__body {
+  flex: 1;
+}
+
+.quick-card__body h3 {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 1rem;
+}
+
+.quick-card__body p {
+  margin: 0.35rem 0 0;
+
+  color: #6b7280;
+
+  font-size: 0.9rem;
+}
+
+.quick-card__arrow {
+  color: #9ca3af;
+
+  transition: 0.3s;
+}

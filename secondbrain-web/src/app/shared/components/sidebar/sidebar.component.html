@@ -1,9 +1,9 @@
 <h2>SecondBrain</h2>
 
 <nav>
-  <a routerLink="/">Dashboard</a>
-  <a routerLink="/timeline">Timeline</a>
-  <a routerLink="/calendar">Calendar</a>
-  <a routerLink="/entities">Entities</a>
-  <a routerLink="/settings">Settings</a>
+  <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Dashboard</a>
+  <a routerLink="/timeline" routerLinkActive="active">Timeline</a>
+  <a routerLink="/calendar" routerLinkActive="active">Calendar</a>
+  <a routerLink="/entities" routerLinkActive="active">Entities</a>
+  <a routerLink="/settings" routerLinkActive="active">Settings</a>
 </nav>

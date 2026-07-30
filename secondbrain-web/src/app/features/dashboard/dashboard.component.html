@@ -1,2 +1,60 @@
-<h1>Dashboard</h1>
-<p>Welcome to SecondBrain 🚀</p>
+<div class="dashboard">
+  <header class="dashboard-header">
+    <div>
+      <h1>
+        👋 {{ greeting() }},
+        {{ currentUser()?.fullName || "User" }}
+      </h1>
+
+      <p>Welcome back! Here's your SecondBrain overview.</p>
+    </div>
+  </header>
+
+  <section class="stats-grid">
+    @for (stat of stats; track stat.title) {
+      <app-stat-card
+        [title]="stat.title"
+        [value]="stat.value"
+        [icon]="stat.icon"
+        [subtitle]="stat.subtitle"
+        [color]="stat.color"
+      >
+      </app-stat-card>
+    }
+  </section>
+  <section class="quick-actions">
+    <div class="section-header">
+      <h2>Quick Actions</h2>
+
+      <p>Jump straight into your workflow.</p>
+    </div>
+
+    <div class="quick-grid">
+      @for (action of quickActions; track action.title) {
+        <app-quick-action-card
+          [title]="action.title"
+          [description]="action.description"
+          [icon]="action.icon"
+          [route]="action.route"
+          [color]="action.color"
+        >
+        </app-quick-action-card>
+      }
+    </div>
+  </section>
+  <app-recent-notes
+    [notes]="recentNotes">
+  </app-recent-notes>
+
+  <section class="bottom-grid">
+
+    <app-activity-timeline
+        [activities]="activities">
+    </app-activity-timeline>
+
+    <app-upcoming-events
+        [events]="events">
+    </app-upcoming-events>
+
+</section>
+</div>

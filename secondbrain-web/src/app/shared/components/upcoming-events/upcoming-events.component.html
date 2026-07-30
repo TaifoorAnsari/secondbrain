@@ -1,0 +1,23 @@
+<div class="events-card">
+  <div class="card-header">
+    <h2>Upcoming Events</h2>
+
+    <p>Your schedule</p>
+  </div>
+
+  <div class="events-list">
+    @for (event of events(); track event.id) {
+      <div class="event">
+        <div class="event-date">
+          <span class="material-symbols-rounded"> event </span>
+        </div>
+
+        <div>
+          <h4>{{ event.title }}</h4>
+
+          <span>{{ event.date }}</span>
+        </div>
+      </div>
+    }
+  </div>
+</div>

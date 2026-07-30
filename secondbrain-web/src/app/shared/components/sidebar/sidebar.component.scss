@@ -2,10 +2,11 @@
 
 :host {
   display: block;
-  height: 100%;
 }
 
 h2 {
+  margin-left: 14px;
+  margin-top: 15px;
   margin-bottom: $space-xl;
   font-size: 24px;
   font-weight: 700;
@@ -23,9 +24,15 @@ a {
   border-radius: $radius-sm;
   color: $color-white;
   text-decoration: none;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, color 0.2s;
 }
 
-a:hover {
-  background-color: rgba(255, 255, 255, 0.08);
+a:hover,
+a.active {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+a.active {
+  color: $color-primary;
+  font-weight: 700;
 }

@@ -1,7 +1,71 @@
-<div class="header-content">
-  <span>SecondBrain</span>
+<header class="topbar">
+  <div class="search">
+    <span class="material-symbols-rounded"> search </span>
 
-  <sb-button>
-    add activity
-  </sb-button>
-</div>
+    <input type="text" placeholder="Search notes, entities, events..." />
+  </div>
+
+  <div class="topbar-actions">
+    <button class="icon-btn">
+      <span class="material-symbols-rounded"> notifications </span>
+    </button>
+
+    <div class="profile-wrapper">
+      <button class="profile" (click)="toggleMenu()">
+        <div class="avatar">
+          {{ initials() }}
+        </div>
+
+        <div class="profile-info">
+          <span class="name">
+            {{ user()?.fullName }}
+          </span>
+
+          <span class="role">
+            {{ user()?.email }}
+          </span>
+        </div>
+
+        <span class="material-symbols-rounded"> expand_more </span>
+      </button>
+
+      @if (menuOpen()) {
+        <div class="profile-menu">
+          <div class="menu-user">
+            <div class="avatar big">
+              {{ initials() }}
+            </div>
+
+            <div>
+              <strong>{{ user()?.fullName }}</strong>
+
+              <p>{{ user()?.email }}</p>
+            </div>
+          </div>
+
+          <hr />
+
+          <button (click)="profile()">
+            <span class="material-symbols-rounded"> person </span>
+
+            My Profile
+          </button>
+
+          <button>
+            <span class="material-symbols-rounded"> settings </span>
+
+            Settings
+          </button>
+
+          <hr />
+
+          <button class="logout" (click)="logout()">
+            <span class="material-symbols-rounded"> logout </span>
+
+            Logout
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+</header>

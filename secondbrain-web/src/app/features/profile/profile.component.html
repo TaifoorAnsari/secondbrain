@@ -1,0 +1,223 @@
+<div class="profile-page">
+ <button class="back-link" (click)="goBack()">
+    ← Back
+  </button>
+  <div class="page-title">
+    <h1>Profile</h1>
+    <p>Manage your personal account and workspace.</p>
+  </div>
+
+  <div class="profile-grid">
+    <!-- Left Card -->
+    <div class="profile-card">
+      <div class="avatar">
+        {{ avatarLetter() }}
+      </div>
+
+      <h2>{{ user()?.fullName }}</h2>
+
+      <p>{{ user()?.email }}</p>
+
+      <button (click)="openEditProfile()" class="btn-primary">
+        Edit Profile
+      </button>
+    </div>
+
+    <!-- Right Side -->
+    <div class="profile-content">
+      <div class="card">
+        <h3>Personal Information</h3>
+
+        <div class="info-row">
+          <span>Name</span>
+          <strong>{{ user()?.fullName }}</strong>
+        </div>
+
+        <div class="info-row">
+          <span>Email</span>
+          <strong>{{ user()?.email }}</strong>
+        </div>
+
+        <div class="info-row">
+          <span>Member Since</span>
+          <strong>{{ user()?.createdAt | date: "dd MMM yyyy" }}</strong>
+        </div>
+
+        <div class="info-row">
+          <span>Workspace</span>
+          <strong>Personal</strong>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Workspace Statistics</h3>
+
+        <div class="stats">
+          <div class="stat">
+            <h2>0</h2>
+            <span>Notes</span>
+          </div>
+
+          <div class="stat">
+            <h2>0</h2>
+            <span>Entities</span>
+          </div>
+
+          <div class="stat">
+            <h2>0</h2>
+            <span>Events</span>
+          </div>
+
+          <div class="stat">
+            <h2>0</h2>
+            <span>Diary</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Security</h3>
+
+        <div class="info-row">
+          <span>Password</span>
+
+          <strong>••••••••</strong>
+        </div>
+
+        <button  (click)="openChangePassword()" class="btn-secondary">Change Password</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-modal
+  [open]="showEditProfile()"
+  title="Edit Profile"
+  (close)="showEditProfile.set(false)"
+>
+  <form [formGroup]="editProfileForm" (ngSubmit)="updateProfile()">
+    <div class="form-group">
+      <label>Full Name</label>
+
+      <input type="text" formControlName="fullName" />
+    </div>
+
+    <div class="modal-actions">
+      <button
+        type="button"
+        class="btn-secondary"
+        (click)="showEditProfile.set(false)"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="editProfileForm.invalid"
+      >
+        Save Changes
+      </button>
+    </div>
+  </form>
+</app-modal>
+
+<app-modal
+  [open]="showChangePassword()"
+  title="Change Password"
+  (close)="closeChangePassword()"
+>
+  <form
+    [formGroup]="changePasswordForm"
+    (ngSubmit)="changePassword()"
+    class="password-form"
+  >
+
+    <!-- Current Password -->
+    <div class="form-group">
+      <label>Current Password</label>
+
+      <input
+        type="password"
+        formControlName="currentPassword"
+        placeholder="Enter current password"
+      />
+
+      @if (
+        changePasswordForm.get('currentPassword')?.invalid &&
+        changePasswordForm.get('currentPassword')?.touched
+      ) {
+        <small class="error">
+          Current password is required
+        </small>
+      }
+    </div>
+
+    <!-- New Password -->
+    <div class="form-group">
+      <label>New Password</label>
+
+      <input
+        type="password"
+        formControlName="newPassword"
+        placeholder="Enter new password"
+      />
+
+      @if (
+        changePasswordForm.get('newPassword')?.invalid &&
+        changePasswordForm.get('newPassword')?.touched
+      ) {
+        <small class="error">
+          Password must be at least 8 characters
+        </small>
+      }
+    </div>
+
+    <!-- Confirm Password -->
+    <div class="form-group">
+      <label>Confirm Password</label>
+
+      <input
+        type="password"
+        formControlName="confirmPassword"
+        placeholder="Confirm new password"
+      />
+
+      @if (
+        changePasswordForm.get('confirmPassword')?.invalid &&
+        changePasswordForm.get('confirmPassword')?.touched
+      ) {
+        <small class="error">
+          Please confirm your password
+        </small>
+      }
+    </div>
+
+    @if (changePasswordError()) {
+      <div class="error-message">
+        {{ changePasswordError() }}
+      </div>
+    }
+
+    <div class="modal-actions">
+
+      <button
+        type="button"
+        class="btn-secondary"
+        (click)="closeChangePassword()"
+      >
+        Cancel
+      </button>
+
+      <button
+        type="submit"
+        class="btn-primary"
+        [disabled]="isChangingPassword()"
+      >
+        {{ isChangingPassword() ? 'Changing...' : 'Change Password' }}
+      </button>
+
+    </div>
+
+  </form>
+</app-modal>

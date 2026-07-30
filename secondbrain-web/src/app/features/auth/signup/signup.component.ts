@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
   FormBuilder,
   ReactiveFormsModule,
@@ -16,6 +16,7 @@ import {
   Eye,
   EyeOff,
 } from 'lucide-angular';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -38,8 +39,10 @@ export class SignupComponent {
   hideConfirmPassword = true;
 
   private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
-  signupForm = this.fb.group(
+  signupForm = this.fb.nonNullable.group(
     {
       fullName: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
@@ -62,11 +65,29 @@ export class SignupComponent {
       : { passwordMismatch: true };
   }
 
-  onSubmit() {
-    this.signupForm.markAllAsTouched();
+onSubmit() {
+  this.signupForm.markAllAsTouched();
 
-    if (this.signupForm.invalid) return;
-
-    console.log(this.signupForm.value);
+  if (this.signupForm.invalid) {
+    return;
   }
+
+  const formValue = this.signupForm.getRawValue();
+
+  const payload = {
+    fullName: formValue.fullName,
+    email: formValue.email,
+    password: formValue.password,
+  };
+
+  this.authService.signup(payload).subscribe({
+    next: () => {
+      this.router.navigate(['/']);
+    },
+
+    error: (error) => {
+      console.log(error);
+    },
+  });
+}
 }
