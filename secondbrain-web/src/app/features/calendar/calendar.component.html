@@ -1,13 +1,87 @@
-<section class="page-section">
-  <div class="page-header">
-    <h1>Calendar</h1>
-    <p>View and manage your schedule, events, and reminders in one place.</p>
+<div class="calendar-page">
+  <!-- Header -->
+  <div class="calendar-header">
+    <div>
+      <h1>Calendar</h1>
+      <p>Manage your meetings, reminders and events.</p>
+    </div>
+
+    <div class="header-actions">
+      <button class="nav-btn">◀</button>
+
+      <h2>{{ currentMonth }} {{ currentYear }}</h2>
+
+      <button class="nav-btn">▶</button>
+
+      <button class="add-btn">+ Add Event</button>
+    </div>
   </div>
 
-  <div class="page-card">
-    <p>
-      This page is ready for calendar widgets, event cards, and scheduling tools.
-      Add meetings, deadlines, and reminders from here.
-    </p>
+  <div class="calendar-layout">
+    <!-- Calendar -->
+
+    <div class="calendar-card">
+      <div class="weekdays">
+        <div>Sun</div>
+        <div>Mon</div>
+        <div>Tue</div>
+        <div>Wed</div>
+        <div>Thu</div>
+        <div>Fri</div>
+        <div>Sat</div>
+      </div>
+
+      <div class="calendar-grid">
+        <div
+          class="day"
+          *ngFor="let day of calendarDays"
+          [class.today]="day.isToday"
+        >
+          <span class="date">
+            {{ day.date }}
+          </span>
+
+          <div class="event" *ngFor="let event of day.events">
+            {{ event }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+
+    <div class="sidebar">
+      <div class="sidebar-card">
+        <h3>Today's Events</h3>
+
+        <div class="event-item">
+          <h4>Interview 50 Students</h4>
+
+          <span>10:00 AM</span>
+        </div>
+
+        <div class="event-item">
+          <h4>Meeting with Rahul</h4>
+
+          <span>2:00 PM</span>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <h3>Upcoming</h3>
+
+        <div class="event-item">
+          <h4>Project Review</h4>
+
+          <span>Tomorrow</span>
+        </div>
+
+        <div class="event-item">
+          <h4>Birthday Reminder</h4>
+
+          <span>Sunday</span>
+        </div>
+      </div>
+    </div>
   </div>
-</section>
+</div>

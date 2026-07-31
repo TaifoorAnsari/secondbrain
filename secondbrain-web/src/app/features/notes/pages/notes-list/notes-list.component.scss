@@ -1,0 +1,550 @@
+.notes-page {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  min-height: 100%;
+  background: #f8fafc;
+  max-width: 1500px;
+  margin: auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0f172a;
+  }
+
+  p {
+    margin-top: 0.5rem;
+    color: #64748b;
+    font-size: 0.95rem;
+  }
+}
+
+.btn-primary {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 12px;
+  padding: 0.9rem 1.5rem;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  color: white;
+  font-weight: 600;
+  transition: 0.25s ease;
+  box-shadow: 0 10px 25px rgba(79, 70, 229, 0.25);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 35px rgba(79, 70, 229, 0.35);
+  }
+}
+
+.search-box {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  font-size: 0.95rem;
+  transition: 0.25s ease;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+
+  &:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+  }
+
+  &::placeholder {
+    color: #94a3b8;
+  }
+}
+
+.notes-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+}
+
+/* ===========================
+   Note Card
+=========================== */
+
+.note-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+
+  &:hover {
+    transform: translateY(-6px);
+    border-color: #6366f1;
+    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.15);
+  }
+}
+
+.note-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  h3 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+}
+
+.pin {
+  color: #f59e0b;
+  font-size: 22px;
+}
+
+.note-card p {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.7;
+  font-size: 0.95rem;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.updated {
+  display: inline-block;
+  margin-top: 1.25rem;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* ===========================
+   Empty State
+=========================== */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 350px;
+  padding: 3rem 2rem;
+  background: white;
+  border: 2px dashed #dbeafe;
+  border-radius: 20px;
+  box-shadow: 0 12px 35px rgba(15, 23, 42, 0.05);
+
+  .material-symbols-outlined {
+    font-size: 70px;
+    color: #6366f1;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 2rem;
+  }
+
+  h3 {
+    margin: 1rem 0 0;
+    color: #475569;
+    font-size: 1.2rem;
+  }
+
+  p {
+    margin-top: 0.75rem;
+    max-width: 500px;
+    color: #64748b;
+    line-height: 1.8;
+  }
+}
+
+/* ===========================
+   Responsive
+=========================== */
+
+@media (max-width: 768px) {
+  .notes-page {
+    padding: 1rem;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn-primary {
+    width: 100%;
+  }
+
+  .notes-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.search-wrapper {
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 22px;
+}
+
+.search-box {
+  padding-left: 50px;
+}
+
+.btn-primary {
+  display: flex;
+  margin-top: 15px;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ===========================
+   Modal Backdrop
+=========================== */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 2rem;
+
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(8px);
+
+  z-index: 1000;
+
+  animation: fadeIn 0.25s ease;
+}
+
+/* ===========================
+   Modal
+=========================== */
+
+.create-note-modal {
+  width: 100%;
+  max-width: 650px;
+
+  background: #fff;
+
+  border-radius: 24px;
+
+  padding: 2rem;
+
+  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.25);
+
+  animation: modalUp 0.25s ease;
+}
+
+/* ===========================
+   Header
+=========================== */
+
+.modal-header {
+  border-bottom: 1px solid #ececec;
+  margin: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 2rem;
+
+  h2 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #111827;
+  }
+}
+
+.close-btn {
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  background: #f8fafc;
+  color: #475569;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .25s ease;
+}
+
+.close-btn:hover {
+  background: #ef4444;
+  color: white;
+  transform: rotate(90deg);
+}
+
+/* ===========================
+   Form
+=========================== */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1.4rem;
+}
+
+.form-group label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+  width: 100%;
+  padding: 0.95rem 1rem;
+
+  border: 1px solid #dbe3ef;
+  border-radius: 14px;
+
+  font-size: 0.95rem;
+  font-family: inherit;
+
+  background: #fff;
+
+  transition: all 0.25s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+  outline: none;
+
+  border-color: #6366f1;
+
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 180px;
+  line-height: 1.7;
+}
+
+.checkbox-group {
+  flex-direction: row;
+  align-items: center;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.checkbox-group input {
+  width: 18px;
+  height: 18px;
+
+  accent-color: #6366f1;
+}
+
+.error {
+  color: #ef4444;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* ===========================
+   Footer Buttons
+=========================== */
+
+.modal-actions {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+
+  margin-top: 2rem;
+}
+
+.btn-secondary {
+  border: none;
+
+  background: #e2e8f0;
+
+  color: #334155;
+
+  padding: 0.9rem 1.4rem;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+  transition: 0.25s;
+}
+
+.btn-secondary:hover {
+  background: #cbd5e1;
+}
+
+.modal-actions .btn-primary {
+  min-width: 140px;
+}
+
+.modal-actions button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ===========================
+   Animations
+=========================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalUp {
+  from {
+    opacity: 0;
+
+    transform: translateY(25px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ===========================
+   Mobile
+=========================== */
+
+@media (max-width: 768px) {
+  .create-note-modal {
+    padding: 1.5rem;
+    border-radius: 18px;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+    display: flex;
+    justify-content: space-around;
+    /* justify-content: flex-end; */
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .modal-actions button {
+    width: 100%;
+  }
+}
+
+.btn-delete {
+  border: none;
+  background: #ef4444;
+  color: white;
+
+  padding: 0.9rem 1.4rem;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+  transition: 0.25s;
+}
+
+.btn-delete:hover {
+  background: #dc2626;
+}
+
+
+/* ===========================
+   Read Note Modal
+=========================== */
+
+.read-note-modal {
+  width: min(750px, 92vw);
+  max-height: 85vh;
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: modalIn .25s ease;
+}
+
+.read-content {
+  padding: 24px;
+  overflow-y: auto;
+  line-height: 1.8;
+  color: #374151;
+  font-size: 15px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 2;
+  font-size: 16px;
+  color: #374151;
+}
+
+.read-content p {
+  margin: 0;
+}
+
+.read-note-modal .modal-actions {
+  margin: 10px 20px 0px 20px;
+  padding: 20px 24px;
+  border-top: 1px solid #ececec;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.title-section{
+    display: grid;
+
+ .note-date {
+     margin-top: 10px;
+     margin-bottom: 10px;
+ }
+}

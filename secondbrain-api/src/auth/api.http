@@ -1,6 +1,6 @@
 
 @baseUrl = http://localhost:3000
-@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbXM3Njl2djMwMDAwdDU2czZoM2M2dnV2IiwiZW1haWwiOiJ0ZXN0MUB0ZXN0LmNvbSIsImlhdCI6MTc4NTQwODgzMywiZXhwIjoxNzg1NDk1MjMzfQ.c0V-fVKnY6cbQ2ai2w0PIwhjZlJDIYaXS1LVkSmy76Y
-
-GET {{baseUrl}}/notes/123
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbXM3Njl2djMwMDAwdDU2czZoM2M2dnV2IiwiZW1haWwiOiJ0ZXN0MUB0ZXN0LmNvbSIsImlhdCI6MTc4NTQ3Njg3NSwiZXhwIjoxNzg1NTYzMjc1fQ.21Z9-JBdzxJin1zjfqyYr7hVvswg_I5M7FQAoMsl4Lo
+GET {{baseUrl}}/dashboard
 Authorization: Bearer {{authToken}}
+

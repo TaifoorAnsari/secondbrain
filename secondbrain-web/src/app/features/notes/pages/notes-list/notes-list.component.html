@@ -1,1 +1,234 @@
-<p>notes-list works!</p>
+<div class="notes-page">
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1>Notes</h1>
+      <p>Manage and organize your knowledge.</p>
+    </div>
+
+    <button class="btn-primary" (click)="openCreateModal()">
+      <span class="material-symbols-outlined">add</span>
+      New Note
+    </button>
+  </div>
+
+  <!-- Search -->
+  <div class="search-wrapper">
+    <span class="material-symbols-outlined search-icon">search</span>
+
+    <input
+      class="search-box"
+      type="text"
+      placeholder="Search notes..."
+      (input)="onSearch($event)"
+    />
+  </div>
+
+  <!-- Loading -->
+  @if (isLoading()) {
+    <div class="empty-state">
+      <h3>Loading notes...</h3>
+    </div>
+  }
+
+  <!-- Empty -->
+  @else if (filteredNotes().length === 0) {
+    <div class="empty-state">
+      <span class="material-symbols-outlined"> description </span>
+
+      <h2>No notes yet</h2>
+
+      <p>Create your first note to start building your SecondBrain.</p>
+
+      <button class="btn-primary" (click)="openCreateModal()">
+        Create First Note
+      </button>
+    </div>
+  }
+
+  <!-- Notes -->
+  @else {
+    <div class="notes-grid">
+      @for (note of filteredNotes(); track note.id) {
+        <div class="note-card" (click)="openReadModal(note)">
+          <div class="note-header">
+            <h3>{{ note.title }}</h3>
+
+            @if (note.pinned) {
+              <span class="material-symbols-outlined pin"> push_pin </span>
+            }
+          </div>
+
+          <p>
+            {{ note.content | slice: 0 : 120 }}
+
+            @if (note.content.length > 120) {
+              ...
+            }
+          </p>
+
+          <span class="updated">
+            Updated {{ note.updatedAt | date: "mediumDate" }}
+          </span>
+        </div>
+      }
+    </div>
+  }
+</div>
+
+@if (showCreateModal()) {
+  <div class="modal-backdrop" (click)="closeCreateModal()">
+    <div class="create-note-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>
+          @if (isEditMode()) {
+            Edit Note
+          } @else {
+            Create New Note
+          }
+        </h2>
+
+        <button class="close-btn" type="button" (click)="closeCreateModal()">
+          ✕
+        </button>
+      </div>
+
+      <form [formGroup]="createForm" (ngSubmit)="saveNote()">
+        <!-- Title -->
+
+        <div class="form-group">
+          <label>Title</label>
+
+          <input
+            type="text"
+            formControlName="title"
+            placeholder="Enter note title"
+          />
+
+          @if (
+            createForm.controls.title.invalid &&
+            createForm.controls.title.touched
+          ) {
+            <small class="error"> Title is required. </small>
+          }
+        </div>
+
+        <!-- Content -->
+
+        <div class="form-group">
+          <label>Content</label>
+
+          <textarea
+            rows="8"
+            formControlName="content"
+            placeholder="Write your thoughts..."
+          >
+          </textarea>
+
+          @if (
+            createForm.controls.content.invalid &&
+            createForm.controls.content.touched
+          ) {
+            <small class="error"> Content is required. </small>
+          }
+        </div>
+
+        <!-- Pin -->
+
+        <div class="form-group checkbox-group">
+          <label>
+            <input type="checkbox" formControlName="pinned" />
+
+            Pin this note
+          </label>
+        </div>
+
+        <!-- Footer -->
+
+        <div class="modal-actions">
+          @if (isEditMode()) {
+            <button type="button" class="btn-delete" (click)="deleteNote()">
+              Delete
+            </button>
+          }
+
+          <button
+            type="button"
+            class="btn-secondary"
+            (click)="closeCreateModal()"
+          >
+            Cancel
+          </button>
+
+          <button type="submit" class="btn-primary" [disabled]="isSaving()">
+            @if (isSaving()) {
+              Saving...
+            } @else if (isEditMode()) {
+              Update Note
+            } @else {
+              Save Note
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+@if (showReadModal()) {
+
+<div
+  class="modal-backdrop"
+  (click)="closeReadModal()">
+
+  <div
+    class="read-note-modal"
+    (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+
+<div class="title-section">
+    
+  <h2>{{ readNote()?.title }}</h2>
+
+  <span class="note-date">
+    Updated {{ readNote()?.updatedAt | date:'mediumDate' }}
+  </span>
+</div>
+
+      <button
+        class="close-btn"
+        type="button"
+        (click)="closeReadModal()">
+
+        ✕
+
+      </button>
+
+    </div>
+
+    <div class="read-content">
+
+      <p>
+        {{ readNote()?.content }}
+      </p>
+
+    </div>
+
+    <div class="modal-actions">
+
+      <button
+        class="btn-secondary"
+        (click)="closeReadModal()">
+
+        Close
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+}

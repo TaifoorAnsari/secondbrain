@@ -11,21 +11,20 @@
   </header>
 
   <section class="stats-grid">
-    @for (stat of stats; track stat.title) {
+    @for (stat of stats(); track stat.title) {
       <app-stat-card
         [title]="stat.title"
         [value]="stat.value"
         [icon]="stat.icon"
         [subtitle]="stat.subtitle"
-        [color]="stat.color"
-      >
+        [color]="stat.color">
       </app-stat-card>
     }
   </section>
+
   <section class="quick-actions">
     <div class="section-header">
       <h2>Quick Actions</h2>
-
       <p>Jump straight into your workflow.</p>
     </div>
 
@@ -36,25 +35,25 @@
           [description]="action.description"
           [icon]="action.icon"
           [route]="action.route"
-          [color]="action.color"
-        >
+          [color]="action.color">
         </app-quick-action-card>
       }
     </div>
   </section>
+
   <app-recent-notes
-    [notes]="recentNotes">
+    [notes]="recentNotes()">
   </app-recent-notes>
 
   <section class="bottom-grid">
 
     <app-activity-timeline
-        [activities]="activities">
+      [activities]="activities">
     </app-activity-timeline>
 
     <app-upcoming-events
-        [events]="events">
+      [events]="events">
     </app-upcoming-events>
 
-</section>
+  </section>
 </div>

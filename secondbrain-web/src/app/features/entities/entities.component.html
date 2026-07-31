@@ -1,13 +1,57 @@
-<section class="page-section">
+<div class="entities-page">
+  <!-- Header -->
+
   <div class="page-header">
-    <h1>Entities</h1>
-    <p>Browse and manage your notes, contacts, tasks, and project entities.</p>
+    <div>
+      <h1>Entities</h1>
+      <p>Manage your people and companies in one place.</p>
+    </div>
+
+    <button class="add-btn">+ Add Entity</button>
   </div>
 
-  <div class="page-card">
-    <p>
-      This page is prepared for entity lists, filters, and relationship views.
-      Build out your workspace with people, places, and items that matter.
-    </p>
+  <!-- Search -->
+
+  <div class="search-section">
+    <input type="text" placeholder="Search person or company..." />
   </div>
-</section>
+
+  <!-- Stats -->
+
+  <div class="stats">
+    <div class="stat-card">
+      <h2>{{ peopleCount }}</h2>
+      <span>People</span>
+    </div>
+
+    <div class="stat-card">
+      <h2>{{ companyCount }}</h2>
+      <span>Companies</span>
+    </div>
+
+    <div class="stat-card">
+      <h2>{{ totalEntities }}</h2>
+      <span>Total</span>
+    </div>
+  </div>
+
+  <!-- Grid -->
+
+  <div class="entity-grid">
+    <div class="entity-card" *ngFor="let entity of entities">
+      <div class="avatar">
+        {{ entity.name.charAt(0) }}
+      </div>
+
+      <div class="content">
+        <h3>{{ entity.name }}</h3>
+
+        <p>{{ entity.type }}</p>
+
+        <small>{{ entity.description }}</small>
+      </div>
+
+      <button class="view-btn">View</button>
+    </div>
+  </div>
+</div>

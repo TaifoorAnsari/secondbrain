@@ -6,10 +6,13 @@ import {
   Get,
   UseGuards,
   Param,
+  Patch,
+  Delete,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { NotesService } from './notes.service';
 import { CreateNoteDto } from './dto/create-note.dto';
+import { UpdateNoteDto } from './dto/update-note.dto';
 
 @Controller('notes')
 @UseGuards(JwtAuthGuard)
@@ -36,4 +39,31 @@ findOne(
 ) {
   return this.notesService.findOne(id, req.user.id);
 }
+
+@Patch(':id')
+update(
+  @Param('id') id: string,
+  @Req() req: any,
+  @Body() dto: UpdateNoteDto,
+) {
+  return this.notesService.update(
+    id,
+    req.user.id,
+    dto,
+  );
+}
+
+
+@Delete(':id')
+remove(
+  @Param('id') id: string,
+  @Req() req: any,
+) {
+  return this.notesService.remove(
+    id,
+    req.user.id,
+  );
+}
+
+
 }
