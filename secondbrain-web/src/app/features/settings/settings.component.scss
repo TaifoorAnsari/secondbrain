@@ -1,38 +1,335 @@
-@use "variables" as *;
-
 :host {
   display: block;
-  width: 100%;
+  min-height: 100vh;
+  background: #f4f7fc;
+  padding: 35px;
+  font-family: "Poppins", sans-serif;
 }
 
-.page-section {
-  display: flex;
-  flex-direction: column;
-  gap: $space-md;
+.settings-page {
+  max-width: 1400px;
+  margin: auto;
 }
+
+/* ===========================
+   HEADER
+=========================== */
 
 .page-header {
   display: flex;
-  flex-direction: column;
-  gap: $space-sm;
-
-  h1 {
-    margin: 0;
-    font-size: 2rem;
-    font-weight: 700;
-  }
-
-  p {
-    margin: 0;
-    color: rgba($color-text, 0.75);
-  }
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 35px;
 }
 
-.page-card {
-  padding: $space-lg;
-  border-radius: $radius-md;
-  background: #ffffff;
-  border: 1px solid $color-border;
-  box-shadow: 0 14px 34px rgba(31, 41, 55, 0.07);
-  color: $color-text;
+.page-header h1 {
+  font-size: 38px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.page-header p {
+  margin-top: 8px;
+  color: #6b7280;
+  font-size: 15px;
+}
+
+.save-btn {
+  padding: 14px 28px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #4f46e5, #8b5cf6);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .3s;
+  box-shadow: 0 10px 25px rgba(79, 70, 229, .25);
+}
+
+.save-btn:hover {
+  transform: translateY(-3px);
+}
+
+/* ===========================
+   CARD
+=========================== */
+
+.settings-card {
+  background: white;
+  border-radius: 22px;
+  padding: 28px;
+  margin-bottom: 25px;
+  box-shadow: 0 15px 35px rgba(0,0,0,.06);
+}
+
+.settings-card h2 {
+  margin-bottom: 25px;
+  color: #1f2937;
+  font-size: 22px;
+}
+
+/* ===========================
+   PROFILE
+=========================== */
+
+.profile-section {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 35px;
+}
+
+.profile-avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#4f46e5,#8b5cf6);
+  color: white;
+  font-size: 46px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.profile-avatar button {
+  border: none;
+  padding: 12px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+.profile-form {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 22px;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  margin-bottom: 8px;
+  color: #374151;
+  font-weight: 600;
+}
+
+.input-group input,
+.input-group textarea,
+.option select {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid #dbe2ea;
+  background: #f9fafb;
+  outline: none;
+  font-size: 15px;
+  transition: .3s;
+}
+
+.input-group input:focus,
+.input-group textarea:focus,
+.option select:focus {
+  border-color: #4f46e5;
+  background: white;
+}
+
+/* ===========================
+   APPEARANCE
+=========================== */
+
+.option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.option label {
+  font-weight: 600;
+  color: #374151;
+}
+
+.colors {
+  display: flex;
+  gap: 15px;
+}
+
+.colors span {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.colors span:hover {
+  transform: scale(1.2);
+}
+
+.blue {
+  background: #2563eb;
+}
+
+.purple {
+  background: #7c3aed;
+}
+
+.green {
+  background: #10b981;
+}
+
+.orange {
+  background: #f97316;
+}
+
+/* ===========================
+   TOGGLES
+=========================== */
+
+.toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #eceff3;
+}
+
+.toggle:last-child {
+  border-bottom: none;
+}
+
+.toggle span {
+  font-weight: 500;
+  color: #374151;
+}
+
+.toggle input {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+/* ===========================
+   SECURITY
+=========================== */
+
+.security-btn {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 14px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.security-btn:hover {
+  background: #4f46e5;
+  color: white;
+}
+
+.logout {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.logout:hover {
+  background: #dc2626;
+  color: white;
+}
+
+/* ===========================
+   DATA
+=========================== */
+
+.button-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap: 18px;
+}
+
+.button-group button {
+  padding: 15px;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  background: #eef2ff;
+  color: #4f46e5;
+  transition: .3s;
+}
+
+.button-group button:hover {
+  background: #4f46e5;
+  color: white;
+}
+
+.button-group .danger {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.button-group .danger:hover {
+  background: #dc2626;
+  color: white;
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media (max-width: 992px) {
+
+  .profile-section {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-form {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width:768px) {
+
+  :host {
+    padding: 20px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .save-btn {
+    width: 100%;
+  }
+
+  .option {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
 }

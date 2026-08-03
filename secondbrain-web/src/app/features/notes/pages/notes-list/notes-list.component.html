@@ -51,14 +51,61 @@
     <div class="notes-grid">
       @for (note of filteredNotes(); track note.id) {
         <div class="note-card" (click)="openReadModal(note)">
-          <div class="note-header">
-            <h3>{{ note.title }}</h3>
+      <div class="note-header">
 
-            @if (note.pinned) {
-              <span class="material-symbols-outlined pin"> push_pin </span>
-            }
-          </div>
+  <h3>{{ note.title }}</h3>
 
+  <div class="note-actions">
+
+    @if (note.pinned) {
+      <span class="material-symbols-outlined pin">
+        push_pin
+      </span>
+    }
+
+    <button
+      class="menu-btn"
+      (click)="toggleMenu(note.id, $event)">
+
+      <span class="material-symbols-outlined">
+        more_vert
+      </span>
+
+    </button>
+
+  </div>
+
+</div>
+@if (activeMenuId() === note.id) {
+
+<div class="note-menu">
+
+  <button
+    (click)="editFromMenu(note, $event)">
+
+    <span class="material-symbols-outlined">
+      edit
+    </span>
+
+    Edit Note
+
+  </button>
+
+  <button
+    class="delete"
+    (click)="deleteFromMenu(note, $event)">
+
+    <span class="material-symbols-outlined">
+      delete
+    </span>
+
+    Delete Note
+
+  </button>
+
+</div>
+
+}
           <p>
             {{ note.content | slice: 0 : 120 }}
 
@@ -188,7 +235,7 @@
     <div class="modal-header">
 
 <div class="title-section">
-    
+
   <h2>{{ readNote()?.title }}</h2>
 
   <span class="note-date">

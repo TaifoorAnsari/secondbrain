@@ -1,13 +1,136 @@
-<section class="page-section">
+<div class="settings-page">
+  <!-- Header -->
   <div class="page-header">
-    <h1>Settings</h1>
-    <p>Update your profile, preferences, and workspace settings from one place.</p>
+    <div>
+      <h1>Settings</h1>
+      <p>Manage your account, preferences and application settings.</p>
+    </div>
+
+    <button class="save-btn">Save Changes</button>
   </div>
 
-  <div class="page-card">
-    <p>
-      This page is ready for settings options like account details, notifications, and themes.
-      Customize your experience here.
-    </p>
+  <!-- Profile -->
+  <div class="settings-card">
+    <h2>👤 Profile Information</h2>
+
+    <div class="profile-section">
+      <div class="profile-avatar">
+        <div class="avatar">S</div>
+
+        <button>Change Photo</button>
+      </div>
+
+      <div class="profile-form">
+        <div class="input-group">
+          <label>Full Name</label>
+          <input type="text" [(ngModel)]="user.fullName" />
+        </div>
+
+        <div class="input-group">
+          <label>Username</label>
+          <input type="text" [(ngModel)]="user.username" />
+        </div>
+
+        <div class="input-group">
+          <label>Email</label>
+          <input type="email" [(ngModel)]="user.email" />
+        </div>
+
+        <div class="input-group">
+          <label>Phone</label>
+          <input type="text" [(ngModel)]="user.phone" />
+        </div>
+
+        <div class="input-group full-width">
+          <label>Bio</label>
+          <textarea rows="4" [(ngModel)]="user.bio"> </textarea>
+        </div>
+      </div>
+    </div>
   </div>
-</section>
+
+  <!-- Appearance -->
+
+  <div class="settings-card">
+    <h2>🎨 Appearance</h2>
+
+    <div class="option">
+      <label>Theme</label>
+
+      <select>
+        <option>Light</option>
+        <option>Dark</option>
+        <option>System</option>
+      </select>
+    </div>
+
+    <div class="option">
+      <label>Accent Color</label>
+
+      <div class="colors">
+        <span class="blue"></span>
+        <span class="purple"></span>
+        <span class="green"></span>
+        <span class="orange"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notifications -->
+
+  <div class="settings-card">
+    <h2>🔔 Notifications</h2>
+
+    <div class="toggle">
+      <span>Morning Reminder</span>
+
+      <input type="checkbox" [(ngModel)]="notifications.morning" />
+    </div>
+
+    <div class="toggle">
+      <span>Evening Reminder</span>
+
+      <input type="checkbox" [(ngModel)]="notifications.evening" />
+    </div>
+
+    <div class="toggle">
+      <span>Email Notification</span>
+
+      <input type="checkbox" [(ngModel)]="notifications.email" />
+    </div>
+
+    <div class="toggle">
+      <span>Browser Notification</span>
+
+      <input type="checkbox" [(ngModel)]="notifications.browser" />
+    </div>
+  </div>
+
+  <!-- Security -->
+
+  <div class="settings-card">
+    <h2>🔒 Security</h2>
+
+    <button class="security-btn">Change Password</button>
+
+    <button class="security-btn">Enable Two Factor Authentication</button>
+
+    <button class="security-btn logout">Logout All Devices</button>
+  </div>
+
+  <!-- Data -->
+
+  <div class="settings-card">
+    <h2>💾 Data Management</h2>
+
+    <div class="button-group">
+      <button>Export JSON</button>
+
+      <button>Export PDF</button>
+
+      <button>Import Data</button>
+
+      <button class="danger">Delete Account</button>
+    </div>
+  </div>
+</div>

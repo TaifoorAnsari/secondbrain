@@ -68,6 +68,7 @@ export class NoteListComponent implements OnInit {
         note.content.toLowerCase().includes(query),
     );
   });
+  activeMenuId = signal<string | null>(null);
 
   openCreateModal(): void {
     this.selectedNote.set(null);
@@ -186,15 +187,38 @@ export class NoteListComponent implements OnInit {
   }
 
   openReadModal(note: Note): void {
-  this.readNote.set(note);
-  this.showReadModal.set(true);
-}
+    this.readNote.set(note);
+    this.showReadModal.set(true);
+  }
 
-closeReadModal(): void {
+  closeReadModal(): void {
+    this.showReadModal.set(false);
 
-  this.showReadModal.set(false);
+    this.readNote.set(null);
+  }
+  toggleMenu(id: string, event: MouseEvent): void {
+    event.stopPropagation();
 
-  this.readNote.set(null);
+    if (this.activeMenuId() === id) {
+      this.activeMenuId.set(null);
+    } else {
+      this.activeMenuId.set(id);
+    }
+  }
+  editFromMenu(note: Note, event: MouseEvent): void {
+    event.stopPropagation();
 
-}
+    this.activeMenuId.set(null);
+
+    this.openEditModal(note);
+  }
+  deleteFromMenu(note: Note, event: MouseEvent): void {
+    event.stopPropagation();
+
+    this.activeMenuId.set(null);
+
+    this.selectedNote.set(note);
+
+    this.deleteNote();
+  }
 }
