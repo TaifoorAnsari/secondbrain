@@ -1,10 +1,18 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
+
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { NotesService } from '../../../../core/services/notes.service';
 import { Note } from '../../../../core/models/note.model';
-
 @Component({
   selector: 'app-notes-list',
   standalone: true,
@@ -20,15 +28,16 @@ export class NoteListComponent implements OnInit {
   isLoading = signal(false);
 
   search = signal('');
+
   showCreateModal = signal(false);
+  showReadModal = signal(false);
+
   isSaving = signal(false);
 
   selectedNote = signal<Note | null>(null);
-  showReadModal = signal(false);
   readNote = signal<Note | null>(null);
 
   isEditMode = computed(() => this.selectedNote() !== null);
-
   createForm = this.fb.nonNullable.group({
     title: ['', [Validators.required, Validators.maxLength(100)]],
     content: ['', [Validators.required]],
@@ -71,6 +80,8 @@ export class NoteListComponent implements OnInit {
   activeMenuId = signal<string | null>(null);
 
   openCreateModal(): void {
+    this.activeMenuId.set(null);
+
     this.selectedNote.set(null);
 
     this.createForm.reset({
@@ -81,8 +92,9 @@ export class NoteListComponent implements OnInit {
 
     this.showCreateModal.set(true);
   }
-
   openEditModal(note: Note): void {
+    this.activeMenuId.set(null);
+
     this.selectedNote.set(note);
 
     this.createForm.patchValue({
@@ -187,6 +199,7 @@ export class NoteListComponent implements OnInit {
   }
 
   openReadModal(note: Note): void {
+    this.activeMenuId.set(null);
     this.readNote.set(note);
     this.showReadModal.set(true);
   }
@@ -220,5 +233,37 @@ export class NoteListComponent implements OnInit {
     this.selectedNote.set(note);
 
     this.deleteNote();
+  }
+
+  togglePin(note: Note, event: MouseEvent): void {
+    event.stopPropagation();
+
+    const dto = {
+      pinned: !note.pinned,
+    };
+
+    this.notesService.updateNote(note.id, dto).subscribe({
+      next: (updatedNote) => {
+        this.notes.update((notes) =>
+          notes.map((n) => (n.id === updatedNote.id ? updatedNote : n)),
+        );
+
+        this.activeMenuId.set(null);
+      },
+
+      error: (err) => {
+        console.error(err);
+      },
+    });
+  }
+
+  @HostListener('document:click')
+  closeMenu(): void {
+    this.activeMenuId.set(null);
+  }
+
+  @HostListener('document:keydown.escape')
+  closeMenuOnEscape(): void {
+    this.activeMenuId.set(null);
   }
 }

@@ -14,7 +14,7 @@
 
   <!-- Search -->
   <div class="search-wrapper">
-    <span class="material-symbols-outlined search-icon">search</span>
+    <span class="material-symbols-outlined search-icon"> search </span>
 
     <input
       class="search-box"
@@ -47,65 +47,75 @@
   }
 
   <!-- Notes -->
+
   @else {
     <div class="notes-grid">
       @for (note of filteredNotes(); track note.id) {
         <div class="note-card" (click)="openReadModal(note)">
-      <div class="note-header">
+          @if (note.pinned) {
+            <div class="pinned-badge">
+              <span class="material-symbols-outlined"> push_pin </span>
+            </div>
+          }
 
-  <h3>{{ note.title }}</h3>
+          <div class="note-header">
+            <h3>
+              {{ note.title }}
+            </h3>
 
-  <div class="note-actions">
+            <button
+              type="button"
+              class="menu-btn"
+              (click)="toggleMenu(note.id, $event)"
+            >
+              <span class="material-symbols-outlined"> more_vert </span>
+            </button>
+          </div>
 
-    @if (note.pinned) {
-      <span class="material-symbols-outlined pin">
-        push_pin
-      </span>
-    }
+          <!-- Dropdown -->
 
-    <button
-      class="menu-btn"
-      (click)="toggleMenu(note.id, $event)">
+          @if (activeMenuId() === note.id) {
+            <div class="note-menu" (click)="$event.stopPropagation()">
+              <!-- Pin -->
 
-      <span class="material-symbols-outlined">
-        more_vert
-      </span>
+              <button type="button" (click)="togglePin(note, $event)">
+                <span class="material-symbols-outlined">
+                  @if (note.pinned) {
+                    keep_off
+                  } @else {
+                    push_pin
+                  }
+                </span>
 
-    </button>
+                @if (note.pinned) {
+                  Unpin Note
+                } @else {
+                  Pin Note
+                }
+              </button>
 
-  </div>
+              <!-- Edit -->
 
-</div>
-@if (activeMenuId() === note.id) {
+              <button type="button" (click)="editFromMenu(note, $event)">
+                <span class="material-symbols-outlined"> edit </span>
 
-<div class="note-menu">
+                Edit Note
+              </button>
 
-  <button
-    (click)="editFromMenu(note, $event)">
+              <!-- Delete -->
 
-    <span class="material-symbols-outlined">
-      edit
-    </span>
+              <button
+                type="button"
+                class="delete"
+                (click)="deleteFromMenu(note, $event)"
+              >
+                <span class="material-symbols-outlined"> delete </span>
 
-    Edit Note
+                Delete Note
+              </button>
+            </div>
+          }
 
-  </button>
-
-  <button
-    class="delete"
-    (click)="deleteFromMenu(note, $event)">
-
-    <span class="material-symbols-outlined">
-      delete
-    </span>
-
-    Delete Note
-
-  </button>
-
-</div>
-
-}
           <p>
             {{ note.content | slice: 0 : 120 }}
 
@@ -115,13 +125,23 @@
           </p>
 
           <span class="updated">
-            Updated {{ note.updatedAt | date: "mediumDate" }}
+            @if (note.createdAt === note.updatedAt) {
+              Created
+              {{ note.createdAt | date: "dd MMM yyyy • h:mm a" }}
+            } @else {
+              Updated
+              {{ note.updatedAt | date: "dd MMM yyyy • h:mm a" }}
+            }
           </span>
         </div>
       }
     </div>
   }
 </div>
+
+<!-- ===================================================== -->
+<!-- Create / Edit Note Modal -->
+<!-- ===================================================== -->
 
 @if (showCreateModal()) {
   <div class="modal-backdrop" (click)="closeCreateModal()">
@@ -222,60 +242,40 @@
   </div>
 }
 
+<!-- ===================================================== -->
+<!-- Read Note Modal -->
+<!-- ===================================================== -->
+
 @if (showReadModal()) {
+  <div class="modal-backdrop" (click)="closeReadModal()">
+    <div class="read-note-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="title-section">
+          <h2>
+            {{ readNote()?.title }}
+          </h2>
 
-<div
-  class="modal-backdrop"
-  (click)="closeReadModal()">
+          <span class="note-date">
+            @if (readNote()?.createdAt === readNote()?.updatedAt) {
+              Created
+              {{ readNote()?.createdAt | date: "dd MMM yyyy • h:mm a" }}
+            } @else {
+              Updated
+              {{ readNote()?.updatedAt | date: "dd MMM yyyy • h:mm a" }}
+            }
+          </span>
+        </div>
 
-  <div
-    class="read-note-modal"
-    (click)="$event.stopPropagation()">
+        <button class="close-btn" type="button" (click)="closeReadModal()">
+          ✕
+        </button>
+      </div>
 
-    <div class="modal-header">
-
-<div class="title-section">
-
-  <h2>{{ readNote()?.title }}</h2>
-
-  <span class="note-date">
-    Updated {{ readNote()?.updatedAt | date:'mediumDate' }}
-  </span>
-</div>
-
-      <button
-        class="close-btn"
-        type="button"
-        (click)="closeReadModal()">
-
-        ✕
-
-      </button>
-
+      <div class="read-content">
+        <p>
+          {{ readNote()?.content }}
+        </p>
+      </div>
     </div>
-
-    <div class="read-content">
-
-      <p>
-        {{ readNote()?.content }}
-      </p>
-
-    </div>
-
-    <div class="modal-actions">
-
-      <button
-        class="btn-secondary"
-        (click)="closeReadModal()">
-
-        Close
-
-      </button>
-
-    </div>
-
   </div>
-
-</div>
-
 }
