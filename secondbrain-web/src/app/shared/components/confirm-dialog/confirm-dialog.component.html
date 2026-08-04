@@ -1,0 +1,35 @@
+@if (confirmService.dialog(); as dialog) {
+  <div class="confirm-backdrop" (click)="cancel()">
+    <div class="confirm-dialog" (click)="$event.stopPropagation()">
+      <!-- Icon -->
+
+      <div class="icon-wrapper">
+        <span class="material-symbols-outlined"> delete </span>
+      </div>
+
+      <!-- Title -->
+
+      <h2>
+        {{ dialog.title }}
+      </h2>
+
+      <!-- Message -->
+
+      <p>
+        {{ dialog.message }}
+      </p>
+
+      <!-- Buttons -->
+
+      <div class="dialog-actions">
+        <button class="btn-secondary" type="button" (click)="cancel()">
+          {{ dialog.cancelText || "Cancel" }}
+        </button>
+
+        <button class="btn-danger" type="button" (click)="confirm()">
+          {{ dialog.confirmText || "Delete" }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

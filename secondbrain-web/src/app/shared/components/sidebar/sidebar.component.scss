@@ -36,3 +36,17 @@ a.active {
   color: $color-primary;
   font-weight: 700;
 }
+
+.app-logo {
+  height: 75px;
+  width: 100px;
+  margin-left: 14px;
+  margin-top: 15px;
+  margin-bottom: $space-xl;
+}
+.divider{
+      margin-bottom: 20px;
+    border: 1px solid gray;
+    opacity: 0.4;
+}
+

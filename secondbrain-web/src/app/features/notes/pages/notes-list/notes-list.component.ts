@@ -13,6 +13,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { NotesService } from '../../../../core/services/notes.service';
 import { Note } from '../../../../core/models/note.model';
+import { ToastService } from '../../../../core/services/toast.service';
+import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.service';
 @Component({
   selector: 'app-notes-list',
   standalone: true,
@@ -21,12 +23,13 @@ import { Note } from '../../../../core/models/note.model';
   styleUrl: './notes-list.component.scss',
 })
 export class NoteListComponent implements OnInit {
-  private notesService = inject(NotesService);
-  private fb = inject(FormBuilder);
+ private notesService = inject(NotesService);
+private toast = inject(ToastService);
+private fb = inject(FormBuilder);
+private confirmDialog = inject(ConfirmDialogService);
 
   notes = signal<Note[]>([]);
   isLoading = signal(false);
-
   search = signal('');
 
   showCreateModal = signal(false);
@@ -44,10 +47,9 @@ export class NoteListComponent implements OnInit {
     pinned: [false],
   });
 
-  ngOnInit(): void {
-    this.loadNotes();
-  }
-
+ ngOnInit(): void {
+  this.loadNotes();
+}
   loadNotes(): void {
     this.isLoading.set(true);
 
@@ -59,6 +61,7 @@ export class NoteListComponent implements OnInit {
 
       error: (err) => {
         console.error(err);
+        this.toast.error('Failed to load notes');
         this.isLoading.set(false);
       },
     });
@@ -121,6 +124,7 @@ export class NoteListComponent implements OnInit {
   saveNote(): void {
     if (this.createForm.invalid) {
       this.createForm.markAllAsTouched();
+      this.toast.warning('Please fill all required fields');
       return;
     }
 
@@ -139,11 +143,13 @@ export class NoteListComponent implements OnInit {
           );
 
           this.closeCreateModal();
+          this.toast.success('Note updated successfully');
           this.isSaving.set(false);
         },
 
         error: (err) => {
           console.error(err);
+          this.toast.error('Failed to update note');
           this.isSaving.set(false);
         },
       });
@@ -152,47 +158,80 @@ export class NoteListComponent implements OnInit {
     }
 
     // CREATE MODE
-    this.notesService.createNote(dto).subscribe({
-      next: (note) => {
-        this.notes.update((notes) => [note, ...notes]);
+   this.notesService.createNote(dto).subscribe({
 
-        this.closeCreateModal();
-        this.isSaving.set(false);
-      },
+  next: (note) => {
 
-      error: (err) => {
-        console.error(err);
-        this.isSaving.set(false);
-      },
-    });
+    this.notes.update(notes => [note, ...notes]);
+
+    this.toast.success('Note created successfully');
+
+    this.closeCreateModal();
+
+    this.isSaving.set(false);
+
+  },
+
+  error: (err) => {
+
+    console.error(err);
+
+    this.toast.error('Failed to create note');
+
+    this.isSaving.set(false);
+
   }
-  deleteNote(): void {
-    const note = this.selectedNote();
 
-    if (!note) {
-      return;
+});
+
+}
+
+
+async deleteNote(): Promise<void> {
+
+  const note = this.selectedNote();
+
+  if (!note) {
+    return;
+  }
+
+  const confirmed = await this.confirmDialog.confirm({
+    title: 'Delete Note',
+    message: `Are you sure you want to delete "${note.title}"?`,
+    confirmText: 'Delete',
+    cancelText: 'Cancel',
+  });
+
+  if (!confirmed) {
+    return;
+  }
+
+  this.notesService.deleteNote(note.id).subscribe({
+
+    next: () => {
+
+      this.notes.update(notes =>
+        notes.filter(n => n.id !== note.id)
+      );
+
+      this.toast.success('Note deleted successfully');
+
+      this.closeCreateModal();
+
+    },
+
+    error: (err) => {
+
+      console.error(err);
+
+      this.toast.error('Failed to delete note');
+
     }
 
-    const confirmed = confirm(
-      `Are you sure you want to delete "${note.title}"?`,
-    );
+  });
 
-    if (!confirmed) {
-      return;
-    }
+}
 
-    this.notesService.deleteNote(note.id).subscribe({
-      next: () => {
-        this.notes.update((notes) => notes.filter((n) => n.id !== note.id));
-
-        this.closeCreateModal();
-      },
-
-      error: (err) => {
-        console.error(err);
-      },
-    });
-  }
   onSearch(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.search.set(value);
@@ -247,12 +286,16 @@ export class NoteListComponent implements OnInit {
         this.notes.update((notes) =>
           notes.map((n) => (n.id === updatedNote.id ? updatedNote : n)),
         );
+        this.toast.success(
+         updatedNote.pinned ? 'Note pinned successfully' : 'Note unpinned successfully'
+);
 
         this.activeMenuId.set(null);
       },
 
       error: (err) => {
         console.error(err);
+        this.toast.error('Failed to update note');
       },
     });
   }
@@ -267,3 +310,4 @@ export class NoteListComponent implements OnInit {
     this.activeMenuId.set(null);
   }
 }
+

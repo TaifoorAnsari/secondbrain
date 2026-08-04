@@ -19,6 +19,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   notes     Note[]
+  entities   Entity[]
 }
 
 
@@ -34,4 +35,24 @@ model Note {
 
   userId    String
   user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Entity {
+  id          String      @id @default(cuid())
+  name        String
+  type        EntityType
+  description String?
+
+  avatar      String?
+
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+enum EntityType {
+  PERSON
+  COMPANY
 }

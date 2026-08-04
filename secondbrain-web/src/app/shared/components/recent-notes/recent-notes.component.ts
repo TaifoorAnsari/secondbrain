@@ -1,4 +1,5 @@
 import { Component, input } from '@angular/core';
+import { RouterLink, RouterLinkActive  } from '@angular/router';
 
 export interface RecentNote {
 
@@ -15,7 +16,7 @@ export interface RecentNote {
 @Component({
   selector: 'app-recent-notes',
   standalone: true,
-  imports: [],
+  imports: [RouterLink, RouterLinkActive],
   templateUrl: './recent-notes.component.html',
   styleUrl: './recent-notes.component.scss'
 })

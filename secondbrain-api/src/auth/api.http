@@ -1,16 +1,12 @@
 
 @baseUrl = http://localhost:3000
-@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbXM3Njl2djMwMDAwdDU2czZoM2M2dnV2IiwiZW1haWwiOiJ0ZXN0MUB0ZXN0LmNvbSIsImlhdCI6MTc4NTczNzUyOSwiZXhwIjoxNzg1ODIzOTI5fQ.bX68FMmf04mItUqGG_0R_PiXs9SF80Z8_CJQh8SsXOc
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbXM3Njl2djMwMDAwdDU2czZoM2M2dnV2IiwiZW1haWwiOiJ0ZXN0MUB0ZXN0LmNvbSIsImlhdCI6MTc4NTczNzUyOSwiZXhwIjoxNzg1ODIzOTI5fQ.bX68FMmf04mItUqGG_0R_PiXs9SF80Z8_CJQh8SsXOc
 
 
 
-PUT http://localhost:3000/users/cms769vv30000t56s6h3c6vuv
-Content-Type: application/json
 
-{
-  "fullName": "Shaaf Ansari",
-  "username": "shaaf",
-  "phone": "9876543210",
-  "bio": "Building SecondMind",
-  "avatar": ""
-}
+
+DELETE {{baseUrl}}/entities/cmsd9wwsq0001t50gobm1je9m
+Authorization: Bearer {{token}}
+
+

@@ -11,23 +11,28 @@
     </button>
 
     <div class="profile-wrapper">
-      <button class="profile" (click)="toggleMenu()">
-        <div class="avatar">
-          {{ initials() }}
-        </div>
-
-        <div class="profile-info">
-          <span class="name">
-            {{ user()?.fullName }}
-          </span>
-
-          <span class="role">
-            {{ user()?.email }}
-          </span>
-        </div>
-
-        <span class="material-symbols-rounded"> expand_more </span>
-      </button>
+      @if(!user()) {
+        <button class="login" (click)="loginToAccount()">login</button>   
+      }
+      @else {
+        <button class="profile" (click)="toggleMenu()">
+          <div class="avatar">
+            {{ initials() }}
+          </div>
+  
+          <div class="profile-info">
+            <span class="name">
+              {{ user()?.fullName }}
+            </span>
+  
+            <span class="role">
+              {{ user()?.email }}
+            </span>
+          </div>
+  
+          <span class="material-symbols-rounded"> expand_more </span>
+        </button>
+      }
 
       @if (menuOpen()) {
         <div class="profile-menu">

@@ -111,7 +111,7 @@
 }
 
 .name {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .role {
@@ -204,4 +204,14 @@
 
 .logout {
   color: #dc2626;
+}
+
+.login {
+  width: 100px;
+  height: 46px;
+  border: none;
+  border-radius: 14px;
+  background: white;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
 }

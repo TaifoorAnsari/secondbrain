@@ -249,7 +249,7 @@ transform:scale(1.02);
   color: white;
 
   font-size: 17px;
-  font-weight: 600;
+  font-weight: 500;
 
   cursor: pointer;
 
@@ -408,5 +408,11 @@ button:disabled {
   transform: none !important;
   box-shadow: none !important;
 }
+
+.app-logo {
+  height:40px;
+  width:40px;
+}
+
 
 

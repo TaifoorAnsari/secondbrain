@@ -40,4 +40,9 @@ export class HeaderComponent {
     this.menuOpen.set(false);
     this.router.navigate(['/profile']);
   }
+
+  loginToAccount() {
+    console.log(this.user(),"current user ")
+    this.router.navigate(['/login']);
+  }
 }

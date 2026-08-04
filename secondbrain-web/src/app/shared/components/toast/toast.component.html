@@ -1,0 +1,33 @@
+<div class="toast-container">
+  @for (toast of toastService.toasts(); track toast.id) {
+    <div
+      class="toast"
+      [class.success]="toast.type === 'success'"
+      [class.error]="toast.type === 'error'"
+      [class.info]="toast.type === 'info'"
+      [class.warning]="toast.type === 'warning'"
+    >
+      <span class="icon">
+        @switch (toast.type) {
+          @case ("success") {
+            ✓
+          }
+
+          @case ("error") {
+            ✕
+          }
+
+          @case ("warning") {
+            ⚠
+          }
+
+          @default {
+            ℹ
+          }
+        }
+      </span>
+
+      <span>{{ toast.message }}</span>
+    </div>
+  }
+</div>

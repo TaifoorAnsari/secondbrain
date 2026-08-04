@@ -42,16 +42,17 @@ export const routes: Routes = [
         path: 'settings',
         component: SettingsComponent,
       },
-    ],
-  },
-  {
+        {
+        path: 'notes',
+        component: NoteListComponent
+      },
+      {
     path: 'profile',
     loadComponent: () =>
         import('./features/profile/profile.component')
             .then(m => m.ProfileComponent),
+      },
+    ],
   },
-  {
-  path: 'notes',
-  component: NoteListComponent
-}
+  
 ];

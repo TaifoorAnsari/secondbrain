@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { NotesModule } from './notes/notes.module';
+import { EntitiesModule } from './entities/entities.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { NotesModule } from './notes/notes.module';
     UsersModule,
     DashboardModule,
     NotesModule,
+    EntitiesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
