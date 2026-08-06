@@ -1,0 +1,339 @@
+:host {
+  display: block;
+  padding: 35px;
+  background: #f4f7fc;
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+}
+
+.diary-list-page {
+  max-width: 1000px;
+  margin: auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: #1f2937;
+  }
+
+  p {
+    margin-top: 8px;
+    color: #6b7280;
+  }
+}
+
+.new-entry-btn,
+.create-btn {
+  text-decoration: none;
+  background: #2563eb;
+  color: white;
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: .25s;
+
+  &:hover {
+    background: #1d4ed8;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  background: white;
+  padding: 70px;
+  border-radius: 18px;
+
+  .emoji {
+    font-size: 60px;
+    margin-bottom: 20px;
+  }
+
+  h2 {
+    margin-bottom: 10px;
+  }
+
+  p {
+    color: #6b7280;
+    margin-bottom: 30px;
+  }
+}
+
+.toolbar {
+  background: white;
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, .06);
+}
+
+.search-box input {
+
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  font-size: 15px;
+  transition: .2s;
+}
+
+.search-box input:focus {
+
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, .12);
+}
+
+.toolbar-bottom {
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.entry-count {
+
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.filter-row {
+
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-group label {
+
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.filter-group input,
+.filter-group select {
+
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  min-width: 170px;
+}
+
+.clear-btn {
+
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+// .clear-btn:hover{
+
+//   background:#dc2626;
+// }
+
+.apply-btn,
+
+
+
+.clear-btn:hover {
+  background: #d1d5db;
+}
+
+.diary-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.diary-card {
+
+  background: white;
+  border-radius: 18px;
+
+  padding: 22px;
+
+  cursor: pointer;
+
+  transition:
+    transform .25s,
+    box-shadow .25s;
+
+  box-shadow: 0 5px 18px rgba(0, 0, 0, .06);
+}
+
+.diary-card:hover {
+
+  transform: translateY(-6px);
+
+  box-shadow: 0 15px 35px rgba(0, 0, 0, .12);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mood {
+  font-size: 28px;
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 6px 14px;
+
+  border-radius: 999px;
+
+  font-weight: 600;
+
+  font-size: 13px;
+}
+
+.happy {
+
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.excited {
+
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.calm {
+
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.neutral {
+
+  background: #e5e7eb;
+  color: #4b5563;
+}
+
+.sad {
+
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.angry {
+
+  background: #fecaca;
+  color: #991b1b;
+}
+
+.menu-container {
+  position: relative;
+}
+
+.menu-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  font-size: 22px;
+  transition: .2s;
+}
+
+.menu-btn:hover {
+  background: #f3f4f6;
+}
+
+.menu {
+  position: absolute;
+  right: 0;
+  top: 42px;
+  min-width: 150px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .12);
+  overflow: hidden;
+  z-index: 100;
+}
+
+.menu button {
+  width: 100%;
+  padding: 12px 18px;
+  border: none;
+  background: white;
+  text-align: left;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.menu button:hover {
+  background: #f8fafc;
+}
+
+.menu .delete:hover {
+  color: #dc2626;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18px;
+}
+
+.date {
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+.preview {
+
+  color: #4b5563;
+  line-height: 1.7;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+}
+@keyframes fadeUp{
+
+  from{
+
+    opacity:0;
+
+    transform:translateY(15px);
+  }
+
+  to{
+
+    opacity:1;
+
+    transform:translateY(0);
+  }
+
+}
+
+.diary-card{
+
+  animation:fadeUp .35s ease;
+}

@@ -1,0 +1,165 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #f4f7fc;
+  padding: 35px;
+  font-family: "Poppins", sans-serif;
+}
+
+.diary-page {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+  }
+
+  p {
+    margin-top: 8px;
+    color: #6b7280;
+    font-size: 15px;
+  }
+}
+
+.diary-card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 32px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+
+  h2 {
+    margin-bottom: 24px;
+    color: #374151;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+
+  label {
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  input,
+  textarea {
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 15px;
+    transition: 0.25s;
+    outline: none;
+    background: white;
+  }
+
+  input:focus,
+  textarea:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 220px;
+    line-height: 1.6;
+  }
+
+  small {
+    margin-top: 10px;
+    color: #6b7280;
+  }
+}
+
+.mood-list {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.mood-btn {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  background: #f3f4f6;
+  cursor: pointer;
+  font-size: 24px;
+  transition: all 0.25s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    background: #eef4ff;
+  }
+
+  &.selected {
+    border-color: #2563eb;
+    background: #dbeafe;
+    transform: scale(1.08);
+  }
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.cancel-btn,
+.save-btn {
+  border: none;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.cancel-btn {
+  background: #e5e7eb;
+  color: #374151;
+
+  &:hover {
+    background: #d1d5db;
+  }
+}
+
+.save-btn {
+  background: #2563eb;
+  color: white;
+
+  &:hover {
+    background: #1d4ed8;
+  }
+}
+
+@media (max-width: 768px) {
+  :host {
+    padding: 20px;
+  }
+
+  .diary-card {
+    padding: 22px;
+  }
+
+  .button-group {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+}
