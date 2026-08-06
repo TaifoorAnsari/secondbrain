@@ -12,6 +12,8 @@ import { LoginComponent } from './features/auth/login/login.component';
 import { SignupComponent } from './features/auth/signup/signup.component';
 
 import { NoteListComponent } from './features/notes/pages/notes-list/notes-list.component';
+import { DiaryComponent } from './features/diary/diary.component';
+import { DiaryListComponent } from './features/diary/diary-list/diary-list.component';
 
 export const routes: Routes = [
   {
@@ -29,6 +31,18 @@ export const routes: Routes = [
       {
         path: '',
         component: DashboardComponent,
+      },
+      {
+        path: 'diary',
+        component: DiaryListComponent
+      },
+      {
+        path: 'diary/edit/:id',
+        component: DiaryComponent
+      },
+      {
+        path: 'diary/new',
+        component: DiaryComponent
       },
       {
         path: 'timeline',
@@ -54,31 +68,41 @@ export const routes: Routes = [
         component: NoteListComponent,
       },
       {
-  path: 'timeline',
-  component: TimelineComponent,
-},
-{
-  path: 'timeline/:id',
-  loadComponent: () =>
-    import('./features/timeline/timeline-detail/timeline-detail.component')
-      .then(m => m.TimelineDetailComponent),
-},
+        path: 'timeline',
+        component: TimelineComponent,
+      },
+      {
+        path: 'timeline/:id',
+        loadComponent: () =>
+          import('./features/timeline/timeline-detail/timeline-detail.component')
+            .then(m => m.TimelineDetailComponent),
+      },
       {
         path: 'settings',
         component: SettingsComponent,
       },
       {
-  path: 'timeline/:id/edit',
-  loadComponent: () =>
-    import('./features/timeline/edit-timeline/edit-timeline.component')
-      .then(m => m.EditTimelineComponent),
-},
+        path: 'timeline/:id/edit',
+        loadComponent: () =>
+          import('./features/timeline/edit-timeline/edit-timeline.component')
+            .then(m => m.EditTimelineComponent),
+      },
       {
         path: 'profile',
         loadComponent: () =>
           import('./features/profile/profile.component').then(
             (m) => m.ProfileComponent,
           ),
+      },
+      {
+        path: 'notes',
+        component: NoteListComponent
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./features/profile/profile.component')
+        .then(m => m.ProfileComponent),
       },
     ],
   },
