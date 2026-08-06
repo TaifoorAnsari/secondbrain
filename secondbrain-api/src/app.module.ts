@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { NotesModule } from './notes/notes.module';
 import { EntitiesModule } from './entities/entities.module';
+import { TimelineModule } from './timeline/timeline.module';
 
 @Module({
   imports: [
@@ -20,7 +21,9 @@ import { EntitiesModule } from './entities/entities.module';
     DashboardModule,
     NotesModule,
     EntitiesModule,
+    TimelineModule,
   ],
+  
   controllers: [AppController],
   providers: [AppService],
 })

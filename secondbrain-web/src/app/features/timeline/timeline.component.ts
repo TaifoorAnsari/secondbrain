@@ -1,73 +1,382 @@
-import { Component, inject } from '@angular/core';
+import { Component, HostListener, OnInit, computed, inject, signal } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../core/services/auth.service';
+
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+
+import { TimelineService } from '../../core/services/timeline.service';
+import { EntitiesService } from '../../core/services/entities.service';
+import { ToastService } from '../../core/services/toast.service';
+
+import { Timeline } from '../../core/models/timeline.model';
+import { Entity } from '../../core/models/entity.model';
+import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-timeline',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './timeline.component.html',
-  styleUrls: ['./timeline.component.scss']
+  styleUrls: ['./timeline.component.scss'],
 })
-export class TimelineComponent {
+export class TimelineComponent implements OnInit {
+  private timelineService = inject(TimelineService);
 
-  private authService = inject(AuthService);
+  private entitiesService = inject(EntitiesService);
 
-  ngOnInit() {
-  this.authService.getProfile().subscribe({
-    next: (user) => {
-      console.log('Logged-in User:', user);
-    },
-    error: (err) => {
-      console.error(err);
-    },
+  private fb = inject(FormBuilder);
+
+  private toast = inject(ToastService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+  timelines = signal<Timeline[]>([]);
+
+  entities = signal<Entity[]>([]);
+
+  isLoading = signal(false);
+
+  showModal = signal(false);
+
+  isSaving = signal(false);
+
+  entitySearch = signal('');
+
+selectedEntityIds = signal<string[]>([]);
+
+  selectedTimeline = signal<Timeline | null>(null);
+  activeMenuId = signal<string | null>(null);
+
+  isEditMode = computed(() => this.selectedTimeline() !== null);
+
+  filteredEntities = computed(() => {
+
+  const search = this.entitySearch().toLowerCase();
+
+  return this.entities().filter(entity =>
+
+    entity.name
+      .toLowerCase()
+      .includes(search),
+
+  );
+
+});
+
+selectedEntities = computed(() => {
+
+  return this.entities().filter(entity =>
+
+    this.selectedEntityIds().includes(entity.id),
+
+  );
+
+});
+
+  timelineForm = this.fb.nonNullable.group({
+    title: ['', [Validators.required, Validators.maxLength(150)]],
+
+    description: ['', [Validators.required, Validators.maxLength(750)]],
+
+    eventDate: ['', Validators.required],
+
+    entityIds: [[] as string[], Validators.required],
   });
-}
-  timeline = [
-    {
-      title: 'Meeting with Rahul',
-      type: 'meeting',
-      icon: '👤',
-      label: 'Meeting',
-      datetime: 'Today • 09:30 AM',
-      description: 'Met Rahul while purchasing groceries. Rahul informed me about a Townhall interview scheduled for Monday where I need to interview 50 students.',
-      tags: ['Meeting', 'Work', 'Important']
-    },
-    {
-      title: 'Townhall Interview',
-      type: 'event',
-      icon: '📅',
-      label: 'Event',
-      datetime: 'Tomorrow • 10:00 AM',
-      description: 'Reminder created for Interview of 50 students. Notification scheduled for Morning and Night.',
-      tags: ['Reminder', 'Interview']
-    },
-    {
-      title: 'Narendra Modi Notes',
-      type: 'note',
-      icon: '📝',
-      label: 'Note',
-      datetime: '15 Aug 2020',
-      description: 'Added speech regarding "Acche Din" with complete description and references.',
-      tags: ['Politics', 'Speech', 'Notes']
-    },
-    {
-      title: 'ABC Technologies',
-      type: 'company',
-      icon: '🏢',
-      label: 'Company',
-      datetime: '20 July 2026',
-      description: 'Company profile created with website, contacts and meeting history.',
-      tags: ['Company', 'Business']
-    },
-    {
-      title: 'Diary Entry',
-      type: 'diary',
-      icon: '📖',
-      label: 'Diary',
-      datetime: 'Yesterday • 08:45 PM',
-      description: 'Today was productive. Completed Second Mind Dashboard, backend planning and authentication.',
-      tags: ['Diary', 'Personal']
+
+ngOnInit(): void {
+
+  this.loadTimelines();
+
+  this.loadEntities();
+
+  this.route.queryParams.subscribe(params => {
+
+    const editId = params['edit'];
+
+    if (!editId) {
+
+      return;
+
     }
+
+    this.timelineService
+      .getTimeline(editId)
+      .subscribe({
+
+        next: timeline => {
+
+          this.openEditModal(timeline);
+
+        },
+
+        error: err => {
+
+          console.error(err);
+
+        },
+
+      });
+
+  });
+
+}
+
+  loadTimelines(): void {
+    this.isLoading.set(true);
+
+    this.timelineService.getTimelines().subscribe({
+      next: (timelines) => {
+        console.log('Timelines loaded:11111', timelines);
+        this.timelines.set(timelines);
+
+        this.isLoading.set(false);
+      },
+
+      error: (err) => {
+        console.error(err);
+
+        this.isLoading.set(false);
+      },
+    });
+  }
+
+  loadEntities(): void {
+    this.entitiesService.getEntities().subscribe({
+      next: (entities) => {
+        this.entities.set(entities);
+      },
+
+      error: (err) => {
+        console.error(err);
+      },
+    });
+  }
+
+  onEntitySearch(event: Event,): void {
+
+  const input =
+    event.target as HTMLInputElement;
+
+  this.entitySearch.set(
+    input.value,
+  );
+
+}
+
+isSelected(
+  id: string,
+): boolean {
+
+  return this.selectedEntityIds()
+    .includes(id);
+
+}
+
+toggleEntity(
+  entity: Entity,
+): void {
+
+  const ids = [
+    ...this.selectedEntityIds(),
   ];
+
+  const index = ids.indexOf(entity.id);
+
+  if (index > -1) {
+
+    ids.splice(index, 1);
+
+  } else {
+
+    ids.push(entity.id);
+
+  }
+
+  this.selectedEntityIds.set(ids);
+
+  this.timelineForm.patchValue({
+
+    entityIds: ids,
+
+  });
+
+}
+
+removeEntity(
+  id: string,
+): void {
+
+  const ids = this.selectedEntityIds()
+    .filter(x => x !== id);
+
+  this.selectedEntityIds.set(ids);
+
+  this.timelineForm.patchValue({
+
+    entityIds: ids,
+
+  });
+
+}
+
+  openModal(): void {
+    this.selectedTimeline.set(null);
+
+    this.timelineForm.reset({
+      title: '',
+
+      description: '',
+
+      eventDate: '',
+
+      entityIds: [],
+    });
+
+    this.entitySearch.set('');
+
+this.selectedEntityIds.set([]);
+
+    this.showModal.set(true);
+  }
+  openTimeline(
+  timeline: Timeline,
+): void {
+
+  this.router.navigate([
+    '/timeline',
+    timeline.id,
+  ]);
+
+}
+
+openEditModal(
+  timeline: Timeline,
+): void {
+
+  this.selectedTimeline.set(timeline);
+
+  this.selectedEntityIds.set(
+    timeline.entities.map(
+      entity => entity.entityId,
+    ),
+  );
+
+  this.entitySearch.set('');
+
+  this.timelineForm.patchValue({
+
+    title: timeline.title,
+
+    description: timeline.description,
+
+    eventDate: timeline.eventDate.substring(0, 10),
+
+    entityIds: timeline.entities.map(
+      entity => entity.entityId,
+    ),
+
+  });
+
+  this.showModal.set(true);
+
+}
+
+  saveTimeline(): void {
+    if (this.timelineForm.invalid) {
+      this.timelineForm.markAllAsTouched();
+
+      return;
+    }
+
+    this.isSaving.set(true);
+
+    const dto = this.timelineForm.getRawValue();
+
+    const request = this.isEditMode()
+      ? this.timelineService.updateTimeline(this.selectedTimeline()!.id, dto)
+      : this.timelineService.createTimeline(dto);
+
+    request.subscribe({
+      next: () => {
+        this.toast.success(
+          this.isEditMode()
+            ? 'Timeline updated successfully'
+            : 'Timeline created successfully',
+        );
+
+        this.closeModal();
+
+        this.loadTimelines();
+
+        this.isSaving.set(false);
+      },
+
+      error: (err) => {
+        console.error(err);
+
+        this.toast.error('Failed to save timeline');
+
+        this.isSaving.set(false);
+      },
+    });
+  }
+
+
+  closeModal(): void {
+    this.selectedTimeline.set(null);
+
+    this.showModal.set(false);
+
+    this.entitySearch.set('');
+
+this.selectedEntityIds.set([]);
+
+    this.timelineForm.reset({
+      title: '',
+
+      description: '',
+
+      eventDate: '',
+
+      entityIds: [],
+    });
+  }
+  toggleMenu(
+  id: string,
+  event: MouseEvent,
+): void {
+
+  event.stopPropagation();
+
+  if (this.activeMenuId() === id) {
+
+    this.activeMenuId.set(null);
+
+  } else {
+
+    this.activeMenuId.set(id);
+
+  }
+
+}
+
+@HostListener('document:click')
+closeMenu(): void {
+
+  this.activeMenuId.set(null);
+
+}
+
+deleteTimeline(
+  timeline: Timeline,
+): void {
+
+  // delete logic here
+
+}
+
+goBack() {
+  this.router.navigate(['/timeline']);
+}
 }

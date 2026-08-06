@@ -1,12 +1,6 @@
 
 @baseUrl = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbXM3Njl2djMwMDAwdDU2czZoM2M2dnV2IiwiZW1haWwiOiJ0ZXN0MUB0ZXN0LmNvbSIsImlhdCI6MTc4NTczNzUyOSwiZXhwIjoxNzg1ODIzOTI5fQ.bX68FMmf04mItUqGG_0R_PiXs9SF80Z8_CJQh8SsXOc
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbXM3Njl2djMwMDAwdDU2czZoM2M2dnV2IiwiZW1haWwiOiJ0ZXN0MUB0ZXN0LmNvbSIsImlhdCI6MTc4NTkzNDA1NCwiZXhwIjoxNzg2MDIwNDU0fQ.0Mg0_Fqo9lf1E55Ln_T1K_eeqnYYqcrWY0AzL0QISSY
 
-
-
-
-
-DELETE {{baseUrl}}/entities/cmsd9wwsq0001t50gobm1je9m
+GET http://localhost:3000/entities/cmseio3vc0001t548ztrccunk/profile
 Authorization: Bearer {{token}}
-
-

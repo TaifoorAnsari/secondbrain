@@ -1,0 +1,181 @@
+<div class="detail-page">
+
+  <button
+    class="back-btn"
+    (click)="goBack()"
+  >
+    ← Back to Timeline
+  </button>
+
+  @if (isLoading()) {
+
+    <div class="loading-card">
+
+      <h2>Loading timeline...</h2>
+
+    </div>
+
+  }
+
+  @else if (timeline()) {
+
+    <div class="hero-card">
+
+      <div class="date-box">
+
+        <span class="day">
+
+          {{ timeline()!.eventDate | date:'dd' }}
+
+        </span>
+
+        <span class="month">
+
+          {{ timeline()!.eventDate | date:'MMM' }}
+
+        </span>
+
+      </div>
+
+      <div class="hero-content">
+
+        <h1>
+
+          {{ timeline()!.title }}
+
+        </h1>
+
+        <p>
+
+          {{ timeline()!.description }}
+
+        </p>
+
+      </div>
+
+    </div>
+
+        <div class="info-grid">
+
+      <div class="info-card">
+
+        <h2>
+
+          Event Information
+
+        </h2>
+
+        <div class="info-row">
+
+          <span>Date</span>
+
+          <strong>
+
+            {{ timeline()!.eventDate | date:'dd MMM yyyy' }}
+
+          </strong>
+
+        </div>
+
+        <div class="info-row">
+
+          <span>Created</span>
+
+          <strong>
+
+            {{ timeline()!.createdAt | date:'dd MMM yyyy, hh:mm a' }}
+
+          </strong>
+
+        </div>
+
+        @if (
+          timeline()!.createdAt !== timeline()!.updatedAt
+        ) {
+
+          <div class="info-row">
+
+            <span>Updated</span>
+
+            <strong>
+
+              {{ timeline()!.updatedAt | date:'dd MMM yyyy, hh:mm a' }}
+
+            </strong>
+
+          </div>
+
+        }
+
+      </div>
+
+      <div class="info-card">
+
+        <h2>
+
+          Linked Entities
+
+        </h2>
+
+        <div class="entity-list">
+
+          @for (
+            item of timeline()!.entities;
+            track item.entity.id
+          ) {
+
+          <div
+  class="entity-chip"
+  (click)="openEntity(item.entity.id)"
+>
+
+              <span>
+
+                {{ item.entity.type === 'PERSON'
+                  ? '👤'
+                  : '🏢'
+                }}
+
+              </span>
+
+              <span>
+
+                {{ item.entity.name }}
+
+              </span>
+
+            </div>
+
+          }
+
+        </div>
+
+      </div>
+
+    </div>
+
+        <div class="actions">
+
+      <button
+        class="edit-btn"
+        (click)="editTimeline()"
+      >
+
+        ✏️ Edit Timeline
+
+      </button>
+
+      <button
+        class="delete-btn"
+        (click)="deleteTimeline()"
+      >
+
+        🗑 Delete Timeline
+
+      </button>
+
+    </div>
+
+  }
+
+</div>

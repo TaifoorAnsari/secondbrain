@@ -7,30 +7,34 @@
       <p>Manage your people and companies in one place.</p>
     </div>
 
-    <button class="add-btn">+ Add Entity</button>
+    <button class="add-btn" (click)="openCreateModal()">+ Add Entity</button>
   </div>
 
   <!-- Search -->
 
   <div class="search-section">
-    <input type="text" placeholder="Search person or company..." />
+   <input
+  type="text"
+  placeholder="Search person or company..."
+  [formControl]="searchControl"
+/>
   </div>
 
   <!-- Stats -->
 
   <div class="stats">
     <div class="stat-card">
-      <h2>{{ peopleCount }}</h2>
+      <h2>{{ peopleCount() }}</h2>
       <span>People</span>
     </div>
 
     <div class="stat-card">
-      <h2>{{ companyCount }}</h2>
+      <h2>{{ companyCount() }}</h2>
       <span>Companies</span>
     </div>
 
     <div class="stat-card">
-      <h2>{{ totalEntities }}</h2>
+      <h2>{{ totalEntities() }}</h2>
       <span>Total</span>
     </div>
   </div>
@@ -38,20 +42,230 @@
   <!-- Grid -->
 
   <div class="entity-grid">
-    <div class="entity-card" *ngFor="let entity of entities">
-      <div class="avatar">
-        {{ entity.name.charAt(0) }}
-      </div>
+<div class="entity-card" *ngFor="let entity of entities()">
 
-      <div class="content">
-        <h3>{{ entity.name }}</h3>
+  <div class="card-top">
 
-        <p>{{ entity.type }}</p>
+    <div class="menu-wrapper">
 
-        <small>{{ entity.description }}</small>
-      </div>
+      <button
+        class="menu-btn"
+        (click)="toggleMenu(entity.id, $event)"
+      >
+        ⋮
+      </button>
 
-      <button class="view-btn">View</button>
+      @if (activeMenuId() === entity.id) {
+
+        <div
+          class="menu"
+          (click)="$event.stopPropagation()"
+        >
+
+          <button (click)="openEditModal(entity)">
+            ✏️ Edit
+          </button>
+
+          <button
+            class="danger"
+            (click)="deleteEntity(entity)"
+          >
+            🗑 Delete
+          </button>
+
+        </div>
+
+      }
+
     </div>
+
+  </div>
+
+  <div class="avatar-name-type">
+
+    <div class="avatar">
+  
+      {{ entity.name.charAt(0) }}
+  
+    </div>
+  
+    <div>
+
+      <h3>
+    
+        {{ entity.name }}
+    
+      </h3>
+    
+      <span class="entity-badge">
+    
+        {{ entity.type === 'PERSON'
+            ? '👤 Person'
+            : '🏢 Company'
+        }}
+    
+      </span>
+    </div>
+
+  </div>
+
+
+  <p class="description">
+
+    {{ entity.description || 'No description available.' }}
+
+  </p>
+
+  <button
+  class="view-btn"
+  (click)="viewProfile(entity)"
+>
+  View Profile →
+</button>
+
+
+
+</div>
   </div>
 </div>
+
+@if (showCreateModal()) {
+
+<div class="modal-overlay" (click)="closeCreateModal()">
+
+  <div class="modal" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+
+      <h2>
+        {{ isEditMode() ? 'Edit Entity' : 'Create Entity' }}
+      </h2>
+
+      <button
+        class="close-btn"
+        type="button"
+        (click)="closeCreateModal()">
+        ✕
+      </button>
+
+    </div>
+
+    <form
+      [formGroup]="entityForm"
+      (ngSubmit)="saveEntity()"
+    >
+
+      <!-- Name -->
+
+      <div class="form-group">
+
+        <label>Name</label>
+
+        <input
+          type="text"
+          formControlName="name"
+          placeholder="Enter entity name"
+        />
+
+        @if (entityForm.controls.name.touched &&
+             entityForm.controls.name.invalid) {
+
+          <small class="error">
+
+            @if (entityForm.controls.name.errors?.['required']) {
+              Name is required.
+            }
+
+            @if (entityForm.controls.name.errors?.['maxlength']) {
+              Maximum 100 characters allowed.
+            }
+
+            @if (entityForm.controls.name.errors?.['duplicate']) {
+              Entity already exists.
+            }
+
+          </small>
+
+        }
+
+      </div>
+
+      <!-- Type -->
+
+      <div class="form-group">
+
+        <label>Type</label>
+
+        <select formControlName="type">
+
+          <option value="PERSON">Person</option>
+
+          <option value="COMPANY">Company</option>
+
+        </select>
+
+      </div>
+
+      <!-- Description -->
+
+      <div class="form-group">
+
+        <label>Description</label>
+
+        <textarea
+          rows="3"
+          formControlName="description"
+          maxlength="50"
+          placeholder="Short description"
+        ></textarea>
+
+        <div class="character-count">
+             {{ entityForm.controls.description.value.length }}/50
+        </div>
+
+        @if (entityForm.controls.description.touched &&
+             entityForm.controls.description.invalid) {
+
+          <small class="error">
+            Maximum 250 characters allowed.
+          </small>
+
+        }
+
+      </div>
+
+      <!-- Buttons -->
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="cancel-btn"
+          (click)="closeCreateModal()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="save-btn"
+          [disabled]="isSaving()"
+        >
+          {{
+            isSaving()
+              ? 'Saving...'
+              : (isEditMode()
+                  ? 'Update Entity'
+                  : 'Create Entity')
+          }}
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+}
