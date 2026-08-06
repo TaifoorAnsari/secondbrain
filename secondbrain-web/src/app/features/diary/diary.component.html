@@ -1,1 +1,76 @@
-<p>diary works!</p>
+<div class="diary-page">
+
+  <div class="page-header">
+    <div>
+      <h1>{{ isEditMode ? 'Edit Diary' : 'Write Diary' }}</h1>
+      <p>Capture your thoughts, memories and reflections.</p>
+    </div>
+  </div>
+
+  <div class="diary-card">
+
+    <h2>
+      {{ isEditMode ? '✏️ Edit Diary Entry' : '📝 New Diary Entry' }}
+    </h2>
+
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" placeholder="Give your diary entry a title..." [(ngModel)]="diary.title">
+    </div>
+
+    <div class="form-group">
+      <label>Date</label>
+      <input type="date" [(ngModel)]="diary.date">
+    </div>
+
+    <div class="form-group">
+      <label>How are you feeling today?</label>
+
+      <div class="mood-list">
+
+        @for (mood of moods; track mood.value) {
+
+        <button type="button" class="mood-btn" [class.selected]="selectedMood() === mood.value"
+          (click)="selectMood(mood.value)">
+
+          {{ mood.emoji }}
+
+        </button>
+
+        }
+
+      </div>
+
+      <small>Selected: {{ selectedMood() }}</small>
+
+    </div>
+
+    <div class="form-group">
+
+      <label>Today's Reflection</label>
+
+      <textarea rows="10" placeholder="What's on your mind today?" [(ngModel)]="diary.content">
+
+      </textarea>
+
+    </div>
+
+    <div class="button-group">
+
+      <button class="cancel-btn" (click)="cancel()">
+
+        Cancel
+
+      </button>
+
+      <button class="save-btn" (click)="saveDiary()">
+
+        {{ isEditMode ? 'Update Entry' : 'Save Entry' }}
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

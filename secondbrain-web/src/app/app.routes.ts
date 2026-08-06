@@ -8,6 +8,8 @@ import { SettingsComponent } from './features/settings/settings.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { SignupComponent } from './features/auth/signup/signup.component';
 import { NoteListComponent } from './features/notes/pages/notes-list/notes-list.component';
+import { DiaryComponent } from './features/diary/diary.component';
+import { DiaryListComponent } from './features/diary/diary-list/diary-list.component';
 
 export const routes: Routes = [
   {
@@ -27,6 +29,18 @@ export const routes: Routes = [
         component: DashboardComponent,
       },
       {
+        path: 'diary',
+        component: DiaryListComponent
+      },
+      {
+        path: 'diary/edit/:id',
+        component: DiaryComponent
+      },
+      {
+        path: 'diary/new',
+        component: DiaryComponent
+      },
+      {
         path: 'timeline',
         component: TimelineComponent,
       },
@@ -42,17 +56,17 @@ export const routes: Routes = [
         path: 'settings',
         component: SettingsComponent,
       },
-        {
+      {
         path: 'notes',
         component: NoteListComponent
       },
       {
-    path: 'profile',
-    loadComponent: () =>
-        import('./features/profile/profile.component')
+        path: 'profile',
+        loadComponent: () =>
+          import('./features/profile/profile.component')
             .then(m => m.ProfileComponent),
       },
     ],
   },
-  
+
 ];
