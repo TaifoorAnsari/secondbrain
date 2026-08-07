@@ -226,27 +226,7 @@
   cursor: pointer;
 }
 
-/* ===========================
-   SECURITY
-=========================== */
 
-.security-btn {
-  width: 100%;
-  padding: 15px;
-  margin-bottom: 15px;
-  border: none;
-  border-radius: 14px;
-  background: #eef2ff;
-  color: #4f46e5;
-  font-weight: 500;
-  cursor: pointer;
-  transition: .3s;
-}
-
-.security-btn:hover {
-  background: #4f46e5;
-  color: white;
-}
 
 .logout {
   background: #fee2e2;
