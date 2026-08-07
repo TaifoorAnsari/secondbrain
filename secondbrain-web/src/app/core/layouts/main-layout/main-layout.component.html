@@ -1,9 +1,23 @@
 <div class="layout">
-  <aside class="sidebar">
+
+  <!-- Overlay (only visible on mobile when sidebar is open) -->
+  @if (layout.sidebarOpen()) {
+    <div
+      class="overlay"
+      (click)="layout.closeSidebar()">
+    </div>
+  }
+
+  <aside
+    class="sidebar"
+    [class.open]="layout.sidebarOpen()">
+
     <app-sidebar />
+
   </aside>
 
   <div class="content">
+
     <header class="header">
       <app-header />
     </header>
@@ -11,5 +25,7 @@
     <main class="page">
       <router-outlet />
     </main>
+
   </div>
+
 </div>

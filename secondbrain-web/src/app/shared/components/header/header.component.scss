@@ -215,3 +215,47 @@
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
 }
+
+
+.header-container{
+
+  display:flex;
+  align-items:center;
+  gap:16px;
+  width:100%;
+}
+
+.menu-btn{
+
+  display:none;
+
+  width:42px;
+  height:42px;
+
+  border:none;
+
+  background:white;
+
+  border-radius:10px;
+
+  cursor:pointer;
+
+  font-size:22px;
+
+  box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+@media (max-width:768px){
+
+  .menu-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  input{
+
+    flex:1;
+  }
+
+}

@@ -1,6 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { LayoutService } from '../../../core/services/layout.service';
 
 @Component({
   selector: 'app-header',
@@ -9,7 +10,7 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
-
+  layout = inject(LayoutService);
   private authService = inject(AuthService);
   private router = inject(Router);
 

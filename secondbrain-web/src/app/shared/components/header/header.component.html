@@ -1,40 +1,46 @@
-<header class="topbar">
-  <div class="search">
-    <span class="material-symbols-rounded"> search </span>
+<div class="header-container">
+  <button class="menu-btn" (click)="layout.toggleSidebar()">
 
-    <input type="text" placeholder="Search notes, entities, events..." />
-  </div>
+    ☰
 
-  <div class="topbar-actions">
-    <button class="icon-btn">
-      <span class="material-symbols-rounded"> notifications </span>
-    </button>
+  </button>
+  <header class="topbar">
+    <div class="search">
+      <span class="material-symbols-rounded"> search </span>
 
-    <div class="profile-wrapper">
-      @if(!user()) {
-        <button class="login" (click)="loginToAccount()">login</button>   
-      }
-      @else {
+      <input type="text" placeholder="Search notes, entities, events..." />
+    </div>
+
+    <div class="topbar-actions">
+      <button class="icon-btn">
+        <span class="material-symbols-rounded"> notifications </span>
+      </button>
+
+      <div class="profile-wrapper">
+        @if(!user()) {
+        <button class="login" (click)="loginToAccount()">login</button>
+        }
+        @else {
         <button class="profile" (click)="toggleMenu()">
           <div class="avatar">
             {{ initials() }}
           </div>
-  
+
           <div class="profile-info">
             <span class="name">
               {{ user()?.fullName }}
             </span>
-  
+
             <span class="role">
               {{ user()?.email }}
             </span>
           </div>
-  
+
           <span class="material-symbols-rounded"> expand_more </span>
         </button>
-      }
+        }
 
-      @if (menuOpen()) {
+        @if (menuOpen()) {
         <div class="profile-menu">
           <div class="menu-user">
             <div class="avatar big">
@@ -70,7 +76,8 @@
             Logout
           </button>
         </div>
-      }
+        }
+      </div>
     </div>
-  </div>
-</header>
+  </header>
+</div>

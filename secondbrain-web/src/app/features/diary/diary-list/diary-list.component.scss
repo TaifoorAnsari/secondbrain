@@ -160,6 +160,7 @@
 .diary-grid {
   display: grid;
   gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
 }
 
 .diary-card {
@@ -167,6 +168,11 @@
   background: white;
   border-radius: 18px;
 
+  width: 100%;
+
+  overflow: hidden;
+
+  word-break: break-word;
   padding: 22px;
 
   cursor: pointer;
@@ -176,6 +182,11 @@
     box-shadow .25s;
 
   box-shadow: 0 5px 18px rgba(0, 0, 0, .06);
+}
+
+.diary-title {
+
+  overflow-wrap: anywhere;
 }
 
 .diary-card:hover {
@@ -267,12 +278,13 @@
   position: absolute;
   right: 0;
   top: 42px;
-  min-width: 150px;
   background: white;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, .12);
   overflow: hidden;
   z-index: 100;
+  min-width: 150px;
+  max-width: 90vw;
 }
 
 .menu button {
@@ -308,32 +320,95 @@
 
   color: #4b5563;
   line-height: 1.7;
-
+  overflow-wrap: anywhere;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 
   overflow: hidden;
 }
-@keyframes fadeUp{
 
-  from{
+@keyframes fadeUp {
 
-    opacity:0;
+  from {
 
-    transform:translateY(15px);
+    opacity: 0;
+
+    transform: translateY(15px);
   }
 
-  to{
+  to {
 
-    opacity:1;
+    opacity: 1;
 
-    transform:translateY(0);
+    transform: translateY(0);
   }
 
 }
 
-.diary-card{
+.diary-card {
 
-  animation:fadeUp .35s ease;
+  animation: fadeUp .35s ease;
+}
+
+
+//for tablets
+
+@media (max-width: 991px) {
+
+  .toolbar {
+    padding: 18px;
+  }
+
+  .toolbar-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .filter-row {
+    width: 100%;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .filter-group {
+    width: 100%;
+  }
+
+  .filter-group input,
+  .filter-group select {
+    width: 100%;
+  }
+
+}
+
+//for mobile
+
+@media (max-width: 767px) {
+
+  .toolbar {
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  .search-box input {
+    font-size: 14px;
+  }
+
+  .clear-btn {
+    width: 100%;
+  }
+  .menu-btn{
+
+  width:42px;
+
+  height:42px;
+}
+
+.menu button{
+
+  padding:14px 18px;
+}
+
 }
