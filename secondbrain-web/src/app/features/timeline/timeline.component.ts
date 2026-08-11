@@ -50,15 +50,24 @@ selectedEntityIds = signal<string[]>([]);
 
   isEditMode = computed(() => this.selectedTimeline() !== null);
 
-  filteredEntities = computed(() => {
+filteredEntities = computed(() => {
 
-  const search = this.entitySearch().toLowerCase();
+  const search = this.entitySearch()
+    .trim()
+    .toLowerCase();
+
+  // Don't show anything until user types
+  if (!search) {
+
+    return [];
+
+  }
 
   return this.entities().filter(entity =>
 
     entity.name
       .toLowerCase()
-      .includes(search),
+      .includes(search)
 
   );
 
@@ -74,15 +83,39 @@ selectedEntities = computed(() => {
 
 });
 
-  timelineForm = this.fb.nonNullable.group({
-    title: ['', [Validators.required, Validators.maxLength(150)]],
+timelineForm = this.fb.nonNullable.group({
 
-    description: ['', [Validators.required, Validators.maxLength(750)]],
+  title: [
+    '',
+    [
+      Validators.required,
+      Validators.maxLength(150),
+    ],
+  ],
 
-    eventDate: ['', Validators.required],
+  description: [
+    '',
+    [
+      Validators.required,
+      Validators.maxLength(750),
+    ],
+  ],
 
-    entityIds: [[] as string[], Validators.required],
-  });
+  eventDate: [
+    '',
+    Validators.required,
+  ],
+
+  entityIds: [
+    [] as string[],
+    Validators.required,
+  ],
+
+  showOnCalendar: [
+    false,
+  ],
+
+});
 
 ngOnInit(): void {
 
@@ -94,29 +127,55 @@ ngOnInit(): void {
 
     const editId = params['edit'];
 
-    if (!editId) {
+    if (editId) {
+
+      this.timelineService
+        .getTimeline(editId)
+        .subscribe({
+
+          next: timeline => {
+
+            this.openEditModal(timeline);
+
+          },
+
+          error: err => {
+
+            console.error(err);
+
+          },
+
+        });
 
       return;
 
     }
 
-    this.timelineService
-      .getTimeline(editId)
-      .subscribe({
+    const create = params['create'];
 
-        next: timeline => {
+    const entityId = params['entity'];
 
-          this.openEditModal(timeline);
+    if (create) {
 
-        },
+      this.openModal();
 
-        error: err => {
+      if (entityId) {
 
-          console.error(err);
+        this.selectedEntityIds.set([entityId]);
 
-        },
+        this.timelineForm.patchValue({
 
-      });
+          entityIds: [entityId],
+
+        });
+
+      }
+
+    }
+
+    if(params['action'] === 'new') {
+      this.openModal()
+    }
 
   });
 
@@ -201,6 +260,10 @@ toggleEntity(
 
   });
 
+  // Clear search after selection
+
+  this.entitySearch.set('');
+
 }
 
 removeEntity(
@@ -220,25 +283,31 @@ removeEntity(
 
 }
 
-  openModal(): void {
-    this.selectedTimeline.set(null);
+ openModal(): void {
 
-    this.timelineForm.reset({
-      title: '',
+  this.selectedTimeline.set(null);
 
-      description: '',
+  this.timelineForm.reset({
 
-      eventDate: '',
+    title: '',
 
-      entityIds: [],
-    });
+    description: '',
 
-    this.entitySearch.set('');
+    eventDate: '',
 
-this.selectedEntityIds.set([]);
+    entityIds: [],
 
-    this.showModal.set(true);
-  }
+    showOnCalendar: false,
+
+  });
+
+  this.entitySearch.set('');
+
+  this.selectedEntityIds.set([]);
+
+  this.showModal.set(true);
+
+}
   openTimeline(
   timeline: Timeline,
 ): void {
@@ -256,11 +325,11 @@ openEditModal(
 
   this.selectedTimeline.set(timeline);
 
-  this.selectedEntityIds.set(
-    timeline.entities.map(
-      entity => entity.entityId,
-    ),
+  const entityIds = timeline.entities.map(
+    entity => entity.entityId,
   );
+
+  this.selectedEntityIds.set(entityIds);
 
   this.entitySearch.set('');
 
@@ -272,9 +341,9 @@ openEditModal(
 
     eventDate: timeline.eventDate.substring(0, 10),
 
-    entityIds: timeline.entities.map(
-      entity => entity.entityId,
-    ),
+    entityIds: entityIds,
+
+    showOnCalendar: timeline.showOnCalendar,
 
   });
 
@@ -323,25 +392,31 @@ openEditModal(
   }
 
 
-  closeModal(): void {
-    this.selectedTimeline.set(null);
+closeModal(): void {
 
-    this.showModal.set(false);
+  this.selectedTimeline.set(null);
 
-    this.entitySearch.set('');
+  this.showModal.set(false);
 
-this.selectedEntityIds.set([]);
+  this.entitySearch.set('');
 
-    this.timelineForm.reset({
-      title: '',
+  this.selectedEntityIds.set([]);
 
-      description: '',
+  this.timelineForm.reset({
 
-      eventDate: '',
+    title: '',
 
-      entityIds: [],
-    });
-  }
+    description: '',
+
+    eventDate: '',
+
+    entityIds: [],
+
+    showOnCalendar: false,
+
+  });
+
+}
   toggleMenu(
   id: string,
   event: MouseEvent,

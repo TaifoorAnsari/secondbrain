@@ -7,6 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+// ==========================================
+// USER
+// ==========================================
+
 model User {
   id       String  @id @default(cuid())
   fullName String
@@ -20,10 +25,16 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  notes     Note[]
-  entities  Entity[]
-  timelines Timeline[]
+  notes        Note[]
+  entities     Entity[]
+  timelines    Timeline[]
+  diaryEntries DiaryEntry[]
 }
+
+
+// ==========================================
+// NOTE
+// ==========================================
 
 model Note {
   id      String  @id @default(cuid())
@@ -35,8 +46,13 @@ model Note {
   updatedAt DateTime @updatedAt
 
   userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+
+// ==========================================
+// ENTITY
+// ==========================================
 
 model Entity {
   id          String     @id @default(cuid())
@@ -46,7 +62,7 @@ model Entity {
   avatar      String?
 
   userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   timelineEntities TimelineEntity[]
 
@@ -54,21 +70,32 @@ model Entity {
   updatedAt DateTime @updatedAt
 }
 
+
+// ==========================================
+// TIMELINE
+// ==========================================
+
 model Timeline {
   id String @id @default(cuid())
 
-  title       String
-  description String
-  eventDate   DateTime
+  title          String
+  description    String
+  eventDate      DateTime
+  showOnCalendar Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   entities TimelineEntity[]
 }
+
+
+// ==========================================
+// TIMELINE ENTITY
+// ==========================================
 
 model TimelineEntity {
   timelineId String
@@ -80,7 +107,43 @@ model TimelineEntity {
   @@id([timelineId, entityId])
 }
 
+
+// ==========================================
+// DIARY ENTRY
+// ==========================================
+
+model DiaryEntry {
+  id String @id @default(cuid())
+
+  title     String
+  content   String
+  mood      DiaryMood
+  entryDate DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+
+// ==========================================
+// ENUMS
+// ==========================================
+
 enum EntityType {
   PERSON
   COMPANY
+}
+
+enum DiaryMood {
+  HAPPY
+  SAD
+  EXCITED
+  CALM
+  ANGRY
+  ANXIOUS
+  GRATEFUL
+  NEUTRAL
 }

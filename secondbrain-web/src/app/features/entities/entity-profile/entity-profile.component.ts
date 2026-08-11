@@ -127,4 +127,18 @@ export class EntityProfileComponent
 
   }
 
+  createTimeline(): void {
+
+  this.router.navigate(
+    ['/timeline'],
+    {
+      queryParams: {
+        create: true,
+        entity: this.profile()?.entity.id,
+      },
+    },
+  );
+
+}
+
 }

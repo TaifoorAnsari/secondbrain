@@ -1,6 +1,6 @@
 
 @baseUrl = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbXM3Njl2djMwMDAwdDU2czZoM2M2dnV2IiwiZW1haWwiOiJ0ZXN0MUB0ZXN0LmNvbSIsImlhdCI6MTc4NTkzNDA1NCwiZXhwIjoxNzg2MDIwNDU0fQ.0Mg0_Fqo9lf1E55Ln_T1K_eeqnYYqcrWY0AzL0QISSY
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbXM3Njl2djMwMDAwdDU2czZoM2M2dnV2IiwiZW1haWwiOiJ0ZXN0MUB0ZXN0LmNvbSIsImlhdCI6MTc4NjM1ODg3OCwiZXhwIjoxNzg2NDQ1Mjc4fQ.Vm9-Yk0eOARcUnqPSuJfSqne0d_9HMTm1W3vVmfqSGo
 
-GET http://localhost:3000/entities/cmseio3vc0001t548ztrccunk/profile
+GET http://localhost:3000/diary
 Authorization: Bearer {{token}}

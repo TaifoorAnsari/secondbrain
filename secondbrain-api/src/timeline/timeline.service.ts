@@ -1,4 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -11,6 +14,10 @@ export class TimelineService {
   constructor(
     private readonly prisma: PrismaService,
   ) {}
+
+  // ==========================================
+  // CREATE TIMELINE
+  // ==========================================
 
   async create(
     userId: string,
@@ -25,17 +32,24 @@ export class TimelineService {
 
         description: dto.description,
 
-        eventDate: new Date(dto.eventDate),
+        eventDate: new Date(
+          dto.eventDate,
+        ),
+
+        // Calendar
+        showOnCalendar: dto.showOnCalendar,
 
         userId,
 
         entities: {
 
-          create: dto.entityIds.map(entityId => ({
+          create: dto.entityIds.map(
+            entityId => ({
 
-            entityId,
+              entityId,
 
-          })),
+            }),
+          ),
 
         },
 
@@ -58,6 +72,11 @@ export class TimelineService {
     });
 
   }
+
+
+  // ==========================================
+  // GET ALL TIMELINES
+  // ==========================================
 
   async findAll(
     userId: string,
@@ -95,36 +114,42 @@ export class TimelineService {
 
   }
 
+
+  // ==========================================
+  // GET ONE TIMELINE
+  // ==========================================
+
   async findOne(
     id: string,
     userId: string,
   ) {
 
-    const timeline = await this.prisma.timeline.findFirst({
+    const timeline =
+      await this.prisma.timeline.findFirst({
 
-      where: {
+        where: {
 
-        id,
+          id,
 
-        userId,
+          userId,
 
-      },
+        },
 
-      include: {
+        include: {
 
-        entities: {
+          entities: {
 
-          include: {
+            include: {
 
-            entity: true,
+              entity: true,
+
+            },
 
           },
 
         },
 
-      },
-
-    });
+      });
 
     if (!timeline) {
 
@@ -138,6 +163,11 @@ export class TimelineService {
 
   }
 
+
+  // ==========================================
+  // UPDATE TIMELINE
+  // ==========================================
+
   async update(
     id: string,
     userId: string,
@@ -148,6 +178,8 @@ export class TimelineService {
       id,
       userId,
     );
+
+    // Remove existing entity links
 
     await this.prisma.timelineEntity.deleteMany({
 
@@ -177,14 +209,20 @@ export class TimelineService {
           ? new Date(dto.eventDate)
           : undefined,
 
+        // Calendar
+        showOnCalendar:
+          dto.showOnCalendar,
+
         entities: dto.entityIds
           ? {
 
-              create: dto.entityIds.map(entityId => ({
+              create: dto.entityIds.map(
+                entityId => ({
 
-                entityId,
+                  entityId,
 
-              })),
+                }),
+              ),
 
             }
           : undefined,
@@ -208,6 +246,11 @@ export class TimelineService {
     });
 
   }
+
+
+  // ==========================================
+  // DELETE TIMELINE
+  // ==========================================
 
   async remove(
     id: string,

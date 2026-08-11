@@ -3,9 +3,14 @@ export interface Timeline {
   title: string;
   description: string;
   eventDate: string;
+
+  // Calendar
+  showOnCalendar: boolean;
+
   createdAt: string;
   updatedAt: string;
   userId: string;
+
   entities: TimelineEntity[];
 }
 
@@ -28,6 +33,9 @@ export interface CreateTimelineDto {
   description: string;
   eventDate: string;
   entityIds: string[];
+
+  // Calendar
+  showOnCalendar: boolean;
 }
 
 export interface UpdateTimelineDto extends CreateTimelineDto {}

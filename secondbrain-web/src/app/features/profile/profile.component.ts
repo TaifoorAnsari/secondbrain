@@ -1,37 +1,94 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+
 import { CommonModule, DatePipe } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { AuthService } from '../../core/services/auth.service';
+
 import { NotesService } from '../../core/services/notes.service';
+
 import { ModalComponent } from '../../shared/components/modal/modal.component';
+
 import { Note } from '../../core/models/note.model';
+
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-profile',
+
   standalone: true,
+
   imports: [CommonModule, DatePipe, ReactiveFormsModule, ModalComponent],
+
   templateUrl: './profile.component.html',
+
   styleUrl: './profile.component.scss',
 })
-export class ProfileComponent {
-  private authService = inject(AuthService);
-  private notesService = inject(NotesService);
-  private fb = inject(FormBuilder);
+export class ProfileComponent implements OnInit {
+// ==========================================
+openPhotoPicker(_t8: HTMLInputElement) {
+throw new Error('Method not implemented.');
+}
+  // ==========================================
+  // SERVICES
+  // ==========================================
 
-  user = this.authService.currentUser;
+  private readonly authService = inject(AuthService);
 
-  showEditProfile = signal(false);
-  showChangePassword = signal(false);
+  private readonly notesService = inject(NotesService);
 
-  isChangingPassword = signal(false);
-  isLoading = signal(false);
+  private readonly fb = inject(FormBuilder);
 
-  changePasswordError = signal('');
+  // ==========================================
+  // USER
+  // ==========================================
 
-  notes = signal<number>(0);
+  readonly user = this.authService.currentUser;
 
-  avatarLetter = computed(() => {
+  // ==========================================
+  // API URL
+  // ==========================================
+
+  readonly apiUrl = environment.apiUrl;
+
+  // ==========================================
+  // PROFILE STATE
+  // ==========================================
+
+  readonly showEditProfile = signal(false);
+
+  readonly showChangePassword = signal(false);
+
+  // ==========================================
+  // LOADING
+  // ==========================================
+
+  readonly isLoading = signal(false);
+
+  readonly isChangingPassword = signal(false);
+
+  readonly isUploadingAvatar = signal(false);
+
+  // ==========================================
+  // ERRORS
+  // ==========================================
+
+  readonly changePasswordError = signal('');
+
+  readonly avatarError = signal('');
+
+  // ==========================================
+  // NOTES
+  // ==========================================
+
+  readonly notes = signal(0);
+
+  // ==========================================
+  // AVATAR LETTER
+  // ==========================================
+
+  readonly avatarLetter = computed(() => {
     const fullName = this.user()?.fullName;
 
     if (!fullName) {
@@ -41,21 +98,137 @@ export class ProfileComponent {
     return fullName.charAt(0).toUpperCase();
   });
 
-  editProfileForm = this.fb.group({
+  // ==========================================
+  // AVATAR URL
+  // ==========================================
+
+  readonly avatarUrl = computed(() => {
+    const avatar = this.user()?.avatar;
+
+    if (!avatar) {
+      return null;
+    }
+
+    if (avatar.startsWith('http://') || avatar.startsWith('https://')) {
+      return avatar;
+    }
+
+    return `${this.apiUrl}${avatar}`;
+  });
+
+  // ==========================================
+  // EDIT PROFILE FORM
+  // ==========================================
+
+  readonly editProfileForm = this.fb.nonNullable.group({
     fullName: ['', [Validators.required, Validators.minLength(3)]],
   });
 
-  changePasswordForm = this.fb.group({
+  // ==========================================
+  // CHANGE PASSWORD FORM
+  // ==========================================
+
+  readonly changePasswordForm = this.fb.nonNullable.group({
     currentPassword: ['', Validators.required],
+
     newPassword: ['', [Validators.required, Validators.minLength(8)]],
+
     confirmPassword: ['', [Validators.required, Validators.minLength(8)]],
   });
+
+  // ==========================================
+  // INIT
+  // ==========================================
 
   ngOnInit(): void {
     this.loadNotes();
   }
 
-  openEditProfile() {
+  // ==========================================
+  // PROFILE PHOTO
+  // ==========================================
+
+  onPhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    const file = input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    // Clear previous error
+
+    this.avatarError.set('');
+
+    // Validate file type
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+
+    if (!allowedTypes.includes(file.type)) {
+      this.avatarError.set('Only JPG, PNG and WEBP images are allowed.');
+
+      input.value = '';
+
+      return;
+    }
+
+    // Validate file size
+
+    const maxSize = 5 * 1024 * 1024;
+
+    if (file.size > maxSize) {
+      this.avatarError.set('Profile photo must be smaller than 5MB.');
+
+      input.value = '';
+
+      return;
+    }
+
+    // Get current user
+
+    const currentUser = this.user();
+
+    if (!currentUser?.id) {
+      this.avatarError.set('User information is not available.');
+
+      input.value = '';
+
+      return;
+    }
+
+    // Start upload
+
+    this.isUploadingAvatar.set(true);
+
+    this.authService.uploadAvatar(currentUser.id, file).subscribe({
+      next: (updatedUser) => {
+        this.authService.currentUser.set(updatedUser);
+
+        this.isUploadingAvatar.set(false);
+
+        input.value = '';
+      },
+
+      error: (error) => {
+        console.error('Profile photo upload failed:', error);
+
+        this.avatarError.set(
+          error?.error?.message || 'Failed to upload profile photo.',
+        );
+
+        this.isUploadingAvatar.set(false);
+
+        input.value = '';
+      },
+    });
+  }
+
+  // ==========================================
+  // OPEN EDIT PROFILE
+  // ==========================================
+
+  openEditProfile(): void {
     this.editProfileForm.patchValue({
       fullName: this.user()?.fullName ?? '',
     });
@@ -63,89 +236,122 @@ export class ProfileComponent {
     this.showEditProfile.set(true);
   }
 
-  updateProfile() {
+  // ==========================================
+  // SAVE PROFILE
+  // ==========================================
+
+  saveProfile(): void {
     if (this.editProfileForm.invalid) {
       this.editProfileForm.markAllAsTouched();
+
       return;
     }
 
-    const fullName = this.editProfileForm.value.fullName!;
+    const fullName = this.editProfileForm.getRawValue().fullName;
 
     this.authService.updateProfile(fullName).subscribe({
       next: () => {
         this.showEditProfile.set(false);
       },
 
-      error: (err) => {
-        console.error(err);
-        alert('Failed to update profile.');
+      error: (error) => {
+        console.error('Failed to update profile:', error);
       },
     });
   }
 
+  // ==========================================
+  // LOAD NOTES
+  // ==========================================
+
   loadNotes(): void {
+    this.isLoading.set(true);
 
     this.notesService.getNotes().subscribe({
       next: (notes: Note[]) => {
         this.notes.set(notes.length);
-        console.log(this.notes(), " 1112222222")
+
         this.isLoading.set(false);
       },
 
-      error: (err) => {
-        console.error(err);
+      error: (error) => {
+        console.error('Failed to load notes:', error);
+
         this.isLoading.set(false);
       },
     });
   }
 
-  openChangePassword() {
+  // ==========================================
+  // OPEN CHANGE PASSWORD
+  // ==========================================
+
+  openChangePassword(): void {
     this.changePasswordForm.reset();
+
     this.changePasswordError.set('');
+
     this.showChangePassword.set(true);
   }
 
-  closeChangePassword() {
+  // ==========================================
+  // CLOSE CHANGE PASSWORD
+  // ==========================================
+
+  closeChangePassword(): void {
     this.showChangePassword.set(false);
+
     this.changePasswordForm.reset();
+
     this.changePasswordError.set('');
   }
 
-  changePassword() {
+  // ==========================================
+  // CHANGE PASSWORD
+  // ==========================================
+
+  changePassword(): void {
     if (this.changePasswordForm.invalid) {
       this.changePasswordForm.markAllAsTouched();
+
       return;
     }
 
     const { currentPassword, newPassword, confirmPassword } =
       this.changePasswordForm.getRawValue();
 
+    // Password confirmation
+
     if (newPassword !== confirmPassword) {
-      this.changePasswordError.set('New passwords do not match');
+      this.changePasswordError.set('New passwords do not match.');
+
       return;
     }
 
     this.isChangingPassword.set(true);
+
     this.changePasswordError.set('');
 
     this.authService
       .changePassword({
-        currentPassword: currentPassword!,
-        newPassword: newPassword!,
-        confirmPassword: confirmPassword!,
+        currentPassword,
+
+        newPassword,
+
+        confirmPassword,
       })
       .subscribe({
-        next: (response) => {
-          alert(response.message);
+        next: () => {
+          this.isChangingPassword.set(false);
 
           this.closeChangePassword();
-
-          this.isChangingPassword.set(false);
         },
 
-        error: (err) => {
+        error: (error) => {
+          console.error('Failed to change password:', error);
+
           this.changePasswordError.set(
-            err.error?.message || 'Something went wrong',
+            error?.error?.message || 'Something went wrong.',
           );
 
           this.isChangingPassword.set(false);
@@ -153,7 +359,11 @@ export class ProfileComponent {
       });
   }
 
-  goBack() {
+  // ==========================================
+  // GO BACK
+  // ==========================================
+
+  goBack(): void {
     window.history.back();
   }
 }

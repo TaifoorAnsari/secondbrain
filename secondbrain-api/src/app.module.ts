@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
@@ -9,22 +11,34 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { NotesModule } from './notes/notes.module';
 import { EntitiesModule } from './entities/entities.module';
 import { TimelineModule } from './timeline/timeline.module';
+import { DiaryModule } from './diary/diary.module';
 
 @Module({
   imports: [
+    // Global configuration
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+
+    // Core
     PrismaModule,
+
+    // Features
     AuthModule,
     UsersModule,
     DashboardModule,
     NotesModule,
     EntitiesModule,
     TimelineModule,
+    DiaryModule,
   ],
-  
-  controllers: [AppController],
-  providers: [AppService],
+
+  controllers: [
+    AppController,
+  ],
+
+  providers: [
+    AppService,
+  ],
 })
 export class AppModule {}

@@ -1,219 +1,677 @@
+/* =========================================================
+   CALENDAR PAGE
+========================================================= */
+
 :host {
   display: block;
-  padding: 35px;
   min-height: 100vh;
+  padding: 35px;
+  box-sizing: border-box;
+
   background: #f5f7fb;
+
   font-family: Poppins, sans-serif;
 }
 
-/* ================= HEADER ================= */
+
+/* =========================================================
+   HEADER
+========================================================= */
 
 .calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   margin-bottom: 30px;
+
+  min-width: 0;
 }
 
 .calendar-header h1 {
   margin: 0;
+
   font-size: 38px;
   font-weight: 700;
+
   color: #1f2937;
 }
 
 .calendar-header p {
-  margin-top: 8px;
+  margin: 8px 0 0;
+
   color: #6b7280;
+
+  font-size: 16px;
 }
 
 .header-actions {
   display: flex;
   align-items: center;
+
   gap: 14px;
+
+  flex-shrink: 0;
 }
+
+
+/* =========================================================
+   HEADER BUTTONS
+========================================================= */
 
 .today-btn,
 .nav-btn,
 .add-btn {
   border: none;
+
   cursor: pointer;
-  transition: .25s;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .today-btn,
 .nav-btn {
   height: 46px;
+
   padding: 0 18px;
+
   border-radius: 14px;
-  background: white;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, .08);
+
+  background: #ffffff;
+
+  box-shadow:
+    0 8px 24px rgba(15, 23, 42, 0.08);
 }
 
 .nav-btn {
   width: 46px;
+
   padding: 0;
+
   font-size: 18px;
 }
 
 .today-btn:hover,
 .nav-btn:hover {
   transform: translateY(-2px);
+
+  box-shadow:
+    0 12px 28px rgba(15, 23, 42, 0.12);
 }
 
 .add-btn {
   height: 46px;
+
   padding: 0 24px;
+
   border-radius: 14px;
-  background: linear-gradient(135deg, #4f46e5, #8b5cf6);
-  color: white;
+
+  background: linear-gradient(
+    135deg,
+    #4f46e5,
+    #8b5cf6
+  );
+
+  color: #ffffff;
+
   font-weight: 600;
 }
 
 .add-btn:hover {
   transform: translateY(-2px);
+
+  box-shadow:
+    0 12px 25px rgba(79, 70, 229, 0.25);
 }
 
-/* ================= LAYOUT ================= */
+
+/* =========================================================
+   MAIN LAYOUT
+========================================================= */
 
 .calendar-content {
   display: grid;
-  grid-template-columns: 2fr 360px;
+
+  /*
+    IMPORTANT:
+    minmax(0, 1fr) prevents the calendar
+    from expanding because of long event text.
+  */
+
+  grid-template-columns:
+    minmax(0, 2fr)
+    minmax(300px, 360px);
+
   gap: 24px;
+
+  width: 100%;
+
+  min-width: 0;
 }
+
+
+/* =========================================================
+   CARDS
+========================================================= */
 
 .calendar-card,
 .sidebar-card {
-  background: white;
+  background: #ffffff;
+
   border-radius: 24px;
-  box-shadow: 0 15px 35px rgba(15, 23, 42, .08);
+
+  box-shadow:
+    0 15px 35px rgba(15, 23, 42, 0.08);
+
+  box-sizing: border-box;
+
+  min-width: 0;
 }
 
-/* ================= CALENDAR ================= */
+
+/* =========================================================
+   CALENDAR CARD
+========================================================= */
 
 .calendar-card {
   padding: 24px;
+
+  width: 100%;
+
+  min-width: 0;
+
+  overflow: hidden;
 }
+
+
+/* =========================================================
+   WEEKDAY HEADER
+
+   7 EXACTLY EQUAL COLUMNS
+========================================================= */
 
 .weekdays {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+
+  grid-template-columns:
+    repeat(7, minmax(0, 1fr));
+
+  gap: 14px;
+
+  width: 100%;
+
+  min-width: 0;
+
   margin-bottom: 18px;
 }
 
 .weekdays div {
+  min-width: 0;
+
   text-align: center;
+
+  font-size: 15px;
+
   font-weight: 600;
+
   color: #64748b;
+
+  overflow: hidden;
+
+  white-space: nowrap;
 }
+
+
+/* =========================================================
+   CALENDAR GRID
+
+   THIS IS THE MOST IMPORTANT PART
+========================================================= */
 
 .calendar-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+
+  /*
+    ALWAYS 7 EQUAL COLUMNS.
+    minmax(0, 1fr) is critical.
+  */
+
+  grid-template-columns:
+    repeat(7, minmax(0, 1fr));
+
+  /*
+    Every calendar cell gets the same height.
+  */
+
+  grid-auto-rows: 130px;
+
   gap: 14px;
+
+  width: 100%;
+
+  min-width: 0;
+
+  box-sizing: border-box;
 }
+
+
+/* =========================================================
+   DAY CARD
+========================================================= */
 
 .day-card {
+  position: relative;
+
+  width: 100%;
+
+  min-width: 0;
+
+  height: 130px;
   min-height: 130px;
-  padding: 12px;
+
+  box-sizing: border-box;
+
+  padding: 13px;
+
   border-radius: 18px;
+
   background: #f8fafc;
+
   border: 2px solid transparent;
+
   cursor: pointer;
-  transition: .25s;
+
+  overflow: hidden;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
+
+
+/* =========================================================
+   DAY CARD HOVER
+========================================================= */
 
 .day-card:hover {
-  border-color: #5b5ceb;
   transform: translateY(-3px);
+
+  border-color: #c7d2fe;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 10px 25px rgba(15, 23, 42, 0.08);
 }
 
-.day-card.today {
-  background: linear-gradient(135deg, #5b5ceb, #8b5cf6);
-  color: white;
-}
 
-.day-card.selected {
-  border-color: #5b5ceb;
-}
+/* =========================================================
+   DAY HEADER
+========================================================= */
 
 .day-header {
   display: flex;
+
   justify-content: space-between;
+
   align-items: center;
+
+  width: 100%;
+
+  min-width: 0;
+
   margin-bottom: 10px;
 }
 
-.event-count {
-  background: #5b5ceb;
-  color: white;
-  font-size: 11px;
-  padding: 3px 8px;
-  border-radius: 999px;
+.day-header > * {
+  min-width: 0;
 }
 
-.today .event-count {
-  background: rgba(255,255,255,.25);
+
+/* =========================================================
+   DAY NUMBER
+========================================================= */
+
+.day-number {
+  flex-shrink: 0;
+
+  font-size: 16px;
+
+  font-weight: 500;
+
+  color: #1f2937;
 }
+
+
+/* =========================================================
+   EVENT COUNT
+========================================================= */
+
+.event-count {
+  flex-shrink: 0;
+
+  min-width: 20px;
+
+  height: 20px;
+
+  padding: 0 5px;
+
+  display: inline-flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  border-radius: 7px;
+
+  background: #eef2ff;
+
+  color: #4f46e5;
+
+  font-size: 10px;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   TODAY
+========================================================= */
+
+.day-card.today {
+  background:
+    linear-gradient(
+      145deg,
+      #4f46e5,
+      #7c3aed
+    );
+
+  color: #ffffff;
+
+  border-color: transparent;
+
+  box-shadow:
+    0 12px 28px rgba(79, 70, 229, 0.25);
+}
+
+.day-card.today:hover {
+  border-color: transparent;
+
+  transform: translateY(-3px);
+
+  background:
+    linear-gradient(
+      145deg,
+      #4f46e5,
+      #7c3aed
+    );
+}
+
+.day-card.today .day-number {
+  color: #ffffff;
+
+  font-weight: 700;
+}
+
+.day-card.today .event-count {
+  background: rgba(255, 255, 255, 0.25);
+
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   SELECTED DAY
+========================================================= */
+
+.day-card.selected:not(.today) {
+  border-color: #6366f1;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 0 0 3px rgba(99, 102, 241, 0.10);
+
+  transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   TODAY + SELECTED
+========================================================= */
+
+.day-card.today.selected {
+  border: 3px solid #c4b5fd;
+
+  box-shadow:
+    0 0 0 4px rgba(99, 102, 241, 0.12),
+    0 14px 30px rgba(79, 70, 229, 0.25);
+}
+
+
+/* =========================================================
+   PREVIOUS / NEXT MONTH
+========================================================= */
+
+.day-card.other-month {
+  background: #f1f5f9;
+
+  color: #94a3b8;
+
+  opacity: 0.55;
+}
+
+.day-card.other-month:hover {
+  opacity: 0.8;
+}
+
+
+/* =========================================================
+   EVENTS CONTAINER
+
+   IMPORTANT FOR MULTIPLE EVENTS
+========================================================= */
 
 .day-events {
   display: flex;
+
   flex-direction: column;
+
   gap: 6px;
+
+  width: 100%;
+
+  min-width: 0;
+
+  max-width: 100%;
+
+  overflow: hidden;
 }
 
+
+/* =========================================================
+   EVENT PILL
+
+   LONG EVENT NAMES MUST NOT CHANGE
+   THE WIDTH OF THE CALENDAR COLUMN
+========================================================= */
+
 .event-pill {
+  display: block;
+
+  width: 100%;
+
+  max-width: 100%;
+
+  min-width: 0;
+
+  box-sizing: border-box;
+
   padding: 6px 10px;
+
   border-radius: 10px;
+
   background: #eef2ff;
+
   color: #4f46e5;
-  font-size: 12px;
+
+  border-left: 3px solid #6366f1;
+
+  font-size: 11px;
+
+  line-height: 1.3;
+
   font-weight: 600;
+
+  /*
+    THIS PREVENTS LONG EVENT TITLES
+    FROM EXPANDING THE GRID.
+  */
+
   overflow: hidden;
+
   white-space: nowrap;
+
+  text-overflow: ellipsis;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+/* =========================================================
+   EVENT HOVER
+========================================================= */
+
+.event-pill:hover {
+  background: #e0e7ff;
+
+  transform: translateX(2px);
+}
+
+
+/* =========================================================
+   EVENT INSIDE TODAY
+========================================================= */
+
+.today .event-pill {
+  background: rgba(255, 255, 255, 0.16);
+
+  color: #ffffff;
+
+  border-left-color:
+    rgba(255, 255, 255, 0.8);
+}
+
+.today .event-pill:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+
+/* =========================================================
+   MORE EVENTS
+========================================================= */
+
+.more-events {
+  display: block;
+
+  width: 100%;
+
+  min-width: 0;
+
+  margin-top: 4px;
+
+  color: #64748b;
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+
   text-overflow: ellipsis;
 }
 
-.today .event-pill {
-  background: rgba(255,255,255,.18);
-  color: white;
+.today .more-events {
+  color: rgba(255, 255, 255, 0.85);
 }
 
-.more-events {
-  font-size: 12px;
-  color: #64748b;
-  margin-top: 4px;
+
+/* =========================================================
+   IMPORTANT GLOBAL GRID SAFETY
+========================================================= */
+
+.calendar-grid *,
+.weekdays *,
+.day-card *,
+.day-events *,
+.event-pill {
+  min-width: 0;
 }
 
-/* ================= SIDEBAR ================= */
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
 
 .sidebar {
   display: flex;
+
   flex-direction: column;
+
   gap: 20px;
+
+  min-width: 0;
 }
 
 .sidebar-card {
   padding: 22px;
+
+  min-width: 0;
 }
 
 .sidebar-card h3 {
-  margin-bottom: 18px;
+  margin: 0 0 18px;
+
   color: #1f2937;
+
+  font-size: 20px;
 }
 
 .selected-date {
   color: #5b5ceb;
+
   font-weight: 600;
 }
 
+
+/* =========================================================
+   SIDEBAR EVENTS
+========================================================= */
+
 .sidebar-event {
   padding: 14px;
-  border-radius: 14px;
-  background: #f8fafc;
+
   margin-bottom: 12px;
+
+  border-radius: 14px;
+
+  background: #f8fafc;
+
   cursor: pointer;
-  transition: .25s;
+
+  transition: 0.25s;
+
+  min-width: 0;
+
+  overflow: hidden;
 }
 
 .sidebar-event:hover {
@@ -222,32 +680,86 @@
 
 .sidebar-event h4 {
   margin: 0 0 6px;
+
   font-size: 15px;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+
+  text-overflow: ellipsis;
 }
 
 .sidebar-event p {
   margin: 0 0 8px;
+
   color: #6b7280;
+
   font-size: 13px;
 }
 
 .sidebar-event span {
   font-size: 12px;
+
   color: #5b5ceb;
+
   font-weight: 600;
 }
 
+
+/* =========================================================
+   EMPTY EVENTS
+========================================================= */
+
 .empty-events {
   text-align: center;
+
   padding: 35px 10px;
 }
 
 .empty-icon {
   font-size: 42px;
+
   margin-bottom: 10px;
 }
 
-/* ================= RESPONSIVE ================= */
+
+/* =========================================================
+   UPCOMING DATE
+========================================================= */
+
+.upcoming-date {
+  display: inline-flex;
+
+  align-items: center;
+
+  max-width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 5px 9px;
+
+  border-radius: 8px;
+
+  background: #eef2ff;
+
+  color: #4f46e5;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   RESPONSIVE — TABLET
+========================================================= */
 
 @media (max-width: 1100px) {
 
@@ -255,13 +767,30 @@
     grid-template-columns: 1fr;
   }
 
+  .sidebar {
+    display: grid;
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
 }
+
+
+/* =========================================================
+   RESPONSIVE — SMALL TABLET
+========================================================= */
 
 @media (max-width: 768px) {
 
+  :host {
+    padding: 20px;
+  }
+
   .calendar-header {
     flex-direction: column;
+
     align-items: flex-start;
+
     gap: 20px;
   }
 
@@ -269,12 +798,131 @@
     flex-wrap: wrap;
   }
 
+  .calendar-card {
+    padding: 14px;
+  }
+
   .calendar-grid {
+    gap: 8px;
+
+    grid-auto-rows: 110px;
+  }
+
+  .weekdays {
     gap: 8px;
   }
 
   .day-card {
-    min-height: 100px;
+    height: 110px;
+
+    min-height: 110px;
+
+    padding: 9px;
+
+    border-radius: 14px;
   }
 
+  .event-pill {
+    padding: 5px 7px;
+
+    font-size: 9px;
+  }
+
+  .sidebar {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  :host {
+    padding: 14px;
+  }
+
+  .calendar-header h1 {
+    font-size: 30px;
+  }
+
+  .calendar-header p {
+    font-size: 14px;
+  }
+
+  .calendar-content {
+    display: block;
+  }
+
+  .calendar-card {
+    margin-bottom: 20px;
+
+    padding: 10px;
+
+    border-radius: 18px;
+  }
+
+  .calendar-grid {
+    gap: 5px;
+
+    grid-auto-rows: 85px;
+  }
+
+  .weekdays {
+    gap: 5px;
+
+    margin-bottom: 10px;
+  }
+
+  .weekdays div {
+    font-size: 11px;
+  }
+
+  .day-card {
+    height: 85px;
+
+    min-height: 85px;
+
+    padding: 6px;
+
+    border-radius: 10px;
+  }
+
+  .day-number {
+    font-size: 12px;
+  }
+
+  .event-count {
+    width: 16px;
+
+    min-width: 16px;
+
+    height: 16px;
+
+    padding: 0;
+
+    font-size: 8px;
+  }
+
+  .day-events {
+    gap: 3px;
+
+    margin-top: 3px;
+  }
+
+  .event-pill {
+    padding: 3px 4px;
+
+    border-left-width: 2px;
+
+    border-radius: 6px;
+
+    font-size: 8px;
+  }
+
+  .more-events {
+    font-size: 8px;
+  }
 }

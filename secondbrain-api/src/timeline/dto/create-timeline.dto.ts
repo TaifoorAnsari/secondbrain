@@ -1,5 +1,6 @@
 import {
   IsArray,
+  IsBoolean,
   IsDateString,
   IsNotEmpty,
   IsString,
@@ -22,5 +23,8 @@ export class CreateTimelineDto {
 
   @IsArray()
   entityIds!: string[];
+
+  @IsBoolean()
+  showOnCalendar!: boolean;
 
 }

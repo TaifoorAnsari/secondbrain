@@ -1,266 +1,147 @@
 <div class="profile-page">
-
-  <button
-    class="back-btn"
-    (click)="goBack()"
-  >
-    ← Back to Entities
-  </button>
+  <button class="back-btn" (click)="goBack()">← Back to Entities</button>
 
   @if (isLoading()) {
-
     <div class="loading-state">
-
       <h2>Loading profile...</h2>
-
     </div>
 
-  }
-
- @else if (profile()) {
-
+  } @else if (profile()) {
     <div class="hero-card">
-
       <div class="hero-avatar">
-        @if(profile()!.entity === null) {
+        @if (profile()!.entity === null) {
           {{ profile()!.entity }}
-        }@else {
-          {{profile()!.entity.name.charAt(0)}}  
+        } @else {
+          {{ profile()!.entity.name.charAt(0) }}
         }
-
       </div>
 
       <div class="hero-content">
-
         <h1>
-
           {{ profile()!.entity.name }}
-
         </h1>
 
         <p>
-
-          {{ profile()!.entity.description || 'No description available.' }}
-
+          {{ profile()!.entity.description || "No description available." }}
         </p>
 
         <span class="entity-type">
-
-          {{ profile()!.entity.type === 'PERSON'
-            ? '👤 Person'
-            : '🏢 Company'
-          }}
-
+          {{ profile()!.entity.type === "PERSON" ? "👤 Person" : "🏢 Company" }}
         </span>
-
       </div>
 
+      @if(profile()!.timelines.length > 0){
+        <div >
+          <button class="create-btn" style="margin-top: 0px" (click)="createTimeline()">
+            + Create Timeline
+          </button>
+        </div>
+      }
     </div>
 
-        <div class="stats-grid">
-
+    <div class="stats-grid">
       <div class="stat-card">
-
         <h2>
-
           {{ profile()!.stats.timelineCount }}
-
         </h2>
 
-        <span>
-
-          Timeline Events
-
-        </span>
-
+        <span> Timeline Events </span>
       </div>
 
       <div class="stat-card">
-
         <h2>
-
           @if (profile()!.stats.firstEvent) {
-
-            {{ profile()!.stats.firstEvent | date:'dd MMM yyyy' }}
-
+            {{ profile()!.stats.firstEvent | date: "dd MMM yyyy" }}
           } @else {
-
             —
-
           }
-
         </h2>
 
-        <span>
-
-          First Event
-
-        </span>
-
+        <span> First Event </span>
       </div>
 
       <div class="stat-card">
-
         <h2>
-
           @if (profile()!.stats.lastEvent) {
-
-            {{ profile()!.stats.lastEvent | date:'dd MMM yyyy' }}
-
+            {{ profile()!.stats.lastEvent | date: "dd MMM yyyy" }}
           } @else {
-
             —
-
           }
-
         </h2>
 
-        <span>
-
-          Latest Event
-
-        </span>
-
+        <span> Latest Event </span>
       </div>
-
     </div>
 
-        <div class="timeline-section">
-
+    <div class="timeline-section">
       <div class="section-header">
-
-        <h2>
-
-          Timeline History
-
-        </h2>
+        <h2>Timeline History</h2>
 
         <span>
-
-          {{profile()!.stats.timelineCount }}
+          {{ profile()!.stats.timelineCount }}
           Events
-
         </span>
-
       </div>
 
       @if (profile()!.timelines.length === 0) {
-
         <div class="empty-card">
+          <div class="empty-icon">📅</div>
 
-          <div class="empty-icon">
-
-            📅
-
-          </div>
-
-          <h3>
-
-            No timeline events yet
-
-          </h3>
+          <h3>No timeline events yet</h3>
 
           <p>
-
             Start documenting your history with
             {{ profile()!.entity.name }}.
-
           </p>
 
-          <button
-            class="create-btn"
-          >
-
+          <button class="create-btn" (click)="createTimeline()">
             + Create Timeline
-
           </button>
-
         </div>
 
-      }
-
-      @else {
-
+      } @else {
         <div class="timeline-list">
-
-          @for (
-            timeline of profile()!.timelines;
-            track timeline.id
-          ) {
-
-            <div
-              class="timeline-card"
-              (click)="openTimeline(timeline)"
-            >
-
+          @for (timeline of profile()!.timelines; track timeline.id) {
+            <div class="timeline-card" (click)="openTimeline(timeline)">
               <div class="timeline-date">
-
                 <div class="day">
-
-                  {{ timeline.eventDate | date:'dd' }}
-
+                  {{ timeline.eventDate | date: "dd" }}
                 </div>
 
                 <div class="month">
-
-                  {{ timeline.eventDate | date:'MMM' }}
-
+                  {{ timeline.eventDate | date: "MMM" }}
                 </div>
-
               </div>
 
               <div class="timeline-info">
-
                 <h3>
-
                   {{ timeline.title }}
-
                 </h3>
 
                 <p>
-
                   {{ timeline.description }}
-
                 </p>
 
                 <div class="timeline-meta">
-
                   <span>
-
                     Created
 
-                    {{ timeline.createdAt | date:'dd MMM yyyy' }}
-
+                    {{ timeline.createdAt | date: "dd MMM yyyy" }}
                   </span>
 
                   @if (timeline.createdAt !== timeline.updatedAt) {
-
                     <span>
-                      Updated {{ timeline.updatedAt | date:'dd MMM yyyy' }}
+                      Updated {{ timeline.updatedAt | date: "dd MMM yyyy" }}
                     </span>
-
                   }
-
                 </div>
-
               </div>
 
-              <div class="timeline-arrow">
-
-                →
-
-              </div>
-
+              <div class="timeline-arrow">→</div>
             </div>
-
           }
-
         </div>
-
       }
-
     </div>
-
   }
-
 </div>

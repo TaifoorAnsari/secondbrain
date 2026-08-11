@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import {
   FormBuilder,
@@ -69,6 +69,7 @@ export class EntitiesComponent implements OnInit {
   private fb = inject(FormBuilder);
 
   private toast = inject(ToastService);
+  private route = inject(ActivatedRoute);
 
   searchControl = this.fb.nonNullable.control('');
 
@@ -112,6 +113,11 @@ export class EntitiesComponent implements OnInit {
         this.loadEntities(value);
 
       });
+      this.route.queryParams.subscribe(params =>{
+        if(params['action'] === 'new') {
+          this.openCreateModal()
+        }
+      })
 
   }
 

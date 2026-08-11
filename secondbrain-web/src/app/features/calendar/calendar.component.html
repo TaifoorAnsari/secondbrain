@@ -16,49 +16,58 @@
 
     <div class="header-actions">
 
+      <!-- Today -->
+
       <button
         class="today-btn"
+        type="button"
+        (click)="goToToday()"
       >
         Today
       </button>
 
+      <!-- Previous Month -->
+
       <button
         class="nav-btn"
+        type="button"
         (click)="previousMonth()"
       >
         ←
       </button>
 
-      <h2>
+      <!-- Current Month -->
 
+      <h2>
         {{ currentMonth }}
         {{ currentYear }}
-
       </h2>
+
+      <!-- Next Month -->
 
       <button
         class="nav-btn"
+        type="button"
         (click)="nextMonth()"
       >
         →
       </button>
 
-      <button
-        class="add-btn"
-        (click)="openCreateTimeline()"
-      >
-        + Timeline
-      </button>
+      <!-- Create Timeline -->
+
+     
 
     </div>
 
   </div>
 
+
   <!-- ================= CONTENT ================= -->
 
   <div class="calendar-content">
 
-    <!-- CALENDAR -->
+
+    <!-- ================= CALENDAR ================= -->
 
     <div class="calendar-card">
 
@@ -67,16 +76,23 @@
       <div class="weekdays">
 
         <div>Sun</div>
+
         <div>Mon</div>
+
         <div>Tue</div>
+
         <div>Wed</div>
+
         <div>Thu</div>
+
         <div>Fri</div>
+
         <div>Sat</div>
 
       </div>
 
-      <!-- DAYS -->
+
+      <!-- CALENDAR DAYS -->
 
       <div class="calendar-grid">
 
@@ -89,8 +105,11 @@
             class="day-card"
             [class.today]="day.isToday"
             [class.selected]="selectedDate === day.fullDate"
+            [class.other-month]="!day.isCurrentMonth"
             (click)="selectDay(day)"
           >
+
+            <!-- DAY HEADER -->
 
             <div class="day-header">
 
@@ -99,6 +118,7 @@
                 {{ day.date }}
 
               </span>
+
 
               @if (day.events.length > 0) {
 
@@ -112,16 +132,22 @@
 
             </div>
 
+
+            <!-- EVENTS -->
+
             <div class="day-events">
 
               @for (
-                event of day.events.slice(0,2);
+                event of day.events.slice(0, 2);
                 track event.id
               ) {
 
                 <div
                   class="event-pill"
-                  (click)="openTimeline(event); $event.stopPropagation()"
+                  (click)="
+                    openTimeline(event);
+                    $event.stopPropagation()
+                  "
                 >
 
                   {{ event.title }}
@@ -129,6 +155,7 @@
                 </div>
 
               }
+
 
               @if (day.events.length > 2) {
 
@@ -151,58 +178,52 @@
 
     </div>
 
-    <!-- SIDEBAR -->
+
+    <!-- ================= SIDEBAR ================= -->
 
     <aside class="sidebar">
+
 
       <!-- SELECTED DAY -->
 
       <div class="sidebar-card">
 
         <h3>
-
           Selected Day
-
         </h3>
 
         <p class="selected-date">
 
-          {{ selectedDate }}
+          {{ selectedDate | date:'dd MMM yyyy' }}
 
         </p>
 
       </div>
 
-      <!-- EVENTS -->
+
+      <!-- SELECTED DAY EVENTS -->
 
       <div class="sidebar-card">
 
         <h3>
-
           Events
-
         </h3>
+
 
         @if (selectedEvents.length === 0) {
 
           <div class="empty-events">
 
             <div class="empty-icon">
-
               📅
-
             </div>
 
             <h4>
-
               No Events
-
             </h4>
 
             <p>
-
               No timeline events for this day.
-
             </p>
 
           </div>
@@ -222,16 +243,72 @@
             >
 
               <h4>
-
                 {{ event.title }}
-
               </h4>
 
               <p>
-
                 {{ event.description }}
-
               </p>
+
+          <span class="upcoming-date">
+
+  {{ getUpcomingLabel(event.eventDate) }}
+
+</span>
+
+            </div>
+
+          }
+
+        }
+
+      </div>
+
+
+      <!-- ================= UPCOMING ================= -->
+
+      <div class="sidebar-card">
+
+        <h3>
+          Upcoming
+        </h3>
+
+
+        @if (getUpcomingEvents().length === 0) {
+
+          <div class="empty-events">
+
+            <div class="empty-icon">
+              🗓️
+            </div>
+
+            <h4>
+              Nothing Upcoming
+            </h4>
+
+            <p>
+              No upcoming timeline events.
+            </p>
+
+          </div>
+
+        }
+
+        @else {
+
+          @for (
+            event of getUpcomingEvents();
+            track event.id
+          ) {
+
+            <div
+              class="sidebar-event"
+              (click)="openTimeline(event)"
+            >
+
+              <h4>
+                {{ event.title }}
+              </h4>
 
               <span>
 
@@ -242,44 +319,6 @@
             </div>
 
           }
-
-        }
-
-      </div>
-
-      <!-- UPCOMING -->
-
-      <div class="sidebar-card">
-
-        <h3>
-
-          Upcoming
-
-        </h3>
-
-        @for (
-          event of upcomingEvents;
-          track event.id
-        ) {
-
-          <div
-            class="sidebar-event"
-            (click)="openTimeline(event)"
-          >
-
-            <h4>
-
-              {{ event.title }}
-
-            </h4>
-
-            <span>
-
-              {{ event.eventDate | date:'dd MMM' }}
-
-            </span>
-
-          </div>
 
         }
 

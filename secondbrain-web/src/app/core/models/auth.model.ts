@@ -1,38 +1,88 @@
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface SignupRequest {
-  fullName: string;
-  email: string;
-  password: string;
-}
+// ==========================================
+// USER
+// ==========================================
 
 export interface User {
   id: string;
+
   fullName: string;
+
+  username: string;
+
   email: string;
+
+  phone?: string | null;
+
+  bio?: string | null;
+
+  avatar?: string | null;
+
   createdAt: string;
 }
 
+
+// ==========================================
+// LOGIN
+// ==========================================
+
+export interface LoginRequest {
+  email: string;
+
+  password: string;
+}
+
+
+// ==========================================
+// LOGIN RESPONSE
+// ==========================================
+
 export interface LoginResponse {
-  message: string;
   accessToken: string;
+
   user: User;
 }
+
+
+// ==========================================
+// SIGNUP
+// ==========================================
+
+export interface SignupRequest {
+  fullName: string;
+
+  username?: string;
+
+  email: string;
+
+  password: string;
+}
+
+
+// ==========================================
+// SIGNUP RESPONSE
+// ==========================================
 
 export interface SignupResponse {
-  message: string;
-  user: User;
   accessToken: string;
+
+  user: User;
 }
 
+
+// ==========================================
+// AUTH RESPONSE
+// ==========================================
+
 export interface AuthResponse {
-  message: string;
-  accessToken?: string;
+  accessToken: string;
+
   user: User;
 }
+
+
+// ==========================================
+// MESSAGE RESPONSE
+// ==========================================
 
 export interface MessageResponse {
   message: string;

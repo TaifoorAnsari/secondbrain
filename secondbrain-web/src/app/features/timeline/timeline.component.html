@@ -134,6 +134,42 @@
           />
 
         </div>
+        <!-- Add to Calendar -->
+
+<div class="calendar-option">
+
+  <div class="calendar-option-info">
+
+    <div class="calendar-option-icon">
+      📅
+    </div>
+
+    <div>
+
+      <strong>
+        Add to Calendar
+      </strong>
+
+      <span>
+        Display this timeline event on your calendar.
+      </span>
+
+    </div>
+
+  </div>
+
+  <label class="switch">
+
+    <input
+      type="checkbox"
+      formControlName="showOnCalendar"
+    />
+
+    <span class="slider"></span>
+
+  </label>
+
+</div>
 
         <!-- Linked Entities -->
 
@@ -148,43 +184,59 @@
             (input)="onEntitySearch($event)"
           />
 
-          <div class="entity-picker">
+@if (entitySearch().trim()) {
 
-            @for (
-              entity of filteredEntities();
-              track entity.id
-            ) {
+  <div class="entity-picker">
 
-              <div
-                class="picker-item"
-                (click)="toggleEntity(entity)"
-              >
+    @if (filteredEntities().length > 0) {
 
-                <span>
+      @for (
+        entity of filteredEntities();
+        track entity.id
+      ) {
 
-                  {{
-                    entity.type === 'PERSON'
-                      ? '👤'
-                      : '🏢'
-                  }}
+        <div
+          class="picker-item"
+          (click)="toggleEntity(entity)"
+        >
 
-                  {{ entity.name }}
+          <span>
 
-                </span>
+            {{
+              entity.type === 'PERSON'
+                ? '👤'
+                : '🏢'
+            }}
 
-                @if (isSelected(entity.id)) {
+            {{ entity.name }}
 
-                  <span class="selected-icon">
-                    ✓
-                  </span>
+          </span>
 
-                }
+          @if (isSelected(entity.id)) {
 
-              </div>
+            <span class="selected-icon">
+              ✓
+            </span>
 
-            }
+          }
 
-          </div>
+        </div>
+
+      }
+
+    } @else {
+
+      <div class="no-results">
+
+        No entities found
+
+      </div>
+
+    }
+
+  </div>
+
+}
 
           @if (selectedEntities().length > 0) {
 
