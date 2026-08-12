@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -35,12 +36,51 @@ export class EntitiesController {
     );
   }
 
-  @Get()
-  findAll(@Req() req: any) {
-    return this.entitiesService.findAll(
-      req.user.id,
-    );
-  }
+@Get()
+findAll(
+  @Req() req: any,
+  @Query('search') search?: string,
+) {
+  return this.entitiesService.findAll(
+    req.user.id,
+    search,
+  );
+}
+
+@Get('stats')
+getStats(@Req() req: any) {
+
+  return this.entitiesService.getStats(
+    req.user.id,
+  );
+
+}
+
+  @Get(':id/timelines')
+getTimelines(
+  @Param('id') id: string,
+  @Req() req: any,
+) {
+
+  return this.entitiesService.getTimelines(
+    id,
+    req.user.id,
+  );
+
+}
+
+@Get(':id/profile')
+getProfile(
+  @Param('id') id: string,
+  @Req() req: any,
+) {
+
+  return this.entitiesService.getProfile(
+    id,
+    req.user.id,
+  );
+
+}
 
   @Get(':id')
   findOne(

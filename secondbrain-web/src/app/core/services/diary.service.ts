@@ -1,65 +1,99 @@
-import { Injectable } from '@angular/core';
-import { Diary } from '../models/diary.model';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+import {
+  DiaryEntry,
+  CreateDiaryDto,
+  UpdateDiaryDto,
+} from '../models/diary.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DiaryService {
-
-  private STORAGE_KEY = 'diary_entries';
-
-  constructor() {}
-
-  getAllDiaries(): Diary[] {
-    const data = localStorage.getItem(this.STORAGE_KEY);
-    return data ? JSON.parse(data) : [];
+  deleteDiary(id: string) {
+    throw new Error('Method not implemented.');
   }
 
-  saveDiary(entry: Diary): void {
-    const diaries = this.getAllDiaries();
+  private http = inject(HttpClient);
 
-    entry.id = crypto.randomUUID();
-    entry.createdAt = new Date().toISOString();
-    entry.updatedAt = new Date().toISOString();
+  private api = 'http://localhost:3000/diary';
 
-    diaries.unshift(entry);
 
-    localStorage.setItem(
-      this.STORAGE_KEY,
-      JSON.stringify(diaries)
-    );
-  }
+  // ==========================================
+  // GET ALL DIARY ENTRIES
+  // ==========================================
 
-  getDiaryById(id: string): Diary | undefined {
-    return this.getAllDiaries().find(d => d.id === id);
-  }
+  getDiaryEntries(): Observable<DiaryEntry[]> {
 
-  updateDiary(updatedDiary: Diary): void {
-    const diaries = this.getAllDiaries();
-
-    const index = diaries.findIndex(
-      d => d.id === updatedDiary.id
+    return this.http.get<DiaryEntry[]>(
+      this.api,
     );
 
-    if (index !== -1) {
-      updatedDiary.updatedAt = new Date().toISOString();
-      diaries[index] = updatedDiary;
-
-      localStorage.setItem(
-        this.STORAGE_KEY,
-        JSON.stringify(diaries)
-      );
-    }
   }
 
-  deleteDiary(id: string): void {
-    const diaries = this
-      .getAllDiaries()
-      .filter(d => d.id !== id);
 
-    localStorage.setItem(
-      this.STORAGE_KEY,
-      JSON.stringify(diaries)
+  // ==========================================
+  // GET ONE DIARY ENTRY
+  // ==========================================
+
+  getDiaryEntry(
+    id: string,
+  ): Observable<DiaryEntry> {
+
+    return this.http.get<DiaryEntry>(
+      `${this.api}/${id}`,
     );
+
   }
+
+
+  // ==========================================
+  // CREATE DIARY ENTRY
+  // ==========================================
+
+  createDiaryEntry(
+    dto: CreateDiaryDto,
+  ): Observable<DiaryEntry> {
+
+    return this.http.post<DiaryEntry>(
+      this.api,
+      dto,
+    );
+
+  }
+
+
+  // ==========================================
+  // UPDATE DIARY ENTRY
+  // ==========================================
+
+  updateDiaryEntry(
+    id: string,
+    dto: UpdateDiaryDto,
+  ): Observable<DiaryEntry> {
+
+    return this.http.patch<DiaryEntry>(
+      `${this.api}/${id}`,
+      dto,
+    );
+
+  }
+
+
+  // ==========================================
+  // DELETE DIARY ENTRY
+  // ==========================================
+
+  deleteDiaryEntry(
+    id: string,
+  ): Observable<void> {
+
+    return this.http.delete<void>(
+      `${this.api}/${id}`,
+    );
+
+  }
+
 }

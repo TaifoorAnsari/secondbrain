@@ -1,108 +1,366 @@
-<div class="profile-page">
- <button class="back-link" (click)="goBack()">
-    ← Back
-  </button>
-  <div class="page-title">
-    <h1>Profile</h1>
-    <p>Manage your personal account and workspace.</p>
-  </div>
+<!-- ==========================================
+     PROFILE PAGE
+========================================== -->
 
-  <div class="profile-grid">
-    <!-- Left Card -->
-    <div class="profile-card">
-      <div class="avatar">
-        {{ avatarLetter() }}
+<div class="profile-page">
+
+
+  <!-- ========================================
+       PROFILE SIDEBAR
+  ========================================= -->
+
+  <div class="profile-sidebar">
+
+    <div class="profile-avatar-section">
+
+
+      <!-- PROFILE PHOTO -->
+
+      <div class="profile-avatar">
+
+        @if (avatarUrl()) {
+
+          <img
+            [src]="avatarUrl()!"
+            alt="Profile Photo"
+          />
+
+        } @else {
+
+          <span>
+            {{ avatarLetter() }}
+          </span>
+
+        }
+
       </div>
 
-      <h2>{{ user()?.fullName }}</h2>
 
-      <p>{{ user()?.email }}</p>
+      <!-- ======================================
+           HIDDEN FILE INPUT
+      ======================================= -->
 
-      <button (click)="openEditProfile()" class="btn-primary">
+      <input
+        #photoInput
+        type="file"
+        accept="image/png,image/jpeg,image/webp"
+        hidden
+        (change)="onPhotoSelected($event)"
+      />
+
+
+      <!-- ======================================
+           CHANGE PHOTO BUTTON
+      ======================================= -->
+
+      <button
+        type="button"
+        class="change-photo-btn"
+        [disabled]="isUploadingAvatar()"
+        (click)="photoInput.click()"
+      >
+
+        @if (isUploadingAvatar()) {
+
+          Uploading...
+
+        } @else {
+
+          📷 Change Photo
+
+        }
+
+      </button>
+
+
+      <!-- ======================================
+           PHOTO ERROR
+      ======================================= -->
+
+      @if (avatarError()) {
+
+        <small class="error">
+          {{ avatarError() }}
+        </small>
+
+      }
+
+
+      <!-- ======================================
+           USER INFO
+      ======================================= -->
+
+      <h2>
+        {{ user()?.fullName }}
+      </h2>
+
+
+      <p>
+        {{ user()?.email }}
+      </p>
+
+
+      <!-- ======================================
+           EDIT PROFILE
+      ======================================= -->
+
+      <button
+        type="button"
+        class="btn-primary"
+        (click)="openEditProfile()"
+      >
         Edit Profile
       </button>
+
     </div>
 
-    <!-- Right Side -->
-    <div class="profile-content">
-      <div class="card">
-        <h3>Personal Information</h3>
-
-        <div class="info-row">
-          <span>Name</span>
-          <strong>{{ user()?.fullName }}</strong>
-        </div>
-
-        <div class="info-row">
-          <span>Email</span>
-          <strong>{{ user()?.email }}</strong>
-        </div>
-
-        <div class="info-row">
-          <span>Member Since</span>
-          <strong>{{ user()?.createdAt | date: "dd MMM yyyy" }}</strong>
-        </div>
-
-        <div class="info-row">
-          <span>Workspace</span>
-          <strong>Personal</strong>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Workspace Statistics</h3>
-
-        <div class="stats">
-          <div class="stat">
-            <h2>{{notes()}}</h2>
-            <span>Notes</span>
-          </div>
-
-          <div class="stat">
-            <h2>0</h2>
-            <span>Entities</span>
-          </div>
-
-          <div class="stat">
-            <h2>0</h2>
-            <span>Events</span>
-          </div>
-
-          <div class="stat">
-            <h2>0</h2>
-            <span>Diary</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Security</h3>
-
-        <div class="info-row">
-          <span>Password</span>
-
-          <strong>••••••••</strong>
-        </div>
-
-        <button  (click)="openChangePassword()" class="btn-secondary">Change Password</button>
-      </div>
-    </div>
   </div>
+
+
+
+  <!-- ==========================================
+       RIGHT CONTENT
+  ========================================== -->
+
+  <div class="profile-content">
+
+
+    <!-- ========================================
+         PERSONAL INFORMATION
+    ========================================= -->
+
+    <div class="card">
+
+      <h3>
+        Personal Information
+      </h3>
+
+
+      <div class="info-row">
+
+        <span>
+          Name
+        </span>
+
+        <strong>
+          {{ user()?.fullName }}
+        </strong>
+
+      </div>
+
+
+      <div class="info-row">
+
+        <span>
+          Email
+        </span>
+
+        <strong>
+          {{ user()?.email }}
+        </strong>
+
+      </div>
+
+
+      <div class="info-row">
+
+        <span>
+          Member Since
+        </span>
+
+        <strong>
+          {{ user()?.createdAt | date:'dd MMM yyyy' }}
+        </strong>
+
+      </div>
+
+
+      <div class="info-row">
+
+        <span>
+          Workspace
+        </span>
+
+        <strong>
+          Personal
+        </strong>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ========================================
+         WORKSPACE STATISTICS
+    ========================================= -->
+
+    <div class="card">
+
+      <h3>
+        Workspace Statistics
+      </h3>
+
+
+      <div class="stats">
+
+
+        <!-- NOTES -->
+
+        <div class="stat">
+
+          <h2>
+            {{ notes() }}
+          </h2>
+
+          <span>
+            Notes
+          </span>
+
+        </div>
+
+
+        <!-- ENTITIES -->
+
+        <div class="stat">
+
+          <h2>
+            0
+          </h2>
+
+          <span>
+            Entities
+          </span>
+
+        </div>
+
+
+        <!-- EVENTS -->
+
+        <div class="stat">
+
+          <h2>
+            0
+          </h2>
+
+          <span>
+            Events
+          </span>
+
+        </div>
+
+
+        <!-- DIARY -->
+
+        <div class="stat">
+
+          <h2>
+            0
+          </h2>
+
+          <span>
+            Diary
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ========================================
+         SECURITY
+    ========================================= -->
+
+    <div class="card">
+
+      <h3>
+        Security
+      </h3>
+
+
+      <div class="info-row">
+
+        <span>
+          Password
+        </span>
+
+        <strong>
+          ••••••••
+        </strong>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="btn-secondary"
+        (click)="openChangePassword()"
+      >
+        Change Password
+      </button>
+
+    </div>
+
+  </div>
+
 </div>
+
+
+
+<!-- ==========================================
+     EDIT PROFILE MODAL
+========================================== -->
 
 <app-modal
   [open]="showEditProfile()"
   title="Edit Profile"
   (close)="showEditProfile.set(false)"
 >
-  <form [formGroup]="editProfileForm" (ngSubmit)="updateProfile()">
-    <div class="form-group">
-      <label>Full Name</label>
 
-      <input type="text" formControlName="fullName" />
+  <form
+    [formGroup]="editProfileForm"
+    (ngSubmit)="saveProfile()"
+  >
+
+
+    <!-- FULL NAME -->
+
+    <div class="form-group">
+
+      <label for="fullName">
+        Full Name
+      </label>
+
+
+      <input
+        id="fullName"
+        type="text"
+        formControlName="fullName"
+        placeholder="Enter your full name"
+      />
+
+
+      @if (
+        editProfileForm.controls.fullName.invalid &&
+        editProfileForm.controls.fullName.touched
+      ) {
+
+        <small class="error">
+          Full name is required and must be at least 3 characters.
+        </small>
+
+      }
+
     </div>
 
+
+    <!-- ACTIONS -->
+
     <div class="modal-actions">
+
       <button
         type="button"
         class="btn-secondary"
@@ -111,6 +369,7 @@
         Cancel
       </button>
 
+
       <button
         type="submit"
         class="btn-primary"
@@ -118,86 +377,142 @@
       >
         Save Changes
       </button>
+
     </div>
+
   </form>
+
 </app-modal>
+
+
+
+<!-- ==========================================
+     CHANGE PASSWORD MODAL
+========================================== -->
 
 <app-modal
   [open]="showChangePassword()"
   title="Change Password"
   (close)="closeChangePassword()"
 >
+
   <form
     [formGroup]="changePasswordForm"
     (ngSubmit)="changePassword()"
-    class="password-form"
   >
 
-    <!-- Current Password -->
+
+    <!-- CURRENT PASSWORD -->
+
     <div class="form-group">
-      <label>Current Password</label>
+
+      <label for="currentPassword">
+        Current Password
+      </label>
+
 
       <input
+        id="currentPassword"
         type="password"
         formControlName="currentPassword"
         placeholder="Enter current password"
       />
 
+
       @if (
-        changePasswordForm.get('currentPassword')?.invalid &&
-        changePasswordForm.get('currentPassword')?.touched
+        changePasswordForm.controls.currentPassword.invalid &&
+        changePasswordForm.controls.currentPassword.touched
       ) {
+
         <small class="error">
-          Current password is required
+          Current password is required.
         </small>
+
       }
+
     </div>
 
-    <!-- New Password -->
+
+
+    <!-- NEW PASSWORD -->
+
     <div class="form-group">
-      <label>New Password</label>
+
+      <label for="newPassword">
+        New Password
+      </label>
+
 
       <input
+        id="newPassword"
         type="password"
         formControlName="newPassword"
         placeholder="Enter new password"
       />
 
+
       @if (
-        changePasswordForm.get('newPassword')?.invalid &&
-        changePasswordForm.get('newPassword')?.touched
+        changePasswordForm.controls.newPassword.invalid &&
+        changePasswordForm.controls.newPassword.touched
       ) {
+
         <small class="error">
-          Password must be at least 8 characters
+          Password must be at least 8 characters.
         </small>
+
       }
+
     </div>
 
-    <!-- Confirm Password -->
+
+
+    <!-- CONFIRM PASSWORD -->
+
     <div class="form-group">
-      <label>Confirm Password</label>
+
+      <label for="confirmPassword">
+        Confirm Password
+      </label>
+
 
       <input
+        id="confirmPassword"
         type="password"
         formControlName="confirmPassword"
         placeholder="Confirm new password"
       />
 
+
       @if (
-        changePasswordForm.get('confirmPassword')?.invalid &&
-        changePasswordForm.get('confirmPassword')?.touched
+        changePasswordForm.controls.confirmPassword.invalid &&
+        changePasswordForm.controls.confirmPassword.touched
       ) {
+
         <small class="error">
-          Please confirm your password
+          Please confirm your password.
         </small>
+
       }
+
     </div>
 
+
+
+    <!-- PASSWORD ERROR -->
+
     @if (changePasswordError()) {
+
       <div class="error-message">
+
         {{ changePasswordError() }}
+
       </div>
+
     }
+
+
+
+    <!-- ACTIONS -->
 
     <div class="modal-actions">
 
@@ -209,15 +524,30 @@
         Cancel
       </button>
 
+
       <button
         type="submit"
         class="btn-primary"
-        [disabled]="isChangingPassword()"
+        [disabled]="
+          isChangingPassword() ||
+          changePasswordForm.invalid
+        "
       >
-        {{ isChangingPassword() ? 'Changing...' : 'Change Password' }}
+
+        @if (isChangingPassword()) {
+
+          Changing...
+
+        } @else {
+
+          Change Password
+
+        }
+
       </button>
 
     </div>
 
   </form>
+
 </app-modal>

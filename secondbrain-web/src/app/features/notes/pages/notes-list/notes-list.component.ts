@@ -15,6 +15,7 @@ import { NotesService } from '../../../../core/services/notes.service';
 import { Note } from '../../../../core/models/note.model';
 import { ToastService } from '../../../../core/services/toast.service';
 import { ConfirmDialogService } from '../../../../core/services/confirm-dialog.service';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-notes-list',
   standalone: true,
@@ -27,6 +28,7 @@ export class NoteListComponent implements OnInit {
 private toast = inject(ToastService);
 private fb = inject(FormBuilder);
 private confirmDialog = inject(ConfirmDialogService);
+private readonly route = inject(ActivatedRoute)
 
   notes = signal<Note[]>([]);
   isLoading = signal(false);
@@ -49,6 +51,12 @@ private confirmDialog = inject(ConfirmDialogService);
 
  ngOnInit(): void {
   this.loadNotes();
+
+  this.route.queryParams.subscribe(params => {
+    if(params['action'] === 'new') {
+      this.openCreateModal()
+    }
+  })
 }
   loadNotes(): void {
     this.isLoading.set(true);

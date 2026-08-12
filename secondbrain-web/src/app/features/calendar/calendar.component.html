@@ -1,87 +1,331 @@
 <div class="calendar-page">
-  <!-- Header -->
+
+  <!-- ================= HEADER ================= -->
+
   <div class="calendar-header">
+
     <div>
+
       <h1>Calendar</h1>
-      <p>Manage your meetings, reminders and events.</p>
+
+      <p>
+        Visualize your timeline events and important moments.
+      </p>
+
     </div>
 
     <div class="header-actions">
-      <button class="nav-btn">◀</button>
 
-      <h2>{{ currentMonth }} {{ currentYear }}</h2>
+      <!-- Today -->
 
-      <button class="nav-btn">▶</button>
+      <button
+        class="today-btn"
+        type="button"
+        (click)="goToToday()"
+      >
+        Today
+      </button>
 
-      <button class="add-btn">+ Add Event</button>
+      <!-- Previous Month -->
+
+      <button
+        class="nav-btn"
+        type="button"
+        (click)="previousMonth()"
+      >
+        ←
+      </button>
+
+      <!-- Current Month -->
+
+      <h2>
+        {{ currentMonth }}
+        {{ currentYear }}
+      </h2>
+
+      <!-- Next Month -->
+
+      <button
+        class="nav-btn"
+        type="button"
+        (click)="nextMonth()"
+      >
+        →
+      </button>
+
+      <!-- Create Timeline -->
+
+     
+
     </div>
+
   </div>
 
-  <div class="calendar-layout">
-    <!-- Calendar -->
+
+  <!-- ================= CONTENT ================= -->
+
+  <div class="calendar-content">
+
+
+    <!-- ================= CALENDAR ================= -->
 
     <div class="calendar-card">
+
+      <!-- WEEK DAYS -->
+
       <div class="weekdays">
+
         <div>Sun</div>
+
         <div>Mon</div>
+
         <div>Tue</div>
+
         <div>Wed</div>
+
         <div>Thu</div>
+
         <div>Fri</div>
+
         <div>Sat</div>
+
       </div>
+
+
+      <!-- CALENDAR DAYS -->
 
       <div class="calendar-grid">
-        <div
-          class="day"
-          *ngFor="let day of calendarDays"
-          [class.today]="day.isToday"
-        >
-          <span class="date">
-            {{ day.date }}
-          </span>
 
-          <div class="event" *ngFor="let event of day.events">
-            {{ event }}
+        @for (
+          day of calendarDays;
+          track day.fullDate
+        ) {
+
+          <div
+            class="day-card"
+            [class.today]="day.isToday"
+            [class.selected]="selectedDate === day.fullDate"
+            [class.other-month]="!day.isCurrentMonth"
+            (click)="selectDay(day)"
+          >
+
+            <!-- DAY HEADER -->
+
+            <div class="day-header">
+
+              <span>
+
+                {{ day.date }}
+
+              </span>
+
+
+              @if (day.events.length > 0) {
+
+                <span class="event-count">
+
+                  {{ day.events.length }}
+
+                </span>
+
+              }
+
+            </div>
+
+
+            <!-- EVENTS -->
+
+            <div class="day-events">
+
+              @for (
+                event of day.events.slice(0, 2);
+                track event.id
+              ) {
+
+                <div
+                  class="event-pill"
+                  (click)="
+                    openTimeline(event);
+                    $event.stopPropagation()
+                  "
+                >
+
+                  {{ event.title }}
+
+                </div>
+
+              }
+
+
+              @if (day.events.length > 2) {
+
+                <div class="more-events">
+
+                  +{{ day.events.length - 2 }}
+                  more
+
+                </div>
+
+              }
+
+            </div>
+
           </div>
-        </div>
+
+        }
+
       </div>
+
     </div>
 
-    <!-- Sidebar -->
 
-    <div class="sidebar">
-      <div class="sidebar-card">
-        <h3>Today's Events</h3>
+    <!-- ================= SIDEBAR ================= -->
 
-        <div class="event-item">
-          <h4>Interview 50 Students</h4>
+    <aside class="sidebar">
 
-          <span>10:00 AM</span>
-        </div>
 
-        <div class="event-item">
-          <h4>Meeting with Rahul</h4>
-
-          <span>2:00 PM</span>
-        </div>
-      </div>
+      <!-- SELECTED DAY -->
 
       <div class="sidebar-card">
-        <h3>Upcoming</h3>
 
-        <div class="event-item">
-          <h4>Project Review</h4>
+        <h3>
+          Selected Day
+        </h3>
 
-          <span>Tomorrow</span>
-        </div>
+        <p class="selected-date">
 
-        <div class="event-item">
-          <h4>Birthday Reminder</h4>
+          {{ selectedDate | date:'dd MMM yyyy' }}
 
-          <span>Sunday</span>
-        </div>
+        </p>
+
       </div>
-    </div>
+
+
+      <!-- SELECTED DAY EVENTS -->
+
+      <div class="sidebar-card">
+
+        <h3>
+          Events
+        </h3>
+
+
+        @if (selectedEvents.length === 0) {
+
+          <div class="empty-events">
+
+            <div class="empty-icon">
+              📅
+            </div>
+
+            <h4>
+              No Events
+            </h4>
+
+            <p>
+              No timeline events for this day.
+            </p>
+
+          </div>
+
+        }
+
+        @else {
+
+          @for (
+            event of selectedEvents;
+            track event.id
+          ) {
+
+            <div
+              class="sidebar-event"
+              (click)="openTimeline(event)"
+            >
+
+              <h4>
+                {{ event.title }}
+              </h4>
+
+              <p>
+                {{ event.description }}
+              </p>
+
+          <span class="upcoming-date">
+
+  {{ getUpcomingLabel(event.eventDate) }}
+
+</span>
+
+            </div>
+
+          }
+
+        }
+
+      </div>
+
+
+      <!-- ================= UPCOMING ================= -->
+
+      <div class="sidebar-card">
+
+        <h3>
+          Upcoming
+        </h3>
+
+
+        @if (getUpcomingEvents().length === 0) {
+
+          <div class="empty-events">
+
+            <div class="empty-icon">
+              🗓️
+            </div>
+
+            <h4>
+              Nothing Upcoming
+            </h4>
+
+            <p>
+              No upcoming timeline events.
+            </p>
+
+          </div>
+
+        }
+
+        @else {
+
+          @for (
+            event of getUpcomingEvents();
+            track event.id
+          ) {
+
+            <div
+              class="sidebar-event"
+              (click)="openTimeline(event)"
+            >
+
+              <h4>
+                {{ event.title }}
+              </h4>
+
+              <span>
+
+                {{ event.eventDate | date:'dd MMM yyyy' }}
+
+              </span>
+
+            </div>
+
+          }
+
+        }
+
+      </div>
+
+    </aside>
+
   </div>
+
 </div>

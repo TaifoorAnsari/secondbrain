@@ -1,76 +1,720 @@
 <div class="diary-page">
 
-  <div class="page-header">
-    <div>
-      <h1>{{ isEditMode ? 'Edit Diary' : 'Write Diary' }}</h1>
-      <p>Capture your thoughts, memories and reflections.</p>
+  <!-- ==========================================
+       HEADER
+  =========================================== -->
+
+  <header class="diary-header">
+
+    <div class="header-content">
+
+      <div class="header-icon">
+        📖
+      </div>
+
+      <div>
+        <h1>My Diary</h1>
+
+        <p>
+          Capture your thoughts, memories and moments.
+        </p>
+      </div>
+
     </div>
-  </div>
 
-  <div class="diary-card">
+    <button
+      type="button"
+      class="create-btn"
+      (click)="openCreateModal()"
+    >
+      <span>+</span>
+      New Entry
+    </button>
 
-    <h2>
-      {{ isEditMode ? '✏️ Edit Diary Entry' : '📝 New Diary Entry' }}
-    </h2>
+  </header>
 
-    <div class="form-group">
-      <label>Title</label>
-      <input type="text" placeholder="Give your diary entry a title..." [(ngModel)]="diary.title">
+
+  <!-- ==========================================
+       TOOLBAR
+  =========================================== -->
+
+  <section class="diary-toolbar">
+
+    <!-- SEARCH -->
+
+    <div class="search-box">
+
+      <span class="search-icon">
+        🔍
+      </span>
+
+      <input
+        type="text"
+        placeholder="Search your diary..."
+        [value]="searchTerm()"
+        (input)="onSearch($event)"
+      />
+
     </div>
 
-    <div class="form-group">
-      <label>Date</label>
-      <input type="date" [(ngModel)]="diary.date">
+
+    <!-- FROM DATE -->
+
+    <div class="filter-field">
+
+      <label for="fromDate">
+        From
+      </label>
+
+      <input
+        id="fromDate"
+        type="date"
+        [value]="fromDate()"
+        (change)="onFromDate($event)"
+      />
+
     </div>
 
-    <div class="form-group">
-      <label>How are you feeling today?</label>
 
-      <div class="mood-list">
+    <!-- TO DATE -->
 
-        @for (mood of moods; track mood.value) {
+    <div class="filter-field">
 
-        <button type="button" class="mood-btn" [class.selected]="selectedMood() === mood.value"
-          (click)="selectMood(mood.value)">
+      <label for="toDate">
+        To
+      </label>
 
-          {{ mood.emoji }}
+      <input
+        id="toDate"
+        type="date"
+        [value]="toDate()"
+        (change)="onToDate($event)"
+      />
 
+    </div>
+
+
+    <!-- SORT -->
+
+    <div class="filter-field sort-field">
+
+      <label for="sortOrder">
+        Sort
+      </label>
+
+      <select
+        id="sortOrder"
+        [value]="sortOrder()"
+        (change)="changeSort($event)"
+      >
+
+        <option value="newest">
+          Newest first
+        </option>
+
+        <option value="oldest">
+          Oldest first
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <!-- CLEAR -->
+
+    @if (
+      searchTerm() ||
+      fromDate() ||
+      toDate() ||
+      sortOrder() !== 'newest'
+    ) {
+
+      <button
+        type="button"
+        class="clear-btn"
+        (click)="clearFilters()"
+      >
+        Clear
+      </button>
+
+    }
+
+  </section>
+
+
+  <!-- ==========================================
+       RESULT COUNT
+  =========================================== -->
+
+  @if (!isLoading()) {
+
+    <div class="result-info">
+
+      {{ entryCount() }}
+
+      {{
+        entryCount() === 1
+          ? 'entry'
+          : 'entries'
+      }}
+
+    </div>
+
+  }
+
+
+  <!-- ==========================================
+       LOADING
+  =========================================== -->
+
+  @if (isLoading()) {
+
+    <section class="state-card">
+
+      <div class="loading-spinner"></div>
+
+      <h3>
+        Loading your diary...
+      </h3>
+
+      <p>
+        Gathering your memories.
+      </p>
+
+    </section>
+
+  }
+
+
+  <!-- ==========================================
+       EMPTY / NO RESULTS
+  =========================================== -->
+
+  @else if (filteredEntries().length === 0) {
+
+    <section class="state-card empty-state">
+
+      <div class="empty-icon">
+        📖
+      </div>
+
+
+      @if (entries().length === 0) {
+
+        <h2>
+          Your diary is empty
+        </h2>
+
+        <p>
+          Start writing your first diary entry
+          and capture something meaningful.
+        </p>
+
+        <button
+          type="button"
+          class="secondary-btn"
+          (click)="openCreateModal()"
+        >
+          Write First Entry
         </button>
 
-        }
+      }
+
+
+      @else {
+
+        <h2>
+          No entries found
+        </h2>
+
+        <p>
+          Try changing your search or filters.
+        </p>
+
+        <button
+          type="button"
+          class="secondary-btn"
+          (click)="clearFilters()"
+        >
+          Clear Filters
+        </button>
+
+      }
+
+    </section>
+
+  }
+
+
+  <!-- ==========================================
+       DIARY ENTRIES
+  =========================================== -->
+
+  @else {
+
+    <section class="diary-list">
+
+      @for (
+        entry of filteredEntries();
+        track entry.id
+      ) {
+
+        <article class="diary-card">
+
+          <!-- DATE -->
+
+          <div class="entry-date">
+
+            <span class="date-day">
+              {{ entry.entryDate | date:'dd' }}
+            </span>
+
+            <span class="date-month">
+              {{ entry.entryDate | date:'MMM' }}
+            </span>
+
+            <span class="date-year">
+              {{ entry.entryDate | date:'yyyy' }}
+            </span>
+
+          </div>
+
+
+          <!-- ENTRY CONTENT -->
+
+          <div class="entry-content">
+
+            <div class="entry-top">
+
+              <!-- TITLE -->
+
+              <div>
+
+                <h2>
+                  {{ entry.title }}
+                </h2>
+
+                <span class="entry-full-date">
+
+                  {{
+                    entry.entryDate
+                      | date:'EEEE, dd MMMM yyyy'
+                  }}
+
+                </span>
+
+              </div>
+
+
+              <!-- MOOD -->
+
+              <div
+                class="mood-badge"
+                [class]="'mood-' + entry.mood.toLowerCase()"
+              >
+
+                @switch (entry.mood) {
+
+                  @case ('HAPPY') {
+
+                    <span>😊</span>
+                    Happy
+
+                  }
+
+                  @case ('SAD') {
+
+                    <span>😔</span>
+                    Sad
+
+                  }
+
+                  @case ('EXCITED') {
+
+                    <span>🤩</span>
+                    Excited
+
+                  }
+
+                  @case ('CALM') {
+
+                    <span>😌</span>
+                    Calm
+
+                  }
+
+                  @case ('ANGRY') {
+
+                    <span>😠</span>
+                    Angry
+
+                  }
+
+                  @case ('ANXIOUS') {
+
+                    <span>😰</span>
+                    Anxious
+
+                  }
+
+                  @case ('GRATEFUL') {
+
+                    <span>🙏</span>
+                    Grateful
+
+                  }
+
+                  @default {
+
+                    <span>😐</span>
+                    Neutral
+
+                  }
+
+                }
+
+              </div>
+
+            </div>
+
+
+            <!-- CONTENT -->
+
+            <p class="entry-description">
+              {{ entry.content }}
+            </p>
+
+
+            <!-- ACTIONS -->
+
+            <div class="entry-actions">
+
+              <button
+                type="button"
+                class="action-btn edit"
+                (click)="openEditModal(entry, $event)"
+              >
+
+                <span>✏️</span>
+                <span>Edit</span>
+
+              </button>
+
+
+              <button
+                type="button"
+                class="action-btn delete"
+                (click)="deleteEntry(entry, $event)"
+              >
+
+                <span>🗑️</span>
+                <span>Delete</span>
+
+              </button>
+
+            </div>
+
+          </div>
+
+        </article>
+
+      }
+
+    </section>
+
+  }
+
+
+  <!-- ==========================================
+       CREATE / EDIT MODAL
+  =========================================== -->
+
+  @if (showModal()) {
+
+    <div
+      class="modal-overlay"
+      (click)="closeModal()"
+    >
+
+      <div
+        class="diary-modal"
+        (click)="$event.stopPropagation()"
+      >
+
+        <!-- MODAL HEADER -->
+
+        <div class="modal-header">
+
+          <div>
+
+            <span class="modal-eyebrow">
+
+              {{
+                isEditMode()
+                  ? 'EDIT ENTRY'
+                  : 'NEW ENTRY'
+              }}
+
+            </span>
+
+            <h2>
+
+              {{
+                isEditMode()
+                  ? 'Edit your diary'
+                  : 'Write something'
+              }}
+
+            </h2>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="modal-close"
+            (click)="closeModal()"
+            aria-label="Close"
+          >
+            ✕
+          </button>
+
+        </div>
+
+
+        <!-- FORM -->
+
+        <form
+          [formGroup]="diaryForm"
+          (ngSubmit)="saveEntry()"
+        >
+
+          <!-- TITLE -->
+
+          <div class="form-group">
+
+            <label for="diaryTitle">
+              Title
+            </label>
+
+            <input
+              id="diaryTitle"
+              type="text"
+              formControlName="title"
+              placeholder="Give this memory a title..."
+            />
+
+
+            @if (
+              diaryForm.controls.title.touched &&
+              diaryForm.controls.title.invalid
+            ) {
+
+              <small class="error">
+
+                @if (
+                  diaryForm.controls.title.errors?.['required']
+                ) {
+
+                  Title is required.
+
+                }
+
+                @if (
+                  diaryForm.controls.title.errors?.['maxlength']
+                ) {
+
+                  Maximum 150 characters allowed.
+
+                }
+
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- DATE + MOOD -->
+
+          <div class="form-row">
+
+            <!-- DATE -->
+
+            <div class="form-group">
+
+              <label for="diaryDate">
+                Date
+              </label>
+
+              <input
+                id="diaryDate"
+                type="date"
+                formControlName="entryDate"
+              />
+
+            </div>
+
+
+            <!-- MOOD -->
+
+            <div class="form-group">
+
+              <label for="diaryMood">
+                Mood
+              </label>
+
+              <select
+                id="diaryMood"
+                formControlName="mood"
+              >
+
+                <option value="HAPPY">
+                  😊 Happy
+                </option>
+
+                <option value="SAD">
+                  😔 Sad
+                </option>
+
+                <option value="EXCITED">
+                  🤩 Excited
+                </option>
+
+                <option value="CALM">
+                  😌 Calm
+                </option>
+
+                <option value="ANGRY">
+                  😠 Angry
+                </option>
+
+                <option value="ANXIOUS">
+                  😰 Anxious
+                </option>
+
+                <option value="GRATEFUL">
+                  🙏 Grateful
+                </option>
+
+                <option value="NEUTRAL">
+                  😐 Neutral
+                </option>
+
+              </select>
+
+            </div>
+
+          </div>
+
+
+          <!-- CONTENT -->
+
+          <div class="form-group">
+
+            <div class="label-row">
+
+              <label for="diaryContent">
+                Your thoughts
+              </label>
+
+              <span>
+                {{
+                  diaryForm.controls.content.value.length
+                }}/10000
+              </span>
+
+            </div>
+
+
+            <textarea
+              id="diaryContent"
+              rows="9"
+              formControlName="content"
+              maxlength="10000"
+              placeholder="Write whatever is on your mind..."
+            ></textarea>
+
+
+            @if (
+              diaryForm.controls.content.touched &&
+              diaryForm.controls.content.invalid
+            ) {
+
+              <small class="error">
+
+                @if (
+                  diaryForm.controls.content.errors?.['required']
+                ) {
+
+                  Content is required.
+
+                }
+
+                @if (
+                  diaryForm.controls.content.errors?.['maxlength']
+                ) {
+
+                  Maximum 10000 characters allowed.
+
+                }
+
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- ACTIONS -->
+
+          <div class="modal-actions">
+
+            <button
+              type="button"
+              class="cancel-btn"
+              (click)="closeModal()"
+            >
+              Cancel
+            </button>
+
+
+            <button
+              type="submit"
+              class="save-btn"
+              [disabled]="
+                isSaving() ||
+                diaryForm.invalid
+              "
+            >
+
+              @if (isSaving()) {
+
+                Saving...
+
+              }
+
+              @else {
+
+                {{
+                  isEditMode()
+                    ? 'Update Entry'
+                    : 'Save Entry'
+                }}
+
+              }
+
+            </button>
+
+          </div>
+
+        </form>
 
       </div>
 
-      <small>Selected: {{ selectedMood() }}</small>
-
     </div>
 
-    <div class="form-group">
-
-      <label>Today's Reflection</label>
-
-      <textarea rows="10" placeholder="What's on your mind today?" [(ngModel)]="diary.content">
-
-      </textarea>
-
-    </div>
-
-    <div class="button-group">
-
-      <button class="cancel-btn" (click)="cancel()">
-
-        Cancel
-
-      </button>
-
-      <button class="save-btn" (click)="saveDiary()">
-
-        {{ isEditMode ? 'Update Entry' : 'Save Entry' }}
-
-      </button>
-
-    </div>
-
-  </div>
+  }
 
 </div>

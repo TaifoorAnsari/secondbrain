@@ -103,28 +103,32 @@ export class DashboardComponent {
       title: 'New Note',
       description: 'Capture an idea instantly',
       icon: 'edit_note',
-      route: '/notes/new',
+      route: '/notes',
+      action: 'new',
       color: '#6366F1'
     },
     {
       title: 'New Entity',
       description: 'Create a person or company',
       icon: 'account_tree',
-      route: '/entities/new',
+      route: '/entities',
+      action: 'new',
       color: '#06B6D4'
     },
     {
       title: 'Add Event',
       description: 'Schedule something important',
       icon: 'event',
-      route: '/calendar/new',
+      route: '/timeline',
+      action: 'new',
       color: '#F59E0B'
     },
     {
       title: 'Write Diary',
       description: 'Reflect on your day',
       icon: 'menu_book',
-      route: '/diary/new',
+      route: '/diary',
+      action: 'new',
       color: '#10B981'
     }
   ];

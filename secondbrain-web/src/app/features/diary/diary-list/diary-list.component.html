@@ -1,163 +1,446 @@
-<div class="diary-list-page">
+<!-- ==========================================
+     DIARY HEADER
+========================================== -->
 
-  <div class="page-header">
+<div class="diary-header">
 
-    <div>
-      <h1>My Diary</h1>
-      <p>Your memories, thoughts and reflections.</p>
-    </div>
+  <div>
 
-    <a routerLink="/diary/new" class="new-entry-btn">
-      + New Entry
-    </a>
+    <h1>
+      My Diary
+    </h1>
 
-  </div>
-  <div class="toolbar">
-
-    <div class="search-box">
-      <input type="text" placeholder="🔍 Search diary entries..." [(ngModel)]="searchText"
-        (ngModelChange)="applyFilters()">
-    </div>
-
-    <div class="toolbar-bottom">
-
-      <div class="entry-count">
-        Showing {{ filteredDiaries().length }}
-        {{ filteredDiaries().length === 1 ? 'entry' : 'entries' }}
-      </div>
-
-      <button class="clear-btn" (click)="clearFilters()">
-        Clear Filters
-      </button>
-
-    </div>
-
-    <div class="filter-row">
-
-      <div class="filter-group">
-        <label>Sort</label>
-
-        <select [(ngModel)]="sortOption" (ngModelChange)="applyFilters()">
-
-          <option value="newest">Newest First</option>
-          <option value="oldest">Oldest First</option>
-
-        </select>
-      </div>
-
-      <div class="filter-group">
-        <label>From</label>
-
-        <input type="date" [(ngModel)]="fromDate" (ngModelChange)="applyFilters()">
-      </div>
-
-      <div class="filter-group">
-        <label>To</label>
-
-        <input type="date" [(ngModel)]="toDate" (ngModelChange)="applyFilters()">
-      </div>
-
-    </div>
+    <p>
+      Your memories, thoughts and reflections.
+    </p>
 
   </div>
 
-  @if (filteredDiaries().length === 0) {
+
+  <a
+    routerLink="/diary/new"
+    class="new-entry-btn"
+  >
+    + New Entry
+  </a>
+
+</div>
+
+
+
+<!-- ==========================================
+     SEARCH
+========================================== -->
+
+<div class="search-box">
+
+  <input
+    type="text"
+    placeholder="🔍 Search diary entries..."
+    [(ngModel)]="searchText"
+    (ngModelChange)="applyFilters()"
+  />
+
+</div>
+
+
+
+<!-- ==========================================
+     FILTER ROW
+========================================== -->
+
+<div class="filter-row">
+
+
+  <!-- SORT -->
+
+  <div class="filter-group">
+
+    <label for="sort">
+      Sort
+    </label>
+
+    <select
+      id="sort"
+      [(ngModel)]="sortOption"
+      (ngModelChange)="applyFilters()"
+    >
+
+      <option value="newest">
+        Newest First
+      </option>
+
+      <option value="oldest">
+        Oldest First
+      </option>
+
+    </select>
+
+  </div>
+
+
+  <!-- FROM -->
+
+  <div class="filter-group">
+
+    <label for="fromDate">
+      From
+    </label>
+
+    <input
+      id="fromDate"
+      type="date"
+      [(ngModel)]="fromDate"
+      (ngModelChange)="applyFilters()"
+    />
+
+  </div>
+
+
+  <!-- TO -->
+
+  <div class="filter-group">
+
+    <label for="toDate">
+      To
+    </label>
+
+    <input
+      id="toDate"
+      type="date"
+      [(ngModel)]="toDate"
+      (ngModelChange)="applyFilters()"
+    />
+
+  </div>
+
+</div>
+
+
+
+<!-- ==========================================
+     TOOLBAR
+========================================== -->
+
+<div class="toolbar-bottom">
+
+  <div class="entry-count">
+
+    Showing
+
+    {{ filteredDiaries().length }}
+
+    {{
+      filteredDiaries().length === 1
+        ? 'entry'
+        : 'entries'
+    }}
+
+  </div>
+
+
+  <button
+    type="button"
+    class="clear-btn"
+    (click)="clearFilters()"
+  >
+    Clear Filters
+  </button>
+
+</div>
+
+
+
+<!-- ==========================================
+     LOADING
+========================================== -->
+
+@if (isLoading()) {
 
   <div class="empty-state">
 
-    <div class="emoji">📖</div>
+    <div class="emoji">
+      ⏳
+    </div>
 
-    <h2>No diary entries yet</h2>
+    <h2>
+      Loading your diary...
+    </h2>
 
     <p>
-      Start writing your first diary entry.
+      Gathering your memories.
     </p>
-
-    <a routerLink="/diary/new" class="create-btn">
-      Write First Entry
-    </a>
 
   </div>
 
-  } @else {
+}
 
-  <div class="diary-grid">
 
-    @for (diary of filteredDiaries(); track diary.id) {
 
-    <div class="diary-card" (click)="editDiary(diary.id!)">
+<!-- ==========================================
+     EMPTY STATE
+========================================== -->
 
-      <div class="card-header">
+@else if (filteredDiaries().length === 0) {
 
-        <span class="mood" [class]="diary.mood.toLowerCase()">
+  <div class="empty-state">
 
-          @switch (diary.mood) {
-          @case ("Happy") { 😊 }
-          @case ("Excited") { 😄 }
-          @case ("Calm") { 🙂 }
-          @case ("Neutral") { 😐 }
-          @case ("Sad") { 😔 }
-          @case ("Angry") { 😡 }
-          }
+    <div class="emoji">
+      📖
+    </div>
 
-          {{ diary.mood }}
 
-        </span>
-
-        <div class="menu-container">
-
-          <button class="menu-btn" (click)="toggleMenu(diary.id!); $event.stopPropagation()">
-
-            ⋮
-
-          </button>
-
-          @if(openMenuId === diary.id){
-
-          <div class="menu">
-
-            <button (click)="editDiary(diary.id!); $event.stopPropagation()">
-
-              ✏️ Edit
-
-            </button>
-
-            <button class="delete" (click)="deleteDiary(diary.id!); $event.stopPropagation()">
-
-              🗑 Delete
-
-            </button>
-
-          </div>
-
-          }
-
-        </div>
-
-      </div>
+    @if (allDiaries().length === 0) {
 
       <h2>
-
-        {{ diary.title }}
-
+        No diary entries yet
       </h2>
 
-      <p class="preview">
-
-        {{ diary.content }}
-
+      <p>
+        Start writing your first diary entry.
       </p>
 
-      <div class="card-footer">
-        <span class="date">{{ diary.date }}</span>
-      </div>
+      <a
+        routerLink="/diary/new"
+        class="create-btn"
+      >
+        Write First Entry
+      </a>
 
-    </div>
+    }
+
+    @else {
+
+      <h2>
+        No entries found
+      </h2>
+
+      <p>
+        Try changing your search or date filters.
+      </p>
+
+      <button
+        type="button"
+        class="create-btn"
+        (click)="clearFilters()"
+      >
+        Clear Filters
+      </button>
 
     }
 
   </div>
 
-  }
+}
 
-</div>
+
+
+<!-- ==========================================
+     DIARY LIST
+========================================== -->
+
+@else {
+
+  <div class="diary-list">
+
+    @for (
+      diary of filteredDiaries();
+      track diary.id
+    ) {
+
+
+      <!-- ====================================
+           DIARY CARD
+      ===================================== -->
+
+      <article
+        class="diary-card"
+        (click)="editDiary(diary.id)"
+      >
+
+
+        <!-- ==================================
+             CARD HEADER
+        =================================== -->
+
+        <div class="card-header">
+
+
+          <!-- MOOD -->
+
+          <span
+            class="mood"
+            [class]="
+              'mood-' +
+              diary.mood.toLowerCase()
+            "
+          >
+
+            @switch (diary.mood) {
+
+              @case ('HAPPY') {
+
+                😊 Happy
+
+              }
+
+              @case ('SAD') {
+
+                😔 Sad
+
+              }
+
+              @case ('EXCITED') {
+
+                🤩 Excited
+
+              }
+
+              @case ('CALM') {
+
+                😌 Calm
+
+              }
+
+              @case ('ANGRY') {
+
+                😠 Angry
+
+              }
+
+              @case ('ANXIOUS') {
+
+                😰 Anxious
+
+              }
+
+              @case ('GRATEFUL') {
+
+                🙏 Grateful
+
+              }
+
+              @case ('NEUTRAL') {
+
+                😐 Neutral
+
+              }
+
+              @default {
+
+                😐 Neutral
+
+              }
+
+            }
+
+          </span>
+
+
+
+          <!-- ==================================
+               MENU
+          =================================== -->
+
+          <div class="menu-container">
+
+
+            <button
+              type="button"
+              class="menu-btn"
+              aria-label="Diary actions"
+              (click)="
+                toggleMenu(diary.id);
+                $event.stopPropagation()
+              "
+            >
+              ⋮
+            </button>
+
+
+            @if (
+              openMenuId === diary.id
+            ) {
+
+              <div class="menu">
+
+
+                <!-- EDIT -->
+
+                <button
+                  type="button"
+                  (click)="
+                    editDiary(diary.id);
+                    $event.stopPropagation()
+                  "
+                >
+                  ✏️ Edit
+                </button>
+
+
+                <!-- DELETE -->
+
+                <button
+                  type="button"
+                  class="delete"
+                  (click)="
+                    deleteDiary(diary.id);
+                    $event.stopPropagation()
+                  "
+                >
+                  🗑 Delete
+                </button>
+
+              </div>
+
+            }
+
+          </div>
+
+        </div>
+
+
+
+        <!-- ==================================
+             TITLE
+        =================================== -->
+
+        <h2>
+          {{ diary.title }}
+        </h2>
+
+
+
+        <!-- ==================================
+             CONTENT PREVIEW
+        =================================== -->
+
+        <p class="preview">
+
+          {{ diary.content }}
+
+        </p>
+
+
+
+        <!-- ==================================
+             CARD FOOTER
+        =================================== -->
+
+        <div class="card-footer">
+
+          <span class="date">
+
+            {{ diary.entryDate | date:'dd MMM yyyy' }}
+
+          </span>
+
+        </div>
+
+      </article>
+
+    }
+
+  </div>
+
+}
