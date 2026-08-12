@@ -252,10 +252,41 @@
     align-items:center;
     justify-content:center;
   }
-
+  .login{
+    width: 55px;
+  }
   input{
 
     flex:1;
+  }
+
+}
+
+@media (max-width: 767px) {
+
+  :host {
+    display: block;
+    width: 100%;
+  }
+
+  .header-container {
+    width: 100%;
+  }
+
+  .search {
+    flex: 1;
+    min-width: 0;
+    width: auto;
+  }
+
+  .search input {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .profile-wrapper {
+    flex-shrink: 0;
   }
 
 }
