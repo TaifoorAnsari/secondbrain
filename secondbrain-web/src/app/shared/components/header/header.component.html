@@ -1,76 +1,164 @@
 <header class="topbar">
-  <div class="search">
-    <span class="material-symbols-rounded"> search </span>
-
-    <input type="text" placeholder="Search notes, entities, events..." />
-  </div>
+  @if(isHomePage()) {
+    <div class="header-greeting">
+      <h1>
+        👋 {{ greeting() }},
+        {{ user()?.fullName || 'User' }}
+      </h1>
+  
+      <p>
+       
+      </p>
+    </div>
+  }
 
   <div class="topbar-actions">
+
     <button class="icon-btn">
-      <span class="material-symbols-rounded"> notifications </span>
+      <span class="material-symbols-rounded">
+        notifications
+      </span>
     </button>
 
     <div class="profile-wrapper">
-      @if(!user()) {
-        <button class="login" (click)="loginToAccount()">login</button>   
-      }
-      @else {
-        <button class="profile" (click)="toggleMenu()">
+
+      @if (!user()) {
+
+        <button
+          class="login"
+          (click)="loginToAccount()"
+        >
+          login
+        </button>
+
+      } @else {
+
+        <button
+          class="profile"
+          (click)="toggleMenu()"
+        >
+
           <div class="avatar">
-            {{ initials() }}
+
+            @if (avatarUrl()) {
+
+              <img
+                [src]="avatarUrl()!"
+                alt="Profile"
+              />
+
+            } @else {
+
+              <span>
+                {{ initials() }}
+              </span>
+
+            }
+
           </div>
-  
+
           <div class="profile-info">
+
             <span class="name">
               {{ user()?.fullName }}
             </span>
-  
+
             <span class="role">
               {{ user()?.email }}
             </span>
+
           </div>
-  
-          <span class="material-symbols-rounded"> expand_more </span>
+
+          <span class="material-symbols-rounded">
+            expand_more
+          </span>
+
         </button>
+
       }
 
       @if (menuOpen()) {
+
         <div class="profile-menu">
+
           <div class="menu-user">
+
             <div class="avatar big">
-              {{ initials() }}
+
+              @if (avatarUrl()) {
+
+                <img
+                  [src]="avatarUrl()!"
+                  alt="Profile"
+                />
+
+              } @else {
+
+                <span>
+                  {{ initials() }}
+                </span>
+
+              }
+
             </div>
 
             <div>
-              <strong>{{ user()?.fullName }}</strong>
 
-              <p>{{ user()?.email }}</p>
+              <strong>
+                {{ user()?.fullName }}
+              </strong>
+
+              <p>
+                {{ user()?.email }}
+              </p>
+
             </div>
+
           </div>
 
           <hr />
 
           <button (click)="profile()">
-            <span class="material-symbols-rounded"> person </span>
+
+            <span class="material-symbols-rounded">
+              person
+            </span>
 
             My Profile
+
           </button>
 
-          <button>
-            <span class="material-symbols-rounded"> settings </span>
+          <button (click)="settings()">
+
+            <span class="material-symbols-rounded">
+              settings
+            </span>
 
             Settings
+
           </button>
 
           <hr />
 
-          <button class="logout" (click)="logout()">
-            <span class="material-symbols-rounded"> logout </span>
+          <button
+            class="logout"
+            (click)="logout()"
+          >
+
+            <span class="material-symbols-rounded">
+              logout
+            </span>
 
             Logout
+
           </button>
+
         </div>
+
       }
+
     </div>
+
   </div>
+
 </header>

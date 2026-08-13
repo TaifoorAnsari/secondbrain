@@ -60,3 +60,58 @@
   color: #6b7280;
   font-size: 14px;
 }
+
+.no-event {
+    display: flex;
+    width: 200px;
+    height: 200px;
+    margin: auto;
+    align-items: center;
+    justify-content: center;
+
+  & .no-event-text {
+    font-size: 18px;
+    font-weight: 500;
+    color: #6b7280;
+  }
+}
+
+.primary-btn{
+
+  border:none;
+
+  cursor:pointer;
+
+  height:48px;
+  width: 200px;
+
+  padding:0 26px;
+
+  border-radius:16px;
+
+  background:#F3F0FF;
+
+  color:#5B5CEB;
+
+  font-size:15px;
+
+  font-weight:500;
+
+  transition:.3s;
+}
+
+.primary-btn:hover{
+
+  background:#5B5CEB;
+
+  color:white;
+
+  transform:translateY(-2px);
+
+}
+
+.view-all {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}

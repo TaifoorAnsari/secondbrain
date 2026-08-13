@@ -1,15 +1,28 @@
-<a class="quick-card" (click)="onClick()">
+<a
+  class="quick-card"
+  href="javascript:void(0)"
+  (click)="onClick()"
+>
+
+  <!-- ICON -->
+
   <div
     class="quick-card__icon"
     [style.background]="color() + '15'"
     [style.color]="color()"
   >
+
     <span class="material-symbols-rounded">
       {{ icon() }}
     </span>
+
   </div>
 
+
+  <!-- CONTENT -->
+
   <div class="quick-card__body">
+
     <h3>
       {{ title() }}
     </h3>
@@ -17,9 +30,14 @@
     <p>
       {{ description() }}
     </p>
+
   </div>
+
+
+  <!-- ARROW -->
 
   <span class="quick-card__arrow material-symbols-rounded">
     arrow_forward
   </span>
+
 </a>

@@ -1,126 +1,269 @@
 <div class="settings-page">
-  <!-- Header -->
   <div class="page-header">
     <div>
       <h1>Settings</h1>
+
       <p>Manage your account, preferences and application settings.</p>
     </div>
 
-    <button class="save-btn">Save Changes</button>
+    <div class="header-actions">
+      <button
+        type="button"
+        class="save-btn"
+        [disabled]="isSaving"
+        (click)="saveSettings()"
+      >
+        @if (isSaving) {
+          Saving...
+        } @else if (isEditing) {
+          Save Changes
+        } @else {
+          Edit Profile
+        }
+      </button>
+    </div>
   </div>
 
-  <!-- Profile -->
+  @if (saveSuccess) {
+    <div class="settings-success">
+      {{ saveSuccess }}
+    </div>
+  }
+
+  @if (saveError) {
+    <div class="settings-error">
+      {{ saveError }}
+    </div>
+  }
+
   <div class="settings-card">
     <h2>👤 Profile Information</h2>
 
     <div class="profile-section">
       <div class="profile-avatar">
-        <div class="avatar">S</div>
+        <div class="avatar">
+          @if (avatarPreview) {
+            <img [src]="avatarPreview" alt="Profile photo" />
+          } @else {
+            {{ avatarLetter }}
+          }
+        </div>
 
-        <button>Change Photo</button>
+        <input
+          #photoInput
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+          hidden
+          (change)="onPhotoSelected($event)"
+        />
+
+        <button
+          type="button"
+          class="change-photo-btn"
+          [disabled]="!isEditing"
+          (click)="photoInput.click()"
+        >
+          📷 Change Photo
+        </button>
+
+        @if (photoError) {
+          <small class="photo-error">
+            {{ photoError }}
+          </small>
+        }
       </div>
 
       <div class="profile-form">
         <div class="input-group">
-          <label>Full Name</label>
-          <input type="text" [(ngModel)]="user.fullName" />
+          <label for="fullName"> Full Name </label>
+
+          <input
+            id="fullName"
+            type="text"
+            [(ngModel)]="user.fullName"
+            [disabled]="!isEditing"
+            placeholder="Enter your full name"
+          />
         </div>
 
         <div class="input-group">
-          <label>Username</label>
-          <input type="text" [(ngModel)]="user.username" />
+          <label for="username"> Username </label>
+
+          <input
+            id="username"
+            type="text"
+            [(ngModel)]="user.username"
+            [disabled]="!isEditing"
+            placeholder="Enter username"
+          />
         </div>
 
         <div class="input-group">
-          <label>Email</label>
-          <input type="email" [(ngModel)]="user.email" />
+          <label for="email"> Email </label>
+
+          <input id="email" type="email" [ngModel]="user.email" disabled />
+
+          @if (isEditing) {
+            <small class="field-hint"> Email cannot be changed. </small>
+          }
         </div>
 
         <div class="input-group">
-          <label>Phone</label>
-          <input type="text" [(ngModel)]="user.phone" />
+          <label for="phone"> Phone </label>
+
+          <input
+            id="phone"
+            type="text"
+            [(ngModel)]="user.phone"
+            [disabled]="!isEditing"
+            placeholder="Enter phone number"
+          />
         </div>
 
         <div class="input-group full-width">
-          <label>Bio</label>
-          <textarea rows="4" [(ngModel)]="user.bio"> </textarea>
+          <label for="bio"> Bio </label>
+
+          <textarea
+            id="bio"
+            rows="4"
+            [(ngModel)]="user.bio"
+            [disabled]="!isEditing"
+            placeholder="Tell something about yourself..."
+          ></textarea>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- Appearance -->
 
   <div class="settings-card">
     <h2>🎨 Appearance</h2>
 
     <div class="option">
-      <label>Theme</label>
+      <div>
+        <strong> Theme </strong>
 
-      <select>
-        <option>Light</option>
-        <option>Dark</option>
-        <option>System</option>
+        <p>Choose how Birbal looks.</p>
+      </div>
+
+      <select [(ngModel)]="appearance.theme">
+        <option value="light">Light</option>
+
+        <option value="dark">Dark</option>
+
+        <option value="system">System</option>
       </select>
     </div>
 
-    <div class="option">
-      <label>Accent Color</label>
+   <div class="colors">
 
-      <div class="colors">
-        <span class="blue"></span>
-        <span class="purple"></span>
-        <span class="green"></span>
-        <span class="orange"></span>
-      </div>
-    </div>
+  <button
+    type="button"
+    class="color blue"
+    [class.active]="appearance.accentColor === 'blue'"
+    (click)="changeAccentColor('blue')"
+    aria-label="Blue"
+  ></button>
+
+  <button
+    type="button"
+    class="color purple"
+    [class.active]="appearance.accentColor === 'purple'"
+    (click)="changeAccentColor('purple')"
+    aria-label="Purple"
+  ></button>
+
+  <button
+    type="button"
+    class="color green"
+    [class.active]="appearance.accentColor === 'green'"
+    (click)="changeAccentColor('green')"
+    aria-label="Green"
+  ></button>
+
+  <button
+    type="button"
+    class="color orange"
+    [class.active]="appearance.accentColor === 'orange'"
+    (click)="changeAccentColor('orange')"
+    aria-label="Orange"
+  ></button>
+
+</div>
   </div>
-
-  <!-- Notifications -->
 
   <div class="settings-card">
     <h2>🔔 Notifications</h2>
 
     <div class="toggle">
-      <span>Morning Reminder</span>
+      <div>
+        <strong> Morning Reminder </strong>
 
-      <input type="checkbox" [(ngModel)]="notifications.morning" />
+        <p>Receive your morning reminder.</p>
+      </div>
+
+      <label class="switch">
+        <input type="checkbox" [(ngModel)]="notifications.morning" />
+
+        <span class="slider"></span>
+      </label>
     </div>
 
     <div class="toggle">
-      <span>Evening Reminder</span>
+      <div>
+        <strong> Evening Reminder </strong>
 
-      <input type="checkbox" [(ngModel)]="notifications.evening" />
+        <p>Receive your evening reminder.</p>
+      </div>
+
+      <label class="switch">
+        <input type="checkbox" [(ngModel)]="notifications.evening" />
+
+        <span class="slider"></span>
+      </label>
     </div>
 
     <div class="toggle">
-      <span>Email Notification</span>
+      <div>
+        <strong> Email Notification </strong>
 
-      <input type="checkbox" [(ngModel)]="notifications.email" />
+        <p>Receive important notifications by email.</p>
+      </div>
+
+      <label class="switch">
+        <input type="checkbox" [(ngModel)]="notifications.email" />
+
+        <span class="slider"></span>
+      </label>
     </div>
 
     <div class="toggle">
-      <span>Browser Notification</span>
+      <div>
+        <strong> Browser Notification </strong>
 
-      <input type="checkbox" [(ngModel)]="notifications.browser" />
+        <p>Show notifications in your browser.</p>
+      </div>
+
+      <label class="switch">
+        <input type="checkbox" [(ngModel)]="notifications.browser" />
+
+        <span class="slider"></span>
+      </label>
     </div>
   </div>
-
- 
-
- 
 
   <div class="settings-card">
     <h2>💾 Data Management</h2>
 
     <div class="button-group">
-      <button>Export JSON</button>
+      <button type="button" (click)="exportJson()">Export JSON</button>
 
-      <button>Export PDF</button>
+      <button type="button" (click)="exportPdf()">Export PDF</button>
 
-      <button>Import Data</button>
+      <button type="button" (click)="importData()">Import Data</button>
 
-      <button class="danger">Delete Account</button>
+      <button type="button" class="danger" (click)="deleteAccount()">
+        Delete Account
+      </button>
     </div>
   </div>
 </div>

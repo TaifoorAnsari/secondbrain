@@ -1,35 +1,171 @@
 <div class="dashboard">
+
   <header class="dashboard-header">
     <div>
-      <h1>
-        👋 {{ greeting() }},
-        {{ currentUser()?.fullName || "User" }}
-      </h1>
-
-      <p>Welcome back! Here's your SecondBrain overview.</p>
+    
     </div>
   </header>
 
-  <section class="stats-grid">
-    @for (stat of stats(); track stat.title) {
-      <app-stat-card
-        [title]="stat.title"
-        [value]="stat.value"
-        [icon]="stat.icon"
-        [subtitle]="stat.subtitle"
-        [color]="stat.color">
-      </app-stat-card>
+
+  <section class="mind-section">
+
+  <div class="mind-header">
+    <span class="material-symbols-rounded">
+      psychology
+    </span>
+
+    <div>
+      <h2>What's on your mind today?</h2>
+      <p>Capture an idea, thought, or memory.</p>
+    </div>
+  </div>
+
+  <div class="mind-input-wrapper">
+
+  <span class="material-symbols-rounded">
+    search
+  </span>
+
+  @if (selectedEntity()) {
+
+    <div class="selected-entity">
+
+      <div class="selected-entity-avatar">
+
+        @if (selectedEntity()?.avatar) {
+
+          <img
+            [src]="selectedEntity()?.avatar!"
+            [alt]="selectedEntity()?.name"
+          />
+
+        } @else {
+
+          <span class="material-symbols-rounded">
+            {{ selectedEntity()?.type === 'PERSON' ? 'person' : 'business' }}
+          </span>
+
+        }
+
+      </div>
+
+      <span class="selected-entity-name">
+        {{ selectedEntity()?.name }}
+      </span>
+
+      <button
+        type="button"
+        class="remove-entity"
+        (click)="selectedEntity.set(null)"
+      >
+        ×
+      </button>
+
+    </div>
+
+  }
+
+ <input
+  type="text"
+  [placeholder]="
+    selectedEntity()
+      ? 'Type what happened...'
+      : '@ Search people, companies, or entities...'
+  "
+  [(ngModel)]="mindQuery"
+  (input)="onMindInput()"
+  (keydown.enter)="saveMindEntry()"
+/>
+</div>
+  @if (showEntitySuggestions()) {
+
+  <div class="entity-suggestions">
+
+    @if (isSearchingEntities()) {
+
+      <div class="suggestion-loading">
+        Searching entities...
+      </div>
+
+    } @else if (entitySuggestions().length === 0) {
+
+      <div class="suggestion-empty">
+        No entities found.
+      </div>
+
+    } @else {
+
+      @for (entity of entitySuggestions(); track entity.id) {
+
+        <button
+          type="button"
+          class="entity-suggestion"
+          (click)="selectEntity(entity)"
+        >
+
+          <div class="entity-avatar">
+
+            @if (entity.avatar) {
+
+              <img
+                [src]="entity.avatar"
+                [alt]="entity.name"
+              />
+
+            } @else {
+
+              <span class="material-symbols-rounded">
+                {{ entity.type === 'PERSON' ? 'person' : 'business' }}
+              </span>
+
+            }
+
+          </div>
+
+          <div class="entity-info">
+
+            <strong>
+              {{ entity.name }}
+            </strong>
+
+            <span>
+              {{ entity.type === 'PERSON' ? 'Person' : 'Company' }}
+            </span>
+
+          </div>
+
+        </button>
+
+      }
+
     }
-  </section>
+
+  </div>
+
+}
+
+</section>
+
+
+  <!-- Quick Actions -->
 
   <section class="quick-actions">
+
     <div class="section-header">
       <h2>Quick Actions</h2>
-      <p>Jump straight into your workflow.</p>
+
+      <p>
+      
+      </p>
     </div>
 
     <div class="quick-grid">
-      @for (action of quickActions; track action.title) {
+
+      @for (
+        action of quickActions;
+        track action.title
+      ) {
+
         <app-quick-action-card
           [title]="action.title"
           [description]="action.description"
@@ -38,13 +174,40 @@
           [action]="action.action"
           [color]="action.color">
         </app-quick-action-card>
+
       }
+
     </div>
+
   </section>
+
+
+  <!-- Stats -->
+
+  <section class="stats-grid">
+
+    @for (
+      stat of stats();
+      track stat.title
+    ) {
+
+      <app-stat-card
+        [title]="stat.title"
+        [value]="stat.value"
+        [icon]="stat.icon"
+        [subtitle]="stat.subtitle"
+        [color]="stat.color">
+      </app-stat-card>
+
+    }
+
+  </section>
+
 
   <app-recent-notes
     [notes]="recentNotes()">
   </app-recent-notes>
+
 
   <section class="bottom-grid">
 
@@ -52,9 +215,11 @@
       [activities]="activities">
     </app-activity-timeline>
 
+
     <app-upcoming-events
-      [events]="events">
+      [events]="upcomingEvents()">
     </app-upcoming-events>
 
   </section>
+
 </div>

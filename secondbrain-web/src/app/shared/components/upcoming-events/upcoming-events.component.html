@@ -5,19 +5,31 @@
     <p>Your schedule</p>
   </div>
 
+  @if(events().length > 0) {
   <div class="events-list">
-    @for (event of events(); track event.id) {
-      <div class="event">
-        <div class="event-date">
-          <span class="material-symbols-rounded"> event </span>
+      @for (event of (events() | slice:0:3); track event.id) {
+        <div class="event">
+          <div class="event-date">
+            <span class="material-symbols-rounded"> event </span>
+          </div>
+  
+          <div>
+            <h4>{{ event.title }}</h4>
+  
+            <span>{{ event.date }}</span>
+          </div>
         </div>
-
-        <div>
-          <h4>{{ event.title }}</h4>
-
-          <span>{{ event.date }}</span>
-        </div>
+      }
+    </div>
+    @if(events().length > 3) {
+      <div class="view-all">
+        <button class="primary-btn" routerLink="/calendar">View All →</button>
       </div>
     }
-  </div>
+  } @else {
+    <div class="no-event">
+      <p class="no-event-text">No Upcoming Event</p>
+      
+    </div>
+  }
 </div>
