@@ -44,6 +44,7 @@ export class SettingsComponent implements OnInit {
 
   notifications = {
     morning: true,
+    morningTime: '08:00',
     evening: true,
     email: false,
     browser: true,
@@ -61,6 +62,7 @@ saveError: any;
 
 ngOnInit(): void {
   this.loadUser();
+   this.loadNotifications();
   this.loadAppearance();
 }
 
@@ -220,6 +222,7 @@ ngOnInit(): void {
           this.isEditing = false;
           this.toast.success('Your changes have been saved.');
         },
+        
 
         error: (error) => {
           this.isSaving = false;
@@ -276,6 +279,54 @@ ngOnInit(): void {
 
     console.log('Delete account requested.');
   }
+  toggleBrowserNotifications(): void {
+
+  if (!this.notifications.browser) {
+    return;
+  }
+
+  if (!('Notification' in window)) {
+    this.notifications.browser = false;
+
+    this.toast.error(
+      'Browser notifications are not supported on this browser.'
+    );
+
+    return;
+  }
+
+  if (Notification.permission === 'granted') {
+
+    this.toast.success(
+      'Browser notifications are enabled.'
+    );
+
+    return;
+  }
+
+  Notification.requestPermission().then((permission) => {
+
+    if (permission === 'granted') {
+
+      this.notifications.browser = true;
+
+      this.toast.success(
+        'Browser notifications enabled.'
+      );
+
+    } else {
+
+      this.notifications.browser = false;
+
+      this.toast.error(
+        'Browser notification permission was not granted.'
+      );
+
+    }
+
+  });
+
+}
 
   private getAvatarUrl(avatar: string | null): string | null {
   if (!avatar) {
@@ -305,6 +356,40 @@ private loadAppearance(): void {
 
   this.applyTheme();
   this.applyAccentColor();
+}
+private loadNotifications(): void {
+  const savedNotifications =
+    localStorage.getItem('birbal-notifications');
+
+  if (!savedNotifications) {
+    return;
+  }
+
+  try {
+    const saved = JSON.parse(savedNotifications);
+
+    this.notifications = {
+      ...this.notifications,
+      ...saved,
+    };
+
+  } catch (error) {
+    console.error(
+      'Failed to load notification settings:',
+      error
+    );
+  }
+}
+
+saveNotificationSettings(): void {
+  localStorage.setItem(
+    'birbal-notifications',
+    JSON.stringify(this.notifications)
+  );
+
+  this.toast.success(
+    'Notification settings saved.'
+  );
 }
 
 changeTheme(theme: string): void {

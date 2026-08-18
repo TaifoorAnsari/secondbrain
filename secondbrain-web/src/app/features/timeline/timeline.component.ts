@@ -7,6 +7,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TimelineService } from '../../core/services/timeline.service';
 import { EntitiesService } from '../../core/services/entities.service';
 import { ToastService } from '../../core/services/toast.service';
+import { ConfirmDialogService } from '../../core/services/confirm-dialog.service';
 
 import { Timeline } from '../../core/models/timeline.model';
 import { Entity } from '../../core/models/entity.model';
@@ -30,6 +31,7 @@ export class TimelineComponent implements OnInit {
   private toast = inject(ToastService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private confirmDialog = inject(ConfirmDialogService);
 
   timelines = signal<Timeline[]>([]);
 
@@ -443,12 +445,53 @@ closeMenu(): void {
 
 }
 
-deleteTimeline(
+async deleteTimeline(
   timeline: Timeline,
-): void {
+): Promise<void> {
 
-  // delete logic here
+  const confirmed = await this.confirmDialog.confirm({
+    title: 'Delete Timeline',
+    message: `Are you sure you want to delete "${timeline.title}"?`,
+    confirmText: 'Delete',
+    cancelText: 'Cancel',
+  });
 
+  if (!confirmed) {
+    return;
+  }
+
+  this.timelineService
+    .deleteTimeline(timeline.id)
+    .subscribe({
+
+      next: () => {
+
+        this.timelines.update(timelines =>
+          timelines.filter(
+            item => item.id !== timeline.id
+          )
+        );
+
+        this.toast.success(
+          'Timeline deleted successfully'
+        );
+
+      },
+
+      error: (err) => {
+
+        console.error(
+          'Failed to delete timeline:',
+          err
+        );
+
+        this.toast.error(
+          'Failed to delete timeline'
+        );
+
+      },
+
+    });
 }
 
 goBack() {

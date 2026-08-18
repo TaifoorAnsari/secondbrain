@@ -781,3 +781,89 @@ background: linear-gradient(
   box-shadow: 0 0 0 3px var(--accent-color, #7c3aed);
   transform: scale(1.08);
 }
+
+.reminder-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+
+  padding: 7px 11px;
+
+  background: #f8f9ff;
+  border: 1px solid #e2e5f5;
+  border-radius: 10px;
+
+  width: fit-content;
+
+  .material-symbols-rounded {
+    font-size: 19px;
+    color: var(--accent-color, #6366f1);
+  }
+
+  input[type='time'] {
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: 600;
+
+    color: #1f2937;
+
+    cursor: pointer;
+
+    padding: 0;
+
+    width: 78px;
+
+    &::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+      opacity: 0.65;
+    }
+  }
+}
+input[type="time"] {
+  width: 110px;
+  height: 40px;
+  padding: 0 10px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #ddd6fe;
+  border-radius: 10px;
+
+  background: #f5f3ff;
+  color: #312e81;
+
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+
+  outline: none;
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #a78bfa;
+    background:   #a78bfa;
+  }
+
+  &:focus {
+    border-color: #d0ccd7;
+    background: #7c3aed;
+
+    box-shadow:
+      0 0 0 3px rgba(124, 58, 237, 0.12);
+  }
+
+  &::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.7;
+    width: 17px;
+    height: 17px;
+  }
+}
