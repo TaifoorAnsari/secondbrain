@@ -1,0 +1,10 @@
+{
+  "name": "secondbrain",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "postinstall": "cd secondbrain-api && npm install",
+    "build": "cd secondbrain-api && npx prisma generate && nest build",
+    "start": "cd secondbrain-api && npx prisma migrate deploy && node dist/main"
+  }
+}

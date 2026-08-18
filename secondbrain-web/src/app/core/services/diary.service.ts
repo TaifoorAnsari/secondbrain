@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 import {
   DiaryEntry,
@@ -12,13 +13,10 @@ import {
   providedIn: 'root',
 })
 export class DiaryService {
-  deleteDiary(id: string) {
-    throw new Error('Method not implemented.');
-  }
 
   private http = inject(HttpClient);
 
-  private api = 'http://localhost:3000/diary';
+  private api = `${environment.apiUrl}/diary`;
 
 
   // ==========================================
