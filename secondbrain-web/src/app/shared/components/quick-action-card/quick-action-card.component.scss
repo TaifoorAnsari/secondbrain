@@ -5,6 +5,8 @@
 .quick-card {
   display: flex;
 
+  width: 26.4rem;;
+
   align-items: center;
 
   gap: 1rem;
@@ -82,4 +84,10 @@
   color: #9ca3af;
 
   transition: 0.3s;
+}
+
+@media (max-width: 767px) {
+  .quick-card {
+    width: 23.5rem
+  }
 }

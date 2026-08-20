@@ -1,30 +1,37 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import {
+  Component,
+  computed,
+  EventEmitter,
+  inject,
+  Output,
+  signal,
+} from '@angular/core';
+
+import { Router } from '@angular/router';
+
 import { AuthService } from '../../../core/services/auth.service';
+
 import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-header',
-  imports : [RouterLink],
+  imports: [],
   standalone: true,
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
+
+  @Output() menuToggle = new EventEmitter<void>();
 
   private authService = inject(AuthService);
-  private router = inject(Router)
+  private router = inject(Router);
+
   user = this.authService.currentUser;
-  isHomePage = signal(false);
+
   currentRoute = this.router.url;
 
   menuOpen = signal(false);
-
-  ngOnInit(): void {
-      if(this.currentRoute === "/") {
-        this.isHomePage.set(true)
-      }
-  }
 
   greeting = computed(() => {
     const hour = new Date().getHours();
@@ -67,23 +74,26 @@ export class HeaderComponent implements OnInit {
 
     return fullName.charAt(0).toUpperCase();
   });
-routerlink: any;
 
-  toggleMenu() {
+  toggleSidebar(): void {
+    this.menuToggle.emit();
+  }
+
+  toggleMenu(): void {
     this.menuOpen.update(value => !value);
   }
 
-  logout() {
+  logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
 
-  profile() {
+  profile(): void {
     this.menuOpen.set(false);
     this.router.navigate(['/profile']);
   }
 
-  loginToAccount() {
+  loginToAccount(): void {
     console.log(this.user(), 'current user');
     this.router.navigate(['/login']);
   }

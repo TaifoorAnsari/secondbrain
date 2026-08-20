@@ -207,54 +207,35 @@ onMindInput(): void {
 }
 
 saveMindEntry(): void {
+  const input = this.mindQuery.trim();
 
-  const entity = this.selectedEntity();
-
-  const description = this.mindQuery.trim();
-
-  if (!entity || !description) {
+  if (!input) {
     return;
   }
 
-  const dto = {
-    title: description.length > 60
-      ? description.substring(0, 60) + '...'
-      : description,
+  if (!input.startsWith('@')) {
+    console.warn('Quick capture must start with @');
+    return;
+  }
 
-    description,
-
-    eventDate: new Date().toISOString(),
-
-    entityIds: [entity.id],
-
-    showOnCalendar: false,
-  };
-
-  this.timelineService.createTimeline(dto).subscribe({
-
-    next: (timeline) => {
-
-      console.log('Timeline created:', timeline);
+  this.timelineService.quickCapture(input).subscribe({
+    next: (response) => {
+      console.log('Quick capture successful:', response);
 
       this.mindQuery = '';
 
       this.selectedEntity.set(null);
+      this.entitySuggestions.set([]);
+      this.showEntitySuggestions.set(false);
 
       this.loadUpcomingEvents();
-
+      this.loadDashboard();
     },
 
     error: (error) => {
-
-      console.error(
-        'Failed to create timeline:',
-        error
-      );
-
+      console.error('Quick capture failed:', error);
     },
-
   });
-
 }
 
 selectEntity(entity: Entity): void {
@@ -479,16 +460,6 @@ selectEntity(entity: Entity): void {
       action: 'new',
       color: '#F59E0B'
     },
-
-    {
-      title: 'Write Diary',
-      description: 'Reflect on your day',
-      icon: 'menu_book',
-      route: '/diary',
-      action: 'new',
-      color: '#10B981'
-    }
-
   ];
 
 

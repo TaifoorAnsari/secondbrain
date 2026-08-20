@@ -46,6 +46,14 @@ export class TimelineService {
     );
 
   }
+  quickCapture(
+  input: string,
+): Observable<any> {
+  return this.http.post<any>(
+    `${this.api}/quick-capture`,
+    { input }
+  );
+}
 
   updateTimeline(
     id: string,

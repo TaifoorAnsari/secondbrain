@@ -1,16 +1,16 @@
 <header class="topbar">
 
-  <button
-    class="menu-btn"
-    type="button"
-    aria-label="Open navigation"
-  >
-    <span class="material-symbols-rounded">
-      menu
-    </span>
-  </button>
+ <button
+  class="menu-btn"
+  type="button"
+  aria-label="Open navigation"
+  (click)="toggleSidebar()"
+>
+  <span class="material-symbols-rounded">
+    menu
+  </span>
+</button>
 
-  @if(isHomePage()) {
     <div class="header-greeting">
       <h1>
         👋 {{ greeting() }},
@@ -21,7 +21,6 @@
        
       </p>
     </div>
-  }
 
   <div class="topbar-actions">
 

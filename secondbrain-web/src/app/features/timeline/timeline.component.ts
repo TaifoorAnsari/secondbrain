@@ -181,6 +181,7 @@ ngOnInit(): void {
 
   });
 
+
 }
 
   loadTimelines(): void {
@@ -295,7 +296,7 @@ removeEntity(
 
     description: '',
 
-    eventDate: '',
+    eventDate: this.getTodayDateString(),
 
     entityIds: [],
 
@@ -496,5 +497,13 @@ async deleteTimeline(
 
 goBack() {
   this.router.navigate(['/timeline']);
+}
+
+private getTodayDateString(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 }

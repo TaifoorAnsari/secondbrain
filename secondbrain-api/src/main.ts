@@ -10,10 +10,30 @@ async function bootstrap() {
       AppModule,
     );
 
-  app.enableCors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:4200',
-    credentials: true,
-  });
+const allowedOrigins = [
+  'http://localhost:4200',
+  process.env.CORS_ORIGIN,
+].filter(Boolean);
+
+app.enableCors({
+  origin: (origin, callback) => {
+
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(
+      new Error('Not allowed by CORS'),
+      false,
+    );
+  },
+
+  credentials: true,
+});
 
   app.useGlobalPipes(
     new ValidationPipe({

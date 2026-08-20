@@ -22,7 +22,6 @@
   overflow: visible;
 }
 
-
 /* =========================================================
    MOBILE MENU BUTTON
    ========================================================= */
@@ -63,7 +62,6 @@
   }
 }
 
-
 /* =========================================================
    HEADER GREETING
    ========================================================= */
@@ -96,7 +94,6 @@
   }
 }
 
-
 /* =========================================================
    SEARCH
    ========================================================= */
@@ -120,7 +117,6 @@
   box-sizing: border-box;
 }
 
-
 .search input {
   flex: 1;
 
@@ -135,13 +131,11 @@
   font-size: 15px;
 }
 
-
 .search .material-symbols-rounded {
   color: #9ca3af;
 
   flex-shrink: 0;
 }
-
 
 /* =========================================================
    TOPBAR ACTIONS
@@ -156,7 +150,6 @@
 
   flex-shrink: 0;
 }
-
 
 /* =========================================================
    NOTIFICATION BUTTON
@@ -183,7 +176,6 @@
   justify-content: center;
 }
 
-
 /* =========================================================
    PROFILE
    ========================================================= */
@@ -204,13 +196,11 @@
   padding: 0;
 }
 
-
 .profile-wrapper {
   position: relative;
 
   flex-shrink: 0;
 }
-
 
 /* =========================================================
    AVATAR
@@ -231,11 +221,7 @@
 
   border-radius: 50%;
 
-  background: linear-gradient(
-    135deg,
-    #4f46e5,
-    #8b5cf6
-  );
+  background: linear-gradient(135deg, #4f46e5, #8b5cf6);
 
   color: #ffffff;
 
@@ -243,12 +229,10 @@
 
   font-weight: 700;
 
-  box-shadow:
-    0 15px 35px rgba(79, 70, 229, 0.22);
+  box-shadow: 0 15px 35px rgba(79, 70, 229, 0.22);
 
   box-sizing: border-box;
 }
-
 
 .avatar img {
   width: 100%;
@@ -258,7 +242,6 @@
 
   object-fit: cover;
 }
-
 
 /* =========================================================
    PROFILE INFO
@@ -272,7 +255,6 @@
   min-width: 0;
 }
 
-
 .name {
   font-weight: 500;
 
@@ -280,7 +262,6 @@
 
   white-space: nowrap;
 }
-
 
 .role {
   font-size: 13px;
@@ -295,7 +276,6 @@
 
   max-width: 180px;
 }
-
 
 /* =========================================================
    PROFILE MENU
@@ -316,14 +296,12 @@
 
   border: 1px solid #e5e7eb;
 
-  box-shadow:
-    0 15px 40px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
 
   overflow: hidden;
 
   z-index: 1000;
 }
-
 
 .menu-user {
   display: flex;
@@ -335,7 +313,6 @@
   padding: 18px;
 }
 
-
 .menu-user p {
   margin-top: 4px;
 
@@ -345,7 +322,6 @@
 
   word-break: break-word;
 }
-
 
 .profile-menu button {
   width: 100%;
@@ -367,16 +343,13 @@
   transition: 0.2s;
 }
 
-
 .profile-menu button:hover {
   background: #f8fafc;
 }
 
-
 .logout {
   color: #dc2626;
 }
-
 
 /* =========================================================
    LOGIN
@@ -395,49 +368,42 @@
 
   cursor: pointer;
 
-  box-shadow:
-    0 4px 14px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
 }
-
 
 /* =========================================================
    TABLET
    ========================================================= */
 
 @media (max-width: 900px) {
-
   .topbar {
     padding: 0 24px;
 
     gap: 16px;
   }
 
-
   .profile-info {
     display: none;
   }
 
-
   .profile {
     gap: 0;
   }
-
 
   .topbar-actions {
     gap: 10px;
   }
 }
 
-
 /* =========================================================
    MOBILE
    ========================================================= */
 
 @media (max-width: 767px) {
-
   .topbar {
-    width: 100%;
-
+    width: 27rem;
+    position: relative;
+    right: 16px;
     height: 60px;
 
     padding: 0 16px;
@@ -447,13 +413,11 @@
     justify-content: flex-start;
   }
 
-
   /* Show hamburger */
 
   .menu-btn {
     display: flex;
   }
-
 
   /* Greeting takes available space */
 
@@ -464,7 +428,6 @@
 
     overflow: hidden;
   }
-
 
   .header-greeting h1 {
     font-size: 16px;
@@ -478,7 +441,6 @@
     text-overflow: ellipsis;
   }
 
-
   /* Right side */
 
   .topbar-actions {
@@ -486,7 +448,6 @@
 
     margin-left: auto;
   }
-
 
   /* Notification */
 
@@ -497,11 +458,9 @@
     border-radius: 12px;
   }
 
-
   .icon-btn .material-symbols-rounded {
     font-size: 21px;
   }
-
 
   /* Profile */
 
@@ -509,16 +468,13 @@
     gap: 0;
   }
 
-
   .profile-info {
     display: none;
   }
 
-
   .profile > .material-symbols-rounded {
     display: none;
   }
-
 
   .avatar {
     width: 40px;
@@ -528,7 +484,6 @@
 
     font-size: 22px;
   }
-
 
   /* Profile dropdown */
 
@@ -546,18 +501,15 @@
     border-radius: 16px;
   }
 
-
   .menu-user {
     padding: 14px;
 
     gap: 10px;
   }
 
-
   .menu-user p {
     font-size: 12px;
   }
-
 
   /* Login */
 
@@ -570,7 +522,6 @@
     font-size: 0;
   }
 
-
   .login::before {
     content: "login";
 
@@ -578,13 +529,11 @@
   }
 }
 
-
 /* =========================================================
    VERY SMALL PHONES
    ========================================================= */
 
 @media (max-width: 380px) {
-
   .topbar {
     height: 56px;
 
@@ -593,27 +542,22 @@
     gap: 7px;
   }
 
-
   .menu-btn {
     width: 38px;
     height: 38px;
   }
 
-
   .menu-btn .material-symbols-rounded {
     font-size: 21px;
   }
-
 
   .header-greeting h1 {
     font-size: 14px;
   }
 
-
   .topbar-actions {
     gap: 5px;
   }
-
 
   .icon-btn {
     width: 36px;
@@ -622,11 +566,9 @@
     border-radius: 10px;
   }
 
-
   .icon-btn .material-symbols-rounded {
     font-size: 19px;
   }
-
 
   .avatar {
     width: 36px;

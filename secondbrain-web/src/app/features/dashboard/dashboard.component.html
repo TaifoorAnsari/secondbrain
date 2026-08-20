@@ -65,15 +65,10 @@
 
   }
 
- <input
+<input
   type="text"
-  [placeholder]="
-    selectedEntity()
-      ? 'Type what happened...'
-      : '@ Search people, companies, or entities...'
-  "
+  placeholder="@person what happened..."
   [(ngModel)]="mindQuery"
-  (input)="onMindInput()"
   (keydown.enter)="saveMindEntry()"
 />
 </div>
