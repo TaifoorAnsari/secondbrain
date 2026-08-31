@@ -16,6 +16,7 @@ import { TimelineService } from './timeline.service';
 
 import { CreateTimelineDto } from './dto/create-timeline.dto';
 import { UpdateTimelineDto } from './dto/update-timeline.dto';
+import { QuickCaptureDto } from './dto/quick-capture.dto';
 
 @Controller('timeline')
 @UseGuards(JwtAuthGuard)
@@ -89,5 +90,15 @@ export class TimelineController {
     );
 
   }
+  @Post('quick-capture')
+quickCapture(
+  @Req() req: any,
+  @Body() dto: QuickCaptureDto,
+) {
+  return this.timelineService.quickCapture(
+    req.user.id,
+    dto.input,
+  );
+}
 
 }

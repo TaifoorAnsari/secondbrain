@@ -1,24 +1,26 @@
-import { Component, input } from '@angular/core';
+import { SlicePipe } from '@angular/common';
+import { Component, computed, input, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
-export interface UpcomingEvent{
+export interface UpcomingEvent {
 
-    id:string;
+  id: string;
 
-    title:string;
+  title: string;
 
-    date:string;
+  date: string;
 
 }
 
 @Component({
   selector: 'app-upcoming-events',
   standalone: true,
-  imports: [],
+  imports: [RouterLink, SlicePipe],
   templateUrl: './upcoming-events.component.html',
   styleUrl: './upcoming-events.component.scss'
 })
 export class UpcomingEventsComponent {
 
-    events=input.required<UpcomingEvent[]>();
+  events = input.required<UpcomingEvent[]>();
 
 }

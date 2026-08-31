@@ -1,26 +1,35 @@
 <div class="layout">
 
-  <!-- Overlay (only visible on mobile when sidebar is open) -->
-  @if (layout.sidebarOpen()) {
+  <!-- Mobile overlay -->
+  @if (sidebarOpen) {
     <div
-      class="overlay"
-      (click)="layout.closeSidebar()">
-    </div>
+      class="sidebar-overlay"
+      (click)="closeSidebar()"
+    ></div>
   }
 
+
+  <!-- Sidebar -->
   <aside
     class="sidebar"
-    [class.open]="layout.sidebarOpen()">
-
+    [class.mobile-open]="sidebarOpen"
+  >
     <app-sidebar />
 
   </aside>
 
+
+  <!-- Main content -->
   <div class="content">
 
     <header class="header">
-      <app-header />
+
+      <app-header
+        (menuToggle)="toggleSidebar()"
+      />
+
     </header>
+
 
     <main class="page">
       <router-outlet />

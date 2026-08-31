@@ -95,27 +95,166 @@ async login(loginDto: LoginDto) {
   };
 }
 
-async updateProfile(userId: string, dto: UpdateProfileDto) {
-  const user = await this.prisma.user.update({
+// ==========================================
+// GET CURRENT PROFILE
+// ==========================================
+
+async getProfile(userId: string) {
+
+  const user = await this.prisma.user.findUnique({
     where: {
       id: userId,
     },
-    data: {
-      fullName: dto.fullName,
+    select: {
+      id: true,
+      fullName: true,
+      username: true,
+      email: true,
+      phone: true,
+      bio: true,
+      avatar: true,
+      createdAt: true,
+      updatedAt: true,
     },
   });
 
+  if (!user) {
+    throw new UnauthorizedException(
+      'User not found',
+    );
+  }
+
+  return user;
+}
+
+async updateProfile(
+  userId: string,
+  dto: UpdateProfileDto,
+) {
+  const existingUser =
+    await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+  if (!existingUser) {
+    throw new UnauthorizedException(
+      'User not found',
+    );
+  }
+
+
+  // ==========================================
+  // CHECK USERNAME
+  // ==========================================
+
+  if (
+    dto.username &&
+    dto.username !== existingUser.username
+  ) {
+
+    const usernameExists =
+      await this.prisma.user.findFirst({
+        where: {
+          username: dto.username,
+          NOT: {
+            id: userId,
+          },
+        },
+      });
+
+    if (usernameExists) {
+      throw new BadRequestException(
+        'Username already exists',
+      );
+    }
+  }
+
+
+  // ==========================================
+  // CHECK EMAIL
+  // ==========================================
+
+  if (
+    dto.email &&
+    dto.email !== existingUser.email
+  ) {
+
+    const emailExists =
+      await this.prisma.user.findFirst({
+        where: {
+          email: dto.email,
+          NOT: {
+            id: userId,
+          },
+        },
+      });
+
+    if (emailExists) {
+      throw new BadRequestException(
+        'Email already exists',
+      );
+    }
+  }
+
+
+  // ==========================================
+  // UPDATE USER
+  // ==========================================
+
+  const user =
+    await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+
+      data: {
+        fullName: dto.fullName,
+
+        ...(dto.username !== undefined && {
+          username: dto.username,
+        }),
+
+        ...(dto.email !== undefined && {
+          email: dto.email,
+        }),
+
+        ...(dto.phone !== undefined && {
+          phone: dto.phone,
+        }),
+
+        ...(dto.bio !== undefined && {
+          bio: dto.bio,
+        }),
+
+        ...(dto.avatar !== undefined && {
+          avatar: dto.avatar,
+        }),
+      },
+    });
+
+
+  // ==========================================
+  // RESPONSE
+  // ==========================================
+
   return {
     message: 'Profile updated successfully',
+
     user: {
       id: user.id,
       fullName: user.fullName,
+      username: user.username,
       email: user.email,
+      phone: user.phone,
+      bio: user.bio,
+      avatar: user.avatar,
       createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
     },
   };
 }
-
 async changePassword(
   userId: string,
   dto: ChangePasswordDto,

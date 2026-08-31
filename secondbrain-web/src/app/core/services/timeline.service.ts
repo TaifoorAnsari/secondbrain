@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 import {
   Timeline,
@@ -15,7 +16,7 @@ export class TimelineService {
 
   private http = inject(HttpClient);
 
-  private api = 'http://localhost:3000/timeline';
+  private api = `${environment.apiUrl}/timeline`;
 
   getTimelines(): Observable<Timeline[]> {
 
@@ -45,6 +46,14 @@ export class TimelineService {
     );
 
   }
+  quickCapture(
+  input: string,
+): Observable<any> {
+  return this.http.post<any>(
+    `${this.api}/quick-capture`,
+    { input }
+  );
+}
 
   updateTimeline(
     id: string,

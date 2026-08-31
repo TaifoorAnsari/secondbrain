@@ -1,6 +1,5 @@
 
 @baseUrl = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbXM3Njl2djMwMDAwdDU2czZoM2M2dnV2IiwiZW1haWwiOiJ0ZXN0MUB0ZXN0LmNvbSIsImlhdCI6MTc4NjM1ODg3OCwiZXhwIjoxNzg2NDQ1Mjc4fQ.Vm9-Yk0eOARcUnqPSuJfSqne0d_9HMTm1W3vVmfqSGo
-
-GET http://localhost:3000/diary
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjbXNvanZ2MDkwMDAwdDU3czdyb252eWloIiwiZW1haWwiOiJ0ZXN0NEB0ZXN0LmNvbSIsImlhdCI6MTc4NjQ0NjEwMiwiZXhwIjoxNzg2NTMyNTAyfQ.tbHgVKDd2H1r_B6-7Qa0oILMzUosQYarzCPNzCmt6Jw
+GET http://localhost:3000/auth/profile
 Authorization: Bearer {{token}}

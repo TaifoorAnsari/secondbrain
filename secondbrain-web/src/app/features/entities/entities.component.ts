@@ -8,7 +8,11 @@ import {
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+
+import {
+  ActivatedRoute,
+  Router,
+} from '@angular/router';
 
 import {
   FormBuilder,
@@ -23,23 +27,36 @@ import {
 
 import { EntitiesService } from '../../core/services/entities.service';
 import { ToastService } from '../../core/services/toast.service';
+import { ConfirmDialogService } from '../../core/services/confirm-dialog.service';
 
 import {
   CreateEntityDto,
   Entity,
 } from '../../core/models/entity.model';
 
+
 @Component({
   selector: 'app-entities',
   standalone: true,
+
   imports: [
     CommonModule,
     ReactiveFormsModule,
   ],
+
   templateUrl: './entities.component.html',
-  styleUrls: ['./entities.component.scss'],
+
+  styleUrls: [
+    './entities.component.scss'
+  ],
 })
-export class EntitiesComponent implements OnInit {
+export class EntitiesComponent
+  implements OnInit {
+
+
+  // ==========================================
+  // SIGNALS
+  // ==========================================
 
   peopleCount = signal(0);
 
@@ -55,47 +72,81 @@ export class EntitiesComponent implements OnInit {
 
   showCreateModal = signal(false);
 
-  selectedEntity = signal<Entity | null>(null);
+  selectedEntity =
+    signal<Entity | null>(null);
 
-  activeMenuId = signal<string | null>(null);
+  activeMenuId =
+    signal<string | null>(null);
+
 
   isEditMode = computed(
-    () => this.selectedEntity() !== null,
+    () => this.selectedEntity() !== null
   );
 
-  private entitiesService = inject(EntitiesService);
-  private router = inject(Router);
 
-  private fb = inject(FormBuilder);
+  // ==========================================
+  // SERVICES
+  // ==========================================
 
-  private toast = inject(ToastService);
-  private route = inject(ActivatedRoute);
+  private entitiesService =
+    inject(EntitiesService);
 
-  searchControl = this.fb.nonNullable.control('');
+  private router =
+    inject(Router);
 
-  entityForm = this.fb.nonNullable.group({
+  private fb =
+    inject(FormBuilder);
 
-    name: [
-      '',
-      [
+  private toast =
+    inject(ToastService);
+
+  private route =
+    inject(ActivatedRoute);
+
+    private confirmDialog = inject(ConfirmDialogService);
+
+
+  // ==========================================
+  // SEARCH
+  // ==========================================
+
+  searchControl =
+    this.fb.nonNullable.control('');
+
+
+  // ==========================================
+  // ENTITY FORM
+  // ==========================================
+
+  entityForm =
+    this.fb.nonNullable.group({
+
+      name: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(100),
+        ],
+      ],
+
+      type: [
+        'PERSON',
         Validators.required,
-        Validators.maxLength(100),
       ],
-    ],
 
-    type: [
-      'PERSON',
-      Validators.required,
-    ],
-
-    description: [
-      '',
-      [
-        Validators.maxLength(50),
+      description: [
+        '',
+        [
+          Validators.maxLength(50),
+        ],
       ],
-    ],
 
-  });
+    });
+
+
+  // ==========================================
+  // INIT
+  // ==========================================
 
   ngOnInit(): void {
 
@@ -103,73 +154,124 @@ export class EntitiesComponent implements OnInit {
 
     this.loadStats();
 
+
+    // Search
+
     this.searchControl.valueChanges
       .pipe(
         debounceTime(300),
         distinctUntilChanged(),
       )
-      .subscribe(value => {
+      .subscribe((value) => {
 
         this.loadEntities(value);
 
       });
-      this.route.queryParams.subscribe(params =>{
-        if(params['action'] === 'new') {
-          this.openCreateModal()
+
+
+    // Quick action: /entities?action=new
+
+    this.route.queryParams.subscribe(
+      (params) => {
+
+        if (params['action'] === 'new') {
+
+          this.openCreateModal();
+
         }
-      })
+
+      }
+    );
 
   }
 
-  loadEntities(search: string = ''): void {
+
+  // ==========================================
+  // LOAD ENTITIES
+  // ==========================================
+
+  loadEntities(
+    search: string = ''
+  ): void {
 
     this.isLoading.set(true);
 
-    this.entitiesService.getEntities(search).subscribe({
 
-      next: (entities) => {
+    this.entitiesService
+      .getEntities(search)
+      .subscribe({
 
-        this.entities.set(entities);
+        next: (entities) => {
 
-        this.isLoading.set(false);
+          this.entities.set(entities);
 
-      },
+          this.isLoading.set(false);
 
-      error: (err) => {
+        },
 
-        console.error(err);
+        error: (err) => {
 
-        this.isLoading.set(false);
+          console.error(
+            'Failed to load entities:',
+            err
+          );
 
-      },
+          this.isLoading.set(false);
 
-    });
+          this.toast.error(
+            'Failed to load entities'
+          );
+
+        },
+
+      });
 
   }
+
+
+  // ==========================================
+  // LOAD STATS
+  // ==========================================
 
   loadStats(): void {
 
-    this.entitiesService.getStats().subscribe({
+    this.entitiesService
+      .getStats()
+      .subscribe({
 
-      next: (stats) => {
+        next: (stats) => {
 
-        this.peopleCount.set(stats.people);
+          this.peopleCount.set(
+            stats.people
+          );
 
-        this.companyCount.set(stats.companies);
+          this.companyCount.set(
+            stats.companies
+          );
 
-        this.totalEntities.set(stats.total);
+          this.totalEntities.set(
+            stats.total
+          );
 
-      },
+        },
 
-      error: (err) => {
+        error: (err) => {
 
-        console.error(err);
+          console.error(
+            'Failed to load entity stats:',
+            err
+          );
 
-      },
+        },
 
-    });
+      });
 
   }
+
+
+  // ==========================================
+  // CREATE MODAL
+  // ==========================================
 
   openCreateModal(): void {
 
@@ -184,16 +286,24 @@ export class EntitiesComponent implements OnInit {
       description: '',
 
     });
-
+    document.body.style.overflow = 'hidden';
     this.showCreateModal.set(true);
 
   }
 
-  openEditModal(entity: Entity): void {
+
+  // ==========================================
+  // EDIT MODAL
+  // ==========================================
+
+  openEditModal(
+    entity: Entity
+  ): void {
 
     this.activeMenuId.set(null);
 
     this.selectedEntity.set(entity);
+
 
     this.entityForm.patchValue({
 
@@ -201,19 +311,27 @@ export class EntitiesComponent implements OnInit {
 
       type: entity.type,
 
-      description: entity.description ?? '',
+      description:
+        entity.description ?? '',
 
     });
 
+    document.body.style.overflow = 'hidden';
     this.showCreateModal.set(true);
 
   }
+
+
+  // ==========================================
+  // CLOSE MODAL
+  // ==========================================
 
   closeCreateModal(): void {
 
     this.selectedEntity.set(null);
 
     this.showCreateModal.set(false);
+
 
     this.entityForm.reset({
 
@@ -224,8 +342,15 @@ export class EntitiesComponent implements OnInit {
       description: '',
 
     });
+    document.body.style.overflow = '';
 
+    document.body.style.overflow = 'hidden';
   }
+
+
+  // ==========================================
+  // SAVE ENTITY
+  // ==========================================
 
   saveEntity(): void {
 
@@ -237,19 +362,27 @@ export class EntitiesComponent implements OnInit {
 
     }
 
+
     this.isSaving.set(true);
 
+
     const dto =
-      this.entityForm.getRawValue() as CreateEntityDto;
+      this.entityForm
+        .getRawValue() as CreateEntityDto;
 
-    const request = this.isEditMode()
 
-      ? this.entitiesService.updateEntity(
-          this.selectedEntity()!.id,
-          dto,
-        )
+    const request =
+      this.isEditMode()
 
-      : this.entitiesService.createEntity(dto);
+        ? this.entitiesService.updateEntity(
+            this.selectedEntity()!.id,
+            dto,
+          )
+
+        : this.entitiesService.createEntity(
+            dto
+          );
+
 
     request.subscribe({
 
@@ -265,27 +398,37 @@ export class EntitiesComponent implements OnInit {
 
         );
 
+
         this.closeCreateModal();
 
-        this.loadEntities(this.searchControl.value);
+
+        this.loadEntities(
+          this.searchControl.value
+        );
 
         this.loadStats();
+
 
         this.isSaving.set(false);
 
       },
 
+
       error: (err) => {
 
-        console.error(err);
+        console.error(
+          'Failed to save entity:',
+          err
+        );
+
 
         if (err.status === 409) {
 
-          this.entityForm.controls.name.setErrors({
+          this.entityForm.controls.name
+            .setErrors({
+              duplicate: true,
+            });
 
-            duplicate: true,
-
-          });
 
           this.toast.error(
             'Entity already exists'
@@ -299,6 +442,7 @@ export class EntitiesComponent implements OnInit {
 
         }
 
+
         this.isSaving.set(false);
 
       },
@@ -307,60 +451,84 @@ export class EntitiesComponent implements OnInit {
 
   }
 
-  deleteEntity(entity: Entity): void {
 
-    this.activeMenuId.set(null);
+  // ==========================================
+  // DELETE ENTITY
+  // ==========================================
 
-    const confirmed = confirm(
+// ==========================================
+// DELETE ENTITY
+// ==========================================
 
-      `Delete "${entity.name}"?`
+async deleteEntity(
+  entity: Entity,
+  event: MouseEvent
+): Promise<void> {
 
-    );
+  event.stopPropagation();
 
-    if (!confirmed) {
+  this.activeMenuId.set(null);
 
-      return;
+  const confirmed = await this.confirmDialog.confirm({
+    title: 'Delete Entity',
+    message: `Are you sure you want to delete "${entity.name}"?`,
+    confirmText: 'Delete',
+    cancelText: 'Cancel',
+  });
 
-    }
-
-    this.entitiesService
-      .deleteEntity(entity.id)
-      .subscribe({
-
-        next: () => {
-
-          this.toast.success(
-            'Entity deleted successfully'
-          );
-
-          this.loadEntities(this.searchControl.value);
-
-          this.loadStats();
-
-        },
-
-        error: (err) => {
-
-          console.error(err);
-
-          this.toast.error(
-            'Failed to delete entity'
-          );
-
-        },
-
-      });
-
+  if (!confirmed) {
+    return;
   }
+
+  this.entitiesService
+    .deleteEntity(entity.id)
+    .subscribe({
+
+      next: () => {
+
+        this.entities.update(entities =>
+          entities.filter(
+            e => e.id !== entity.id
+          )
+        );
+
+        this.toast.success(
+          'Entity deleted successfully'
+        );
+
+        this.loadStats();
+      },
+
+      error: (err) => {
+
+        console.error(
+          'Failed to delete entity:',
+          err
+        );
+
+        this.toast.error(
+          'Failed to delete entity'
+        );
+      },
+
+    });
+}
+
+  // ==========================================
+  // MENU
+  // ==========================================
 
   toggleMenu(
     id: string,
-    event: MouseEvent,
+    event: MouseEvent
   ): void {
 
     event.stopPropagation();
 
-    if (this.activeMenuId() === id) {
+
+    if (
+      this.activeMenuId() === id
+    ) {
 
       this.activeMenuId.set(null);
 
@@ -372,24 +540,33 @@ export class EntitiesComponent implements OnInit {
 
   }
 
+
+  // ==========================================
+  // CLOSE MENU
+  // ==========================================
+
   @HostListener('document:click')
+
   closeMenu(): void {
 
     this.activeMenuId.set(null);
 
   }
 
- viewProfile(entity: Entity): void {
 
-  console.log('Clicked');
+  // ==========================================
+  // VIEW PROFILE
+  // ==========================================
 
-  console.log(entity);
+  viewProfile(
+    entity: Entity
+  ): void {
 
-  this.router.navigate([
-    '/entities',
-    entity.id,
-  ]);
+    this.router.navigate([
+      '/entities',
+      entity.id,
+    ]);
 
-}
+  }
 
 }

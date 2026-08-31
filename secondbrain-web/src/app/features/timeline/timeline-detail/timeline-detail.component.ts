@@ -13,7 +13,7 @@ import {
 } from '@angular/router';
 
 import { TimelineService } from '../../../core/services/timeline.service';
-
+import { ConfirmDialogService } from '../../../core/services/confirm-dialog.service';
 import { Timeline } from '../../../core/models/timeline.model';
 
 @Component({
@@ -39,7 +39,9 @@ export class TimelineDetailComponent
   private timelineService = inject(
     TimelineService,
   );
-
+private confirmDialog = inject(
+  ConfirmDialogService,
+);
   timeline = signal<Timeline | null>(
     null,
   );
@@ -148,26 +150,24 @@ editTimeline(): void {
   });
 
 }
- deleteTimeline(): void {
+async deleteTimeline(): Promise<void> {
 
   const timeline = this.timeline();
 
   if (!timeline) {
-
     return;
-
   }
 
-  const confirmed = confirm(
-
-    `Delete "${timeline.title}"?`
-
-  );
+  const confirmed =
+    await this.confirmDialog.confirm({
+      title: 'Delete Timeline',
+      message: `Are you sure you want to delete "${timeline.title}"?`,
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+    });
 
   if (!confirmed) {
-
     return;
-
   }
 
   this.timelineService
@@ -182,14 +182,16 @@ editTimeline(): void {
 
       },
 
-      error: err => {
+      error: (err) => {
 
-        console.error(err);
+        console.error(
+          'Failed to delete timeline:',
+          err
+        );
 
       },
 
     });
-
 }
 
 }

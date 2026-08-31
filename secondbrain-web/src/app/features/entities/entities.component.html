@@ -66,12 +66,15 @@
             ✏️ Edit
           </button>
 
-          <button
-            class="danger"
-            (click)="deleteEntity(entity)"
-          >
-            🗑 Delete
-          </button>
+           <button
+                type="button"
+                class="delete"
+                (click)="deleteEntity(entity, $event)"
+              >
+                <span class="material-symbols-outlined"> delete </span>
+
+                Delete Entity
+              </button>
 
         </div>
 

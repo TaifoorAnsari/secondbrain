@@ -8,6 +8,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateTimelineDto } from './dto/create-timeline.dto';
 import { UpdateTimelineDto } from './dto/update-timeline.dto';
 
+
 @Injectable()
 export class TimelineService {
 
@@ -246,6 +247,81 @@ export class TimelineService {
     });
 
   }
+
+  async quickCapture(
+  userId: string,
+  input: string,
+) {
+  const trimmedInput = input.trim();
+
+  // Expected format:
+  // @test today is my insurance of bike
+
+  const match = trimmedInput.match(/^@(\S+)\s+(.+)$/);
+
+  if (!match) {
+    throw new Error(
+      'Invalid format. Use @entity message',
+    );
+  }
+
+  const entityName = match[1].trim();
+  const description = match[2].trim();
+
+  return this.prisma.$transaction(async (tx) => {
+    // Find existing entity for this user
+    let entity = await tx.entity.findFirst({
+      where: {
+        userId,
+        name: {
+          equals: entityName,
+          mode: 'insensitive',
+        },
+      },
+    });
+
+    // Create entity if it doesn't exist
+    if (!entity) {
+      entity = await tx.entity.create({
+        data: {
+          name: entityName,
+          type: 'PERSON',
+          userId,
+        },
+      });
+    }
+
+    // Create timeline
+    const timeline = await tx.timeline.create({
+      data: {
+        title: entity.name,
+        description,
+        eventDate: new Date(),
+        showOnCalendar: false,
+        userId,
+
+        entities: {
+          create: {
+            entityId: entity.id,
+          },
+        },
+      },
+
+      include: {
+        entities: {
+          include: {
+            entity: true,
+          },
+        },
+      },
+    });
+
+    return {
+      entity,
+      timeline,
+    };
+  });
+}
 
 
   // ==========================================

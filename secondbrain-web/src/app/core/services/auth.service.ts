@@ -23,6 +23,15 @@ import {
   SignupResponse,
 } from '../models/auth.model';
 
+export interface UpdateProfileData {
+  fullName: string;
+  username?: string;
+  email?: string;
+  phone?: string;
+  bio?: string;
+  avatar?: string;
+}
+
 import {
   environment,
 } from '../../../environments/environment';
@@ -193,33 +202,30 @@ export class AuthService {
   // UPDATE PROFILE
   // ==========================================
 
-  updateProfile(
-    fullName: string,
-  ) {
-
-    return this.http
-      .patch<{
-        user: User;
-      }>(
-        `${this.apiUrl}/auth/profile`,
-        {
-          fullName,
-        },
-      )
-      .pipe(
-
-        tap((response) => {
-
-          this.currentUser.set(
-            response.user,
-          );
-
-        }),
-
-      );
-
-  }
-
+updateProfile(data: {
+  fullName: string;
+  username?: string;
+  email?: string;
+  phone?: string;
+  bio?: string;
+  avatar?: string;
+}) {
+  return this.http
+    .patch<{
+      message: string;
+      user: User;
+    }>(
+      `${this.apiUrl}/auth/profile`,
+      data,
+    )
+    .pipe(
+      tap((response) => {
+        this.currentUser.set(
+          response.user
+        );
+      }),
+    );
+}
 
   // ==========================================
   // UPLOAD PROFILE AVATAR

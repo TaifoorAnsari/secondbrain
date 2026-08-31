@@ -498,8 +498,10 @@ position: relative;
 
 .modal {
   width: 100%;
-  max-width: 560px;
-
+  max-width: 650px;
+  max-height: 95vh;
+  display: flex;
+  flex-direction: column;
   background: #ffffff;
 
   border-radius: 24px;
@@ -509,6 +511,12 @@ position: relative;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18);
 
   animation: modalFade .25s ease;
+}
+
+.modal form {
+  overflow: auto;
+  flex: 1;
+  scrollbar-width: none;
 }
 
 .modal-header {

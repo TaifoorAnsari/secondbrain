@@ -21,10 +21,10 @@ export class AuthController {
   }
 
 
-    @Get('profile')
-    @UseGuards(JwtAuthGuard)
-    getProfile(@Req() req: any) {
-    return req.user;
+  @Get('profile')
+@UseGuards(JwtAuthGuard)
+getProfile(@Req() req: any) {
+  return this.authService.getProfile(req.user.id);
 }
 
 @Patch('profile')

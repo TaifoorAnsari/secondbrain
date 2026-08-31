@@ -1,111 +1,176 @@
 @use "variables" as *;
 
+/* =========================================================
+   MAIN LAYOUT
+   ========================================================= */
+
 .layout {
   display: flex;
   min-height: 100vh;
   background: #f5f7fb;
 }
 
-/* Fixed Sidebar */
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
 .sidebar {
   position: fixed;
   top: 0;
   left: 0;
-
   width: 248px;
   height: 100vh;
-
   background: $color-sidebar;
   color: white;
-
-  overflow-y: auto;
-  z-index: 1000;
+  z-index: 1100;
+  flex-shrink: 0;
+  transform: translateX(0);
+  transition: transform 0.25s ease;
 }
 
-/* Right Side */
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
 .content {
   margin-left: 248px;
   width: calc(100% - 248px);
-
   min-height: 100vh;
-
+  min-width: 0;
   display: flex;
   flex-direction: column;
-
   background: #f8fafc;
 }
 
-/* Fixed Header */
+/* =========================================================
+   HEADER
+   ========================================================= */
+
 .header {
   position: sticky;
   top: 0;
-  height: 64px;
+  min-height: 64px;
   align-items: center;
   padding: 0 24px;
+  box-sizing: border-box;
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(12px);
-
   border-bottom: 1px solid #e5e7eb;
-
   z-index: 999;
 }
 
-/* Only this area scrolls */
+/* =========================================================
+   PAGE
+   ========================================================= */
+
 .page {
   flex: 1;
-
+  width: 100%;
+  min-width: 0;
   overflow-y: auto;
-
+  overflow-x: hidden;
   padding: 32px;
-
+  box-sizing: border-box;
   background: #f5f7fb;
 }
 
-//mobile responsiveness
+/* =========================================================
+   OVERLAY
+   ========================================================= */
 
-.overlay {
+.sidebar-overlay {
   display: none;
 }
 
-@media (max-width: 768px) {
+/* =========================================================
+   TABLET / MOBILE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+  .layout {
+    display: block;
+    width: 100%;
+    min-height: 100vh;
+  }
 
   .sidebar {
-    position: fixed;
-    left: -260px;
-    top: 0;
-
-    width: 250px;
-    height: 100vh;
-
-    transition: left .3s ease;
-    z-index: 1100;
+    width: 248px;
+    transform: translateX(-100%);
   }
 
-  .sidebar.open {
-    left: 0;
+  .sidebar.mobile-open {
+    transform: translateX(0);
   }
 
-  .overlay {
+  .sidebar-overlay {
     display: block;
     position: fixed;
     inset: 0;
-
-    background: rgba(0,0,0,.45);
-
+    background: rgba(0, 0, 0, 0.4);
     z-index: 1050;
   }
 
   .content {
-    margin-left: 0;
-    width: 100%;
+    width: 100% !important;
+    margin-left: 0 !important;
+    min-width: 0;
+    min-height: 100vh;
   }
 
   .header {
+    width: 100%;
+    min-height: 60px;
+    padding: 0 20px;
+  }
+
+  .page {
+    width: 100%;
+    padding: 24px;
+    overflow-x: hidden;
+  }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 767px) {
+  .sidebar {
+    width: 280px;
+  }
+
+  .content {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+
+  .header {
+    width: 100%;
+    min-height: 60px;
     padding: 0 16px;
   }
 
   .page {
+    width: 100%;
     padding: 16px;
   }
+}
 
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 380px) {
+  .sidebar {
+    width: 270px;
+  }
+
+  .header {
+    min-height: 56px;
+    padding: 0 12px;
+  }
+
+  .page {
+    padding: 12px;
+  }
 }

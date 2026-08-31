@@ -1,5 +1,6 @@
 :host {
   display: block;
+  margin-bottom: 10px;
 }
 
 .quick-card {
@@ -9,7 +10,7 @@
 
   gap: 1rem;
 
-  padding: 1.3rem;
+  padding: 1rem;
 
   border-radius: 20px;
 
@@ -67,7 +68,7 @@
 
   color: #111827;
 
-  font-size: 1rem;
+  font-size: 1.1rem;
 }
 
 .quick-card__body p {
@@ -75,11 +76,17 @@
 
   color: #6b7280;
 
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 .quick-card__arrow {
   color: #9ca3af;
 
   transition: 0.3s;
+}
+
+@media (max-width: 767px) {
+  .quick-card {
+    width: 23.5rem
+  }
 }

@@ -1,49 +1,106 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  EventEmitter,
+  inject,
+  Output,
+  signal,
+} from '@angular/core';
+
 import { Router } from '@angular/router';
+
 import { AuthService } from '../../../core/services/auth.service';
 import { LayoutService } from '../../../core/services/layout.service';
 
+import { environment } from '../../../../environments/environment';
+
 @Component({
   selector: 'app-header',
+  imports: [],
   standalone: true,
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
-  layout = inject(LayoutService);
+
+  @Output() menuToggle = new EventEmitter<void>();
+
   private authService = inject(AuthService);
   private router = inject(Router);
 
   user = this.authService.currentUser;
 
+  currentRoute = this.router.url;
+
   menuOpen = signal(false);
+
+  greeting = computed(() => {
+    const hour = new Date().getHours();
+
+    if (hour < 12) {
+      return 'Good Morning';
+    }
+
+    if (hour < 17) {
+      return 'Good Afternoon';
+    }
+
+    return 'Good Evening';
+  });
+
+  avatarUrl = computed(() => {
+    const avatar = this.user()?.avatar;
+
+    if (!avatar) {
+      return null;
+    }
+
+    if (
+      avatar.startsWith('http://') ||
+      avatar.startsWith('https://') ||
+      avatar.startsWith('data:')
+    ) {
+      return avatar;
+    }
+
+    return `${environment.apiUrl}${avatar}`;
+  });
 
   initials = computed(() => {
     const fullName = this.user()?.fullName;
-    console.log(this.user(),"111111111")
-    console.log('Full Name:', fullName); // Debugging line
 
-    if (!fullName) return 'U';
+    if (!fullName) {
+      return 'U';
+    }
 
     return fullName.charAt(0).toUpperCase();
   });
 
-  toggleMenu() {
+  toggleSidebar(): void {
+    this.menuToggle.emit();
+  }
+
+  toggleMenu(): void {
     this.menuOpen.update(value => !value);
   }
 
-  logout() {
+  logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
 
-  profile() {
+  profile(): void {
     this.menuOpen.set(false);
     this.router.navigate(['/profile']);
   }
 
-  loginToAccount() {
-    console.log(this.user(),"current user ")
+  loginToAccount(): void {
+    console.log(this.user(), 'current user');
     this.router.navigate(['/login']);
+  }
+
+  settings(): void {
+    this.router.navigate(['/settings']);
+    this.menuOpen.set(false);
   }
 }

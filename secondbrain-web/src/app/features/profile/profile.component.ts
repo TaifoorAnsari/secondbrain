@@ -240,25 +240,25 @@ throw new Error('Method not implemented.');
   // SAVE PROFILE
   // ==========================================
 
-  saveProfile(): void {
-    if (this.editProfileForm.invalid) {
-      this.editProfileForm.markAllAsTouched();
+  // saveProfile(): void {
+  //   if (this.editProfileForm.invalid) {
+  //     this.editProfileForm.markAllAsTouched();
 
-      return;
-    }
+  //     return;
+  //   }
 
-    const fullName = this.editProfileForm.getRawValue().fullName;
+  //   const fullName = this.editProfileForm.getRawValue().fullName;
 
-    this.authService.updateProfile(fullName).subscribe({
-      next: () => {
-        this.showEditProfile.set(false);
-      },
+  //   this.authService.updateProfile(fullName).subscribe({
+  //     next: () => {
+  //       this.showEditProfile.set(false);
+  //     },
 
-      error: (error) => {
-        console.error('Failed to update profile:', error);
-      },
-    });
-  }
+  //     error: (error) => {
+  //       console.error('Failed to update profile:', error);
+  //     },
+  //   });
+  // }
 
   // ==========================================
   // LOAD NOTES

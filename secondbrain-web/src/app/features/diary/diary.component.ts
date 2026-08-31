@@ -454,6 +454,8 @@ export class DiaryComponent implements OnInit {
       true,
     );
 
+    document.body.style.overflow = 'hidden';
+
   }
 
 
@@ -497,6 +499,8 @@ export class DiaryComponent implements OnInit {
     this.showModal.set(
       true,
     );
+
+    document.body.style.overflow = 'hidden';
 
   }
 
@@ -706,6 +710,7 @@ export class DiaryComponent implements OnInit {
 
     });
 
+    document.body.style.overflow = '';
   }
 
 
@@ -743,6 +748,10 @@ export class DiaryComponent implements OnInit {
 
     return `${year}-${month}-${day}`;
 
+  }
+
+  ngOnDestroy() {
+  document.body.style.overflow = '';
   }
 
 }

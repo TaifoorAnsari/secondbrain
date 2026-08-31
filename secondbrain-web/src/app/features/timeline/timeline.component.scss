@@ -352,8 +352,11 @@
 .modal {
 
   width: 100%;
+  max-height: 95vh;
 
   max-width: 650px;
+  display: flex;
+  flex-direction: column;
 
   background: #ffffff;
 
@@ -390,6 +393,12 @@
 
   color: #1f2937;
 
+}
+
+.modal form {
+  overflow:auto;
+  flex: 1;
+  scrollbar-width: none;
 }
 
 .close-btn {
