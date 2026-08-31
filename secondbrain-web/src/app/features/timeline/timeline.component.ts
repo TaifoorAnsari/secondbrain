@@ -1,4 +1,11 @@
-import { Component, HostListener, OnInit, computed, inject, signal } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 
@@ -45,144 +52,87 @@ export class TimelineComponent implements OnInit {
 
   entitySearch = signal('');
 
-selectedEntityIds = signal<string[]>([]);
+  selectedEntityIds = signal<string[]>([]);
 
   selectedTimeline = signal<Timeline | null>(null);
   activeMenuId = signal<string | null>(null);
 
   isEditMode = computed(() => this.selectedTimeline() !== null);
 
-filteredEntities = computed(() => {
+  filteredEntities = computed(() => {
+    const search = this.entitySearch().trim().toLowerCase();
 
-  const search = this.entitySearch()
-    .trim()
-    .toLowerCase();
-
-  // Don't show anything until user types
-  if (!search) {
-
-    return [];
-
-  }
-
-  return this.entities().filter(entity =>
-
-    entity.name
-      .toLowerCase()
-      .includes(search)
-
-  );
-
-});
-
-selectedEntities = computed(() => {
-
-  return this.entities().filter(entity =>
-
-    this.selectedEntityIds().includes(entity.id),
-
-  );
-
-});
-
-timelineForm = this.fb.nonNullable.group({
-
-  title: [
-    '',
-    [
-      Validators.required,
-      Validators.maxLength(150),
-    ],
-  ],
-
-  description: [
-    '',
-    [
-      Validators.required,
-      Validators.maxLength(750),
-    ],
-  ],
-
-  eventDate: [
-    '',
-    Validators.required,
-  ],
-
-  entityIds: [
-    [] as string[],
-    Validators.required,
-  ],
-
-  showOnCalendar: [
-    false,
-  ],
-
-});
-
-ngOnInit(): void {
-
-  this.loadTimelines();
-
-  this.loadEntities();
-
-  this.route.queryParams.subscribe(params => {
-
-    const editId = params['edit'];
-
-    if (editId) {
-
-      this.timelineService
-        .getTimeline(editId)
-        .subscribe({
-
-          next: timeline => {
-
-            this.openEditModal(timeline);
-
-          },
-
-          error: err => {
-
-            console.error(err);
-
-          },
-
-        });
-
-      return;
-
+    // Don't show anything until user types
+    if (!search) {
+      return [];
     }
 
-    const create = params['create'];
-
-    const entityId = params['entity'];
-
-    if (create) {
-
-      this.openModal();
-
-      if (entityId) {
-
-        this.selectedEntityIds.set([entityId]);
-
-        this.timelineForm.patchValue({
-
-          entityIds: [entityId],
-
-        });
-
-      }
-
-    }
-
-    if(params['action'] === 'new') {
-      this.openModal()
-    }
-
+    return this.entities().filter((entity) =>
+      entity.name.toLowerCase().includes(search),
+    );
   });
 
+  selectedEntities = computed(() => {
+    return this.entities().filter((entity) =>
+      this.selectedEntityIds().includes(entity.id),
+    );
+  });
 
-}
+  timelineForm = this.fb.nonNullable.group({
+    title: ['', [Validators.required, Validators.maxLength(150)]],
+
+    description: ['', [Validators.required, Validators.maxLength(750)]],
+
+    eventDate: ['', Validators.required],
+
+    entityIds: [[] as string[], Validators.required],
+
+    showOnCalendar: [false],
+  });
+
+  ngOnInit(): void {
+    this.loadTimelines();
+
+    this.loadEntities();
+
+    this.route.queryParams.subscribe((params) => {
+      const editId = params['edit'];
+
+      if (editId) {
+        this.timelineService.getTimeline(editId).subscribe({
+          next: (timeline) => {
+            this.openEditModal(timeline);
+          },
+
+          error: (err) => {
+            console.error(err);
+          },
+        });
+
+        return;
+      }
+
+      const create = params['create'];
+
+      const entityId = params['entity'];
+
+      if (create) {
+        this.openModal();
+
+        if (entityId) {
+          this.selectedEntityIds.set([entityId]);
+
+          this.timelineForm.patchValue({
+            entityIds: [entityId],
+          });
+        }
+      }
+
+      if (params['action'] === 'new') {
+        this.openModal();
+      }
+    });
+  }
 
   loadTimelines(): void {
     this.isLoading.set(true);
@@ -215,144 +165,99 @@ ngOnInit(): void {
     });
   }
 
-  onEntitySearch(event: Event,): void {
+  onEntitySearch(event: Event): void {
+    const input = event.target as HTMLInputElement;
 
-  const input =
-    event.target as HTMLInputElement;
-
-  this.entitySearch.set(
-    input.value,
-  );
-
-}
-
-isSelected(
-  id: string,
-): boolean {
-
-  return this.selectedEntityIds()
-    .includes(id);
-
-}
-
-toggleEntity(
-  entity: Entity,
-): void {
-
-  const ids = [
-    ...this.selectedEntityIds(),
-  ];
-
-  const index = ids.indexOf(entity.id);
-
-  if (index > -1) {
-
-    ids.splice(index, 1);
-
-  } else {
-
-    ids.push(entity.id);
-
+    this.entitySearch.set(input.value);
   }
 
-  this.selectedEntityIds.set(ids);
+  isSelected(id: string): boolean {
+    return this.selectedEntityIds().includes(id);
+  }
 
-  this.timelineForm.patchValue({
+  toggleEntity(entity: Entity): void {
+    const ids = [...this.selectedEntityIds()];
 
-    entityIds: ids,
+    const index = ids.indexOf(entity.id);
 
-  });
+    if (index > -1) {
+      ids.splice(index, 1);
+    } else {
+      ids.push(entity.id);
+    }
 
-  // Clear search after selection
+    this.selectedEntityIds.set(ids);
 
-  this.entitySearch.set('');
+    this.timelineForm.patchValue({
+      entityIds: ids,
+    });
 
-}
+    // Clear search after selection
 
-removeEntity(
-  id: string,
-): void {
+    this.entitySearch.set('');
+  }
 
-  const ids = this.selectedEntityIds()
-    .filter(x => x !== id);
+  removeEntity(id: string): void {
+    const ids = this.selectedEntityIds().filter((x) => x !== id);
 
-  this.selectedEntityIds.set(ids);
+    this.selectedEntityIds.set(ids);
 
-  this.timelineForm.patchValue({
+    this.timelineForm.patchValue({
+      entityIds: ids,
+    });
+  }
 
-    entityIds: ids,
+  openModal(): void {
+    this.selectedTimeline.set(null);
 
-  });
+    this.timelineForm.reset({
+      title: '',
 
-}
+      description: '',
 
- openModal(): void {
+      eventDate: this.getTodayDateString(),
 
-  this.selectedTimeline.set(null);
+      entityIds: [],
 
-  this.timelineForm.reset({
+      showOnCalendar: false,
+    });
 
-    title: '',
+    this.entitySearch.set('');
 
-    description: '',
+    this.selectedEntityIds.set([]);
 
-    eventDate: this.getTodayDateString(),
+    this.showModal.set(true);
 
-    entityIds: [],
+    document.body.style.overflow = 'hidden';
+  }
+  openTimeline(timeline: Timeline): void {
+    this.router.navigate(['/timeline', timeline.id]);
+  }
 
-    showOnCalendar: false,
+  openEditModal(timeline: Timeline): void {
+    this.selectedTimeline.set(timeline);
 
-  });
+    const entityIds = timeline.entities.map((entity) => entity.entityId);
 
-  this.entitySearch.set('');
+    this.selectedEntityIds.set(entityIds);
 
-  this.selectedEntityIds.set([]);
+    this.entitySearch.set('');
 
-  this.showModal.set(true);
+    this.timelineForm.patchValue({
+      title: timeline.title,
 
-}
-  openTimeline(
-  timeline: Timeline,
-): void {
+      description: timeline.description,
 
-  this.router.navigate([
-    '/timeline',
-    timeline.id,
-  ]);
+      eventDate: timeline.eventDate.substring(0, 10),
 
-}
+      entityIds: entityIds,
 
-openEditModal(
-  timeline: Timeline,
-): void {
+      showOnCalendar: timeline.showOnCalendar,
+    });
 
-  this.selectedTimeline.set(timeline);
-
-  const entityIds = timeline.entities.map(
-    entity => entity.entityId,
-  );
-
-  this.selectedEntityIds.set(entityIds);
-
-  this.entitySearch.set('');
-
-  this.timelineForm.patchValue({
-
-    title: timeline.title,
-
-    description: timeline.description,
-
-    eventDate: timeline.eventDate.substring(0, 10),
-
-    entityIds: entityIds,
-
-    showOnCalendar: timeline.showOnCalendar,
-
-  });
-
-  this.showModal.set(true);
-
-}
+    this.showModal.set(true);
+    document.body.style.overflow = 'hidden';
+  }
 
   saveTimeline(): void {
     if (this.timelineForm.invalid) {
@@ -394,116 +299,85 @@ openEditModal(
     });
   }
 
+  closeModal(): void {
+    this.selectedTimeline.set(null);
 
-closeModal(): void {
+    this.showModal.set(false);
+    document.body.style.overflow = '';
 
-  this.selectedTimeline.set(null);
+    this.entitySearch.set('');
 
-  this.showModal.set(false);
+    this.selectedEntityIds.set([]);
 
-  this.entitySearch.set('');
+    this.timelineForm.reset({
+      title: '',
 
-  this.selectedEntityIds.set([]);
+      description: '',
 
-  this.timelineForm.reset({
+      eventDate: '',
 
-    title: '',
+      entityIds: [],
 
-    description: '',
+      showOnCalendar: false,
+    });
+  }
+  toggleMenu(id: string, event: MouseEvent): void {
+    event.stopPropagation();
 
-    eventDate: '',
+    if (this.activeMenuId() === id) {
+      this.activeMenuId.set(null);
+    } else {
+      this.activeMenuId.set(id);
+    }
+  }
 
-    entityIds: [],
-
-    showOnCalendar: false,
-
-  });
-
-}
-  toggleMenu(
-  id: string,
-  event: MouseEvent,
-): void {
-
-  event.stopPropagation();
-
-  if (this.activeMenuId() === id) {
-
+  @HostListener('document:click')
+  closeMenu(): void {
     this.activeMenuId.set(null);
-
-  } else {
-
-    this.activeMenuId.set(id);
-
   }
 
-}
+  async deleteTimeline(timeline: Timeline): Promise<void> {
+    const confirmed = await this.confirmDialog.confirm({
+      title: 'Delete Timeline',
+      message: `Are you sure you want to delete "${timeline.title}"?`,
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+    });
 
-@HostListener('document:click')
-closeMenu(): void {
+    if (!confirmed) {
+      return;
+    }
 
-  this.activeMenuId.set(null);
-
-}
-
-async deleteTimeline(
-  timeline: Timeline,
-): Promise<void> {
-
-  const confirmed = await this.confirmDialog.confirm({
-    title: 'Delete Timeline',
-    message: `Are you sure you want to delete "${timeline.title}"?`,
-    confirmText: 'Delete',
-    cancelText: 'Cancel',
-  });
-
-  if (!confirmed) {
-    return;
-  }
-
-  this.timelineService
-    .deleteTimeline(timeline.id)
-    .subscribe({
-
+    this.timelineService.deleteTimeline(timeline.id).subscribe({
       next: () => {
-
-        this.timelines.update(timelines =>
-          timelines.filter(
-            item => item.id !== timeline.id
-          )
+        this.timelines.update((timelines) =>
+          timelines.filter((item) => item.id !== timeline.id),
         );
 
-        this.toast.success(
-          'Timeline deleted successfully'
-        );
-
+        this.toast.success('Timeline deleted successfully');
       },
 
       error: (err) => {
+        console.error('Failed to delete timeline:', err);
 
-        console.error(
-          'Failed to delete timeline:',
-          err
-        );
-
-        this.toast.error(
-          'Failed to delete timeline'
-        );
-
+        this.toast.error('Failed to delete timeline');
       },
-
     });
-}
+  }
 
-goBack() {
-  this.router.navigate(['/timeline']);
-}
+  goBack() {
+    this.router.navigate(['/timeline']);
+  }
 
-private getTodayDateString(): string {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+  private getTodayDateString(): string {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  ngOnDestroy() {
+  document.body.style.overflow = '';
 }
 }

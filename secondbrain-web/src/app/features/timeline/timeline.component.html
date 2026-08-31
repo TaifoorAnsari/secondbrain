@@ -1,21 +1,13 @@
 <div class="timeline-page">
-
   <!-- Header -->
 
   <div class="page-header">
-
     <div>
       <h1>Timeline</h1>
       <p>Track important events, meetings and memories.</p>
     </div>
 
-    <button
-      class="add-btn"
-      (click)="openModal()"
-    >
-      + New Timeline
-    </button>
-
+    <button class="add-btn" (click)="openModal()">+ New Timeline</button>
   </div>
 
   <!-- ==========================================
@@ -23,297 +15,165 @@
   =========================================== -->
 
   @if (showModal()) {
+    <div class="modal-overlay" (click)="closeModal()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>
+            {{ isEditMode() ? "Edit Timeline" : "Create Timeline" }}
+          </h2>
 
-  <div
-    class="modal-overlay"
-    (click)="closeModal()"
-  >
-
-    <div
-      class="modal"
-      (click)="$event.stopPropagation()"
-    >
-
-      <div class="modal-header">
-
-        <h2>
-
-          {{
-            isEditMode()
-              ? 'Edit Timeline'
-              : 'Create Timeline'
-          }}
-
-        </h2>
-
-        <button
-          class="close-btn"
-          type="button"
-          (click)="closeModal()"
-        >
-          ✕
-        </button>
-
-      </div>
-
-      <form
-        [formGroup]="timelineForm"
-        (ngSubmit)="saveTimeline()"
-      >
-
-        <!-- Title -->
-
-        <div class="form-group">
-
-          <label>Title</label>
-
-          <input
-            type="text"
-            formControlName="title"
-            placeholder="Timeline title"
-          />
-
-          @if (
-            timelineForm.controls.title.touched &&
-            timelineForm.controls.title.invalid
-          ) {
-
-            <small class="error">
-
-              @if (timelineForm.controls.title.errors?.['required']) {
-                Title is required.
-              }
-
-              @if (timelineForm.controls.title.errors?.['maxlength']) {
-                Maximum 150 characters allowed.
-              }
-
-            </small>
-
-          }
-
+          <button class="close-btn" type="button" (click)="closeModal()">
+            ✕
+          </button>
         </div>
 
-        <!-- Description -->
+        <form [formGroup]="timelineForm" (ngSubmit)="saveTimeline()">
+          <!-- Title -->
 
-        <div class="form-group">
+          <div class="form-group">
+            <label>Title</label>
 
-          <label>Description</label>
+            <input
+              type="text"
+              formControlName="title"
+              placeholder="Timeline title"
+            />
 
-          <textarea 
-            rows="4"
-            formControlName="description"
-             maxlength="500"
-            placeholder="Describe what happened"
-          ></textarea>
-    <div class="character-count">
-             {{ timelineForm.controls.description.value.length }}/500
-        </div>
+            @if (
+              timelineForm.controls.title.touched &&
+              timelineForm.controls.title.invalid
+            ) {
+              <small class="error">
+                @if (timelineForm.controls.title.errors?.["required"]) {
+                  Title is required.
+                }
 
-        @if (timelineForm.controls.description.touched &&
-             timelineForm.controls.description.invalid) {
+                @if (timelineForm.controls.title.errors?.["maxlength"]) {
+                  Maximum 150 characters allowed.
+                }
+              </small>
+            }
+          </div>
 
-          <small class="error">
-            Maximum 250 characters allowed.
-          </small>
+          <!-- Description -->
 
-        }
+          <div class="form-group">
+            <label>Description</label>
 
-      </div>
-        
-
-        <!-- Date -->
-
-        <div class="form-group">
-
-          <label>Event Date</label>
-
-          <input
-            type="date"
-            formControlName="eventDate"
-          />
-
-        </div>
-        <!-- Add to Calendar -->
-
-<div class="calendar-option">
-
-  <div class="calendar-option-info">
-
-    <div class="calendar-option-icon">
-      📅
-    </div>
-
-    <div>
-
-      <strong>
-        Add to Calendar
-      </strong>
-
-      <span>
-        Display this timeline event on your calendar.
-      </span>
-
-    </div>
-
-  </div>
-
-  <label class="switch">
-
-    <input
-      type="checkbox"
-      formControlName="showOnCalendar"
-    />
-
-    <span class="slider"></span>
-
-  </label>
-
-</div>
-
-        <!-- Linked Entities -->
-
-        <div class="form-group">
-
-          <label>Linked Entities</label>
-
-          <input
-            type="text"
-            placeholder="Search entities..."
-            [value]="entitySearch()"
-            (input)="onEntitySearch($event)"
-          />
-
-@if (entitySearch().trim()) {
-
-  <div class="entity-picker">
-
-    @if (filteredEntities().length > 0) {
-
-      @for (
-        entity of filteredEntities();
-        track entity.id
-      ) {
-
-        <div
-          class="picker-item"
-          (click)="toggleEntity(entity)"
-        >
-
-          <span>
-
-            {{
-              entity.type === 'PERSON'
-                ? '👤'
-                : '🏢'
-            }}
-
-            {{ entity.name }}
-
-          </span>
-
-          @if (isSelected(entity.id)) {
-
-            <span class="selected-icon">
-              ✓
-            </span>
-
-          }
-
-        </div>
-
-      }
-
-    } @else {
-
-      <div class="no-results">
-
-        No entities found
-
-      </div>
-
-    }
-
-  </div>
-
-}
-
-          @if (selectedEntities().length > 0) {
-
-            <div class="selected-entities">
-
-              @for (
-                entity of selectedEntities();
-                track entity.id
-              ) {
-
-                <div class="selected-chip">
-
-                  {{ entity.name }}
-
-                  <button
-                    type="button"
-                    (click)="removeEntity(entity.id)"
-                  >
-                    ✕
-                  </button>
-
-                </div>
-
-              }
-
+            <textarea
+              rows="4"
+              formControlName="description"
+              maxlength="500"
+              placeholder="Describe what happened"
+            ></textarea>
+            <div class="character-count">
+              {{ timelineForm.controls.description.value.length }}/500
             </div>
 
-          }
+            @if (
+              timelineForm.controls.description.touched &&
+              timelineForm.controls.description.invalid
+            ) {
+              <small class="error"> Maximum 250 characters allowed. </small>
+            }
+          </div>
 
-        </div>
+          <!-- Date -->
 
-        <!-- Buttons -->
+          <div class="form-group">
+            <label>Event Date</label>
 
-        <div class="modal-actions">
+            <input type="date" formControlName="eventDate" />
+          </div>
+          <!-- Add to Calendar -->
 
-          <button
-            type="button"
-            class="cancel-btn"
-            (click)="closeModal()"
-          >
-            Cancel
-          </button>
+          <div class="calendar-option">
+            <div class="calendar-option-info">
+              <div class="calendar-option-icon">📅</div>
 
-          <button
-            type="submit"
-            class="save-btn"
-            [disabled]="isSaving()"
-          >
+              <div>
+                <strong> Add to Calendar </strong>
 
-            {{
+                <span> Display this timeline event on your calendar. </span>
+              </div>
+            </div>
 
-              isSaving()
+            <label class="switch">
+              <input type="checkbox" formControlName="showOnCalendar" />
 
-                ? 'Saving...'
+              <span class="slider"></span>
+            </label>
+          </div>
 
-                : (
+          <!-- Linked Entities -->
 
-                    isEditMode()
+          <div class="form-group">
+            <label>Linked Entities</label>
 
-                      ? 'Update Timeline'
+            <input
+              type="text"
+              placeholder="Search entities..."
+              [value]="entitySearch()"
+              (input)="onEntitySearch($event)"
+            />
 
-                      : 'Create Timeline'
+            @if (entitySearch().trim()) {
+              <div class="entity-picker">
+                @if (filteredEntities().length > 0) {
+                  @for (entity of filteredEntities(); track entity.id) {
+                    <div class="picker-item" (click)="toggleEntity(entity)">
+                      <span>
+                        {{ entity.type === "PERSON" ? "👤" : "🏢" }}
 
-                  )
+                        {{ entity.name }}
+                      </span>
 
-            }}
+                      @if (isSelected(entity.id)) {
+                        <span class="selected-icon"> ✓ </span>
+                      }
+                    </div>
+                  }
+                } @else {
+                  <div class="no-results">No entities found</div>
+                }
+              </div>
+            }
 
-          </button>
+            @if (selectedEntities().length > 0) {
+              <div class="selected-entities">
+                @for (entity of selectedEntities(); track entity.id) {
+                  <div class="selected-chip">
+                    {{ entity.name }}
 
-        </div>
+                    <button type="button" (click)="removeEntity(entity.id)">
+                      ✕
+                    </button>
+                  </div>
+                }
+              </div>
+            }
+          </div>
 
-      </form>
+          <!-- Buttons -->
 
+          <div class="modal-actions">
+            <button type="button" class="cancel-btn" (click)="closeModal()">
+              Cancel
+            </button>
+
+            <button type="submit" class="save-btn" [disabled]="isSaving()">
+              {{
+                isSaving()
+                  ? "Saving..."
+                  : isEditMode()
+                    ? "Update Timeline"
+                    : "Create Timeline"
+              }}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-
-  </div>
-
   }
 
   <!-- ==========================================
@@ -321,13 +181,9 @@
   =========================================== -->
 
   @if (isLoading()) {
-
     <div class="empty-state">
-
       <h3>Loading timelines...</h3>
-
     </div>
-
   }
 
   <!-- ==========================================
@@ -335,33 +191,15 @@
   =========================================== -->
 
   @else if (timelines().length === 0) {
-
     <div class="empty-state">
-
-      <div class="empty-icon">
-
-        📝
-
-      </div>
+      <div class="empty-icon">📝</div>
 
       <h2>No timelines yet</h2>
 
-      <p>
+      <p>Create your first timeline to start recording important moments.</p>
 
-        Create your first timeline to start recording
-        important moments.
-
-      </p>
-
-      <button
-        class="add-btn"
-        (click)="openModal()"
-      >
-        Create Timeline
-      </button>
-
+      <button class="add-btn" (click)="openModal()">Create Timeline</button>
     </div>
-
   }
 
   <!-- ==========================================
@@ -369,80 +207,40 @@
   =========================================== -->
 
   @else {
-
     <div class="timeline-list">
-
-      @for (
-        timeline of timelines();
-        track timeline.id
-      ) {
-
-        <div
-          class="timeline-card"
-          (click)="openTimeline(timeline)"
-        >
-
+      @for (timeline of timelines(); track timeline.id) {
+        <div class="timeline-card" (click)="openTimeline(timeline)">
           <div class="date-box">
-
             <span class="day">
-
-              {{ timeline.eventDate | date:'dd' }}
-
+              {{ timeline.eventDate | date: "dd" }}
             </span>
 
             <span class="month">
-
-              {{ timeline.eventDate | date:'MMM' }}
-
+              {{ timeline.eventDate | date: "MMM" }}
             </span>
-
           </div>
 
           <div class="timeline-content">
-
             <h3>
-
               {{ timeline.title }}
-
             </h3>
 
             <p>
-
               {{ timeline.description }}
-
             </p>
 
             <div class="entity-list">
-
-              @for (
-                item of timeline.entities;
-                track item.entity.id
-              ) {
-
+              @for (item of timeline.entities; track item.entity.id) {
                 <span class="entity-chip">
-
-                  {{
-                    item.entity.type === 'PERSON'
-                      ? '👤'
-                      : '🏢'
-                  }}
+                  {{ item.entity.type === "PERSON" ? "👤" : "🏢" }}
 
                   {{ item.entity.name }}
-
                 </span>
-
               }
-
             </div>
-
           </div>
-
         </div>
-
       }
-
     </div>
-
   }
-
 </div>

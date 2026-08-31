@@ -286,7 +286,7 @@ export class EntitiesComponent
       description: '',
 
     });
-
+    document.body.style.overflow = 'hidden';
     this.showCreateModal.set(true);
 
   }
@@ -316,7 +316,7 @@ export class EntitiesComponent
 
     });
 
-
+    document.body.style.overflow = 'hidden';
     this.showCreateModal.set(true);
 
   }
@@ -342,7 +342,9 @@ export class EntitiesComponent
       description: '',
 
     });
+    document.body.style.overflow = '';
 
+    document.body.style.overflow = 'hidden';
   }
 
 

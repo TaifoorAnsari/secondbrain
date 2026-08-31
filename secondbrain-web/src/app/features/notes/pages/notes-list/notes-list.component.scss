@@ -473,7 +473,7 @@
 
   padding: 24px;
 
-  z-index: 999;
+  z-index: 9999;
 
   animation: fadeIn .2s ease;
 
@@ -487,11 +487,14 @@
 .read-note-modal {
 
   width: 100%;
-  max-width: 850px;
+  max-width: 650px;
+  max-height: 95vh; 
 
   background: white;
 
   border-radius: 24px;
+  display: flex;
+  flex-direction: column;
 
   overflow: hidden;
 
@@ -504,6 +507,9 @@
 .create-note-modal form {
 
   padding: 36px;
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: none;
 
 }
 
@@ -517,9 +523,10 @@
   justify-content: space-between;
   align-items: flex-start;
 
-  padding: 28px 36px;
+  padding: 15px 36px;
 
   border-bottom: 1px solid #eef2f7;
+  flex-shrink: 0;
 
 }
 
@@ -799,14 +806,15 @@
 
   .modal-header {
 
-    padding: 22px;
+    padding: 15px 36px;
 
   }
 
   .create-note-modal form,
   .read-content {
 
-    padding: 22px;
+    padding: 15px 36px;
+
 
   }
 

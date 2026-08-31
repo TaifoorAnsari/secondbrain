@@ -102,6 +102,8 @@ private readonly route = inject(ActivatedRoute)
     });
 
     this.showCreateModal.set(true);
+    document.body.style.overflow = "hidden";
+
   }
   openEditModal(note: Note): void {
     this.activeMenuId.set(null);
@@ -115,6 +117,8 @@ private readonly route = inject(ActivatedRoute)
     });
 
     this.showCreateModal.set(true);
+    document.body.style.overflow = 'hidden';
+
   }
 
   closeCreateModal(): void {
@@ -127,6 +131,7 @@ private readonly route = inject(ActivatedRoute)
       content: '',
       pinned: false,
     });
+    document.body.style.overflow = '';
   }
 
   saveNote(): void {
@@ -317,5 +322,9 @@ async deleteNote(): Promise<void> {
   closeMenuOnEscape(): void {
     this.activeMenuId.set(null);
   }
+
+  ngOnDestroy() {
+  document.body.style.overflow = '';
+ }
 }
 
