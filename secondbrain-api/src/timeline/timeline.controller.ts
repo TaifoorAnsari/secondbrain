@@ -90,7 +90,7 @@ export class TimelineController {
     );
 
   }
-  @Post('quick-capture')
+@Post('quick-capture')
 quickCapture(
   @Req() req: any,
   @Body() dto: QuickCaptureDto,
@@ -98,7 +98,7 @@ quickCapture(
   return this.timelineService.quickCapture(
     req.user.id,
     dto.input,
+    dto.entityId,
   );
 }
-
 }

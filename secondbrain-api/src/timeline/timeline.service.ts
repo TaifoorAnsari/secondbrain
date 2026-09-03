@@ -248,50 +248,34 @@ export class TimelineService {
 
   }
 
-  async quickCapture(
+async quickCapture(
   userId: string,
   input: string,
+  entityId?: string,
 ) {
-  const trimmedInput = input.trim();
+  const description = input.trim();
 
-  // Expected format:
-  // @test today is my insurance of bike
-
-  const match = trimmedInput.match(/^@(\S+)\s+(.+)$/);
-
-  if (!match) {
-    throw new Error(
-      'Invalid format. Use @entity message',
-    );
+  if (!description) {
+    throw new Error('Message cannot be empty');
   }
 
-  const entityName = match[1].trim();
-  const description = match[2].trim();
-
   return this.prisma.$transaction(async (tx) => {
-    // Find existing entity for this user
-    let entity = await tx.entity.findFirst({
+
+    if (!entityId) {
+      throw new Error('Entity must be selected');
+    }
+
+    const entity = await tx.entity.findFirst({
       where: {
+        id: entityId,
         userId,
-        name: {
-          equals: entityName,
-          mode: 'insensitive',
-        },
       },
     });
 
-    // Create entity if it doesn't exist
     if (!entity) {
-      entity = await tx.entity.create({
-        data: {
-          name: entityName,
-          type: 'PERSON',
-          userId,
-        },
-      });
+      throw new Error('Entity not found');
     }
 
-    // Create timeline
     const timeline = await tx.timeline.create({
       data: {
         title: entity.name,
@@ -322,7 +306,6 @@ export class TimelineService {
     };
   });
 }
-
 
   // ==========================================
   // DELETE TIMELINE

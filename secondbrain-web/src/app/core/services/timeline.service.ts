@@ -46,12 +46,16 @@ export class TimelineService {
     );
 
   }
-  quickCapture(
+quickCapture(
   input: string,
+  entityId: string,
 ): Observable<any> {
   return this.http.post<any>(
     `${this.api}/quick-capture`,
-    { input }
+    {
+      input,
+      entityId,
+    }
   );
 }
 
